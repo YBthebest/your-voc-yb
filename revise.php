@@ -26,7 +26,7 @@
 						$html .= "<span class='erreur'>".$erreur."</span><br />";
 					}
 					// Modifier ROWS et COLS pour modifier la hauteur et largeur du textara
-					$html .=        "<form id=\"liste\" method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "\">
+					$html .=        "<form id=\"liste\" method=\"post\" action=\"revise\">
 												  <p>Nombre de questions à reviser (laisser vide pour tout) :
 										<input type=\"text\" name='nbQuestion' id=\"nbQuestion\" /><br />
 										<input type=\"hidden\" name=\"step\" value=\"2\" />
@@ -45,6 +45,7 @@
 					return $html ;
 				}
 				function getHTML_Etape2() {
+					$test = $_POST['sens'];
 					$html = "<form id=\"formulaire\" name=\"formulaire\" method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "\">";
 					if(isset($_POST['id_liste']) OR isset($_SESSION['id'])) {
 						if(isset($_POST['id_liste'])) {
@@ -128,7 +129,7 @@
 									//on prend que le premier mot pour la question
 									$mutliMotTab =  explode("/",$mot[1]);
 									$questionCourante = $mutliMotTab[0];
-									array_push($question, " <br />
+									array_push($question,  " <br />
 									<span class=\"motTraduc\">" . stripslashes($questionCourante) ."</span> <br /><br /><br />
 									<small>Réponse:</small><br /> <input type=\"text\" autocomplete=\"off\" name='reponse[]' id=\"$questionCourante \" size=\"100\" />
 									<input type='hidden' name='question[]' value=\"$questionCourante \"/>

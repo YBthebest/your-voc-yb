@@ -15,7 +15,7 @@ if (isset($_POST['connexion']) && $_POST['connexion'] == 'Connexion') {
 			$_SESSION['login'] = $membre->login();
 			if(isset($_POST['auto'])) {
 				$_SESSION['id'] = $membre->id();
-				init($membre);
+				initCookie($membre);
 			}
 			if(isset($_POST['ref'])) {
 				echo '<META HTTP-EQUIV=Refresh CONTENT="1; URL='.$_POST['ref'].'">';

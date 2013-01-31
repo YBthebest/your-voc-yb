@@ -289,8 +289,8 @@ function getPassByLogin($login){
 	$membre = DBHelper::getDBManager("Membre")->getPassByLogin($login);
 	return $membre;
 }
-function rechercheByCriteres($categorie, $recherche_sur, $mots_cles, $critere){
-	$liste = DBHelper::getDBManager("ListeMotDefinition")->rechercheByCriteres($categorie, $recherche_sur, $mots_cles, $critere);
+function rechercheByCriteres($categorie, $recherche_sur, $mots_cles, $critere, $premiereEntree, $messageParPage){
+	$liste = DBHelper::getDBManager("ListeMotDefinition")->rechercheByCriteres($categorie, $recherche_sur, $mots_cles, $critere, $premiereEntree, $messageParPage);
 	return $liste;
 }
 function createMembre($pseudo, $email, $password){

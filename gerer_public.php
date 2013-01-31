@@ -10,6 +10,7 @@ $(function(){
       this.value= this.value==='' ? save : this.value;
     };
   });
+  createListeSelectLangue("categorie");
 });
 </script>
 <!-- Début de la présentation -->
@@ -22,59 +23,16 @@ $(function(){
     	<div id="title">Les listes publiques </div>
 			<form action="recherche" method="Post">
 				 <p>
-					<?php echo "		Catégorie?				 
-											<select name=\"categorie\">
-											<option value=\"aucun\">Toutes</option>
-											<optgroup label=\"Europe\">
-											<option value=\"Allemand\">Allemand</option>
-											<option value=\"Anglais\">Anglais</option>
-											<option value=\"Français\">Français</option>
-											<option value=\"Espagnol\">Espagnol</option>
-											<option value=\"Italien\">Italien</option>
-											<option value=\"Croate\">Croate</option>											
-											<option value=\"Danois\">Danois</option>
-											<option value=\"Finnois\">Finnois</option>
-											<option value=\"Grec\">Grec</option>
-											<option value=\"Irlandais\">Irlandais</option>
-											<option value=\"Latin\">Latin</option>											
-											<option value=\"Néerlandais\">Néerlandais</option>
-											<option value=\"Norvégien\">Norvégien</option>
-											<option value=\"Portugais\">Portugais</option>
-											<option value=\"Suédois\">Suédois</option>
-											</optgroup>
-											<optgroup label=\"Asie\">
-											<option value=\"Chinois (Cantonnais)\">Chinois (Cantonnais)</option>
-											<option value=\"Chinois (Mandarin)\">Chinois (Mandarin)</option>
-											<option value=\"Coréen\">Coréen</option>											
-											<option value=\"Filipino\">Filipino</option>
-											<option value=\"Indien\">Indien</option>		
-											<option value=\"Indonésien\">Indonésien</option>
-											<option value=\"Japonais\">Japonais</option>
-											<option value=\"Mongolien\">Mongolien</option>
-											<option value=\"Thai\">Thai</option>
-											<option value=\"Vietnamien\">Vietnamien</option>											
-											</optgroup>
-											<optgroup label=\"Slaves\">
-											<option value=\"Russe\">Russe</option>
-											<option value=\"Serbe\">Serbe</option>											
-											<option value=\"Polonais\">Polonais</option>											
-											<option value=\"Tcheque\">Tcheque</option>											
-											</optgroup>
-											<optgroup label=\"Moyen Orient\">
-											<option value=\"Arabe\">Arabe</option>
-											<option value=\"Hébreu\">Hébreu</option>
-											<option value=\"Turc\">Turc</option>
-											</optgroup>
-											</select><br />"; ?>
-							Faire la recherche sur : <select name="sur" >
-							<option value="titre">le titre des listes</option>
-							<option value="mots">le contenu des listes</option>
-							<option value="tous">les deux</option>
-							</select>
-							<input type="text" name="requete" value="Mots-clés" size="30">
-							<input type="submit" value="Recherche">
-		</p>
-		</form>
+				 	Catégorie: <select id="categorie" name="categorie"></select><br />
+					Faire la recherche sur : <select name="sur" >
+						<option value="titre">le titre des listes</option>
+						<option value="mots">le contenu des listes</option>
+						<option value="tous">les deux</option>
+					</select>
+					<input type="text" name="requete" value="Mots-clés" size="30">
+					<input type="submit" value="Recherche">
+				</p>
+			</form>
 		<div id="container">
 			<div id="col1">
 				<div id="title" style="text-align: center">

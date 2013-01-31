@@ -39,7 +39,7 @@
 					}
 				}
 				// Formatage des entrées
-				$f_1=trim(ucwords(eregi_replace("[^a-zA-Z0-9éèàäö\ -]", "", $f_1)));
+				$f_1=trim(ucwords(mb_ereg_replace("[^a-zA-Z0-9éèàäö\ -]", "", $f_1)));
 				$f_2=strip_tags(trim($f_2));
 				// Verification des champs
 				if(strlen($f_1)<2){
@@ -50,11 +50,8 @@
 					$erreur.="<li><span class='txterror'>Le champ &laquo; E-Mail &raquo; est vide ou incomplet.</span>";
 					$errf_2=1;
 				}else{
-					if(!ereg('^[-!#$%&\'*+\./0-9=?A-Z^_`a-z{|}~]+'.
-					'@'.
-					'[-!#$%&\'*+\/0-9=?A-Z^_`a-z{|}~]+\.'.
-					'[-!#$%&\'*+\./0-9=?A-Z^_`a-z{|}~]+$',
-					$f_2)){
+					$regex = '/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/';
+					if(!preg_match($regex, $f_2)){
 						$erreur.="<li><span class='txterror'>La syntaxe de votre adresse e-mail n'est pas correcte.</span>";
 						$errf_2=1;
 					}

@@ -28,12 +28,10 @@
 						// on teste l'existence de nos variables. On teste également si elles ne sont pas vides
 						if (isset($_POST['login']) && isset($_POST['pass']) && isset($_POST['pass_confirm']) && isset($_POST['email'])) {
 							// on teste les deux mots de passe
-							if ($_POST['pass'] != $_POST['pass_confirm']) {						
-								$erreur = 'Les 2 mots de passe sont différents.';
-							}
-							if(!isValidPassword($_POST['pass'])){
-								$erreur = 'Votre mot de passe est invalide. Caractères spéciaux non-autorisés.';
-							}else{
+							if ($_POST['pass'] == $_POST['pass_confirm']) {						
+								if(!isValidPassword($_POST['pass'])){
+									$erreur = 'Votre mot de passe est invalide. Caractères spéciaux non-autorisés. Minimum 6 caractères.';
+								}else{
 									// on recherche si ce login est déjà utilisé par un autre membre
 									$login = mysql_escape_string($_POST['login']);
 									$membre = getMembreByLogin($login);			
@@ -47,10 +45,10 @@
 												$email = mysql_escape_string($_POST['email']);
 												$fonction1 = getMembreByEmail($email);
 												if (empty($fonction1)) {
-												createMembre($_POST['login'], $_POST['email'], md5($_POST['pass']));
-												$_SESSION['login'] = $_POST['login'];
-												header('Location: membre');
-												exit();
+													createMembre($_POST['login'], $_POST['email'], md5($_POST['pass']));
+													$_SESSION['login'] = $_POST['login'];
+													header('Location: membre');
+													exit();
 												}else{
 													$erreur = 'Un membre possède déjà cet email.';
 												}
@@ -61,9 +59,12 @@
 									}
 								}
 							}else {
-								$erreur = 'Au moins un des champs est vide.';
+								$erreur = 'Les 2 mots de passe sont différents.';
 							}
+						}else {
+							$erreur = 'Au moins un des champs est vide.';
 						}
+					}
 			}
 			if (isset($erreur)) echo '<br />',$erreur;
 			?> 

@@ -55,4 +55,8 @@
 	function isValidPassword($password){
 		return !empty($password) && preg_match("/^[a-z0-9_-]{6,40}$/i", $password);
 	}
+	
+	function isValidClass($class){
+		return $class == 'vues' OR $class == 'note' OR $class == 'date' OR $class == 'pseudo';
+	}
 ?>
