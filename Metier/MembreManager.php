@@ -9,6 +9,7 @@ class MembreManager extends DbManager{
 	}
 	
 	protected function binding(){
+		$this->arrayBinding["id"] = "id";
 		$this->arrayBinding["login"] = "login";
 		$this->arrayBinding["email"] = "email";
 		$this->arrayBinding["pass_md5"] = "pass";
