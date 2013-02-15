@@ -113,9 +113,9 @@ abstract class DbManager {
 	}
 	
 	public function get($id){
-		$id = (int)$id;		
-		$query = "SELECT * FROM ".$this->table." WHERE $ID_COLUMN = :id";	
-		$entityListe = select($query, newInstanceEntity(array("id"=>$id)));
+		$id = (int)$id;	
+		$query = "SELECT * FROM ".$this->table." WHERE ".$this->ID_COLUMN." = :id";	
+		$entityListe = $this->select($query, $this->newInstanceEntity(array("id"=>$id)));
 		return $entityListe[0];
 	}
 	

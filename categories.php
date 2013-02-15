@@ -1,3 +1,50 @@
+<?php
+$valueSelected = "";
+$jsObject = "";
+if(isset($_GET['cat'])) {
+	$id = addslashes($_GET['cat']);
+	$id = mysql_real_escape_string($id);
+	$categorie = getCategorieById($id);
+	if(empty($categorie)){
+		echo 'Veuillez préciser une catégorie existante.';
+	}
+	$valueSelected = $categorie->nom();
+	$listesMot = getListeByCategorie($valueSelected);
+	$jsObject = "[";
+	$i = 0;
+	$size = sizeof($listesMot);
+	foreach($listesMot as $listeMot){
+		$i++;
+		$jsObject .= convertToJavascriptObject($listeMot);
+		if($i < $size){
+			$jsObject .= ",";
+		}
+	}
+	$jsObject .= "]";
+}
+
+function convertToJavascriptObject($phpObject){
+	$ref = new ReflectionObject($phpObject);
+	$pros = $ref->getProperties(ReflectionProperty::IS_PRIVATE);
+	$jsObject = "{";
+	$i=0;
+	$size = sizeof($pros);
+	foreach ($pros as $property) {
+		$i++;
+		$property->setAccessible(true);
+		$value = $property->getValue($phpObject);
+		if(!preg_match('/\\n/', $value)){
+			$jsObject .= $property->getName().':"'.$value.'"';
+			if($i < $size){
+				$jsObject .= ",";
+			}
+		}
+	}
+	$jsObject .= "}";
+	return $jsObject;
+}
+?>
+
 <script type="text/javascript">
 $(function(){
   var save='';
@@ -10,204 +57,185 @@ $(function(){
       this.value= this.value==='' ? save : this.value;
     };
   });
-  createListeSelectLangue("categorie");
+  createListeSelectWithDefault("categorie", <?php echo getJsCategorieListe();?>);
+	var listeTri = [{options:[
+		{value:"categorie",text:"catégorie"},
+		{value:"note",text:"note"},
+		{value:"auteur",text:"auteur"},
+		{value:"date",text:"date"},
+		{value:"titre",text:"titre"}
+	]}];
+  var selectTri = createListeSelect("trier", listeTri);
+  selectTri.onchange = function(){
+	  var value = this.options[this.selectedIndex].value;
+	  var alternate = 'titre';
+	  if(value == alternate){
+		  value = "categorie";
+	  }
+	  reversableSort(this, value, 'titre');
+  };
+  $("#categorie").val('<?php echo $valueSelected;?>');
+
+  window.listeMotsDef = {
+		listesMot:<?php echo $jsObject?>,
+		currentPage:1,
+		nbLimite:20
+  }
+  createListeByCateg(window.listeMotsDef.listesMot, window.listeMotsDef.currentPage , window.listeMotsDef.nbLimite);
 });
+
+function createListeByCateg(listesVocabulaires, currentPage, limite){
+	var div = createElem({tag:"div"});
+	limite = (listesVocabulaires.length>=limite)?limite:listesVocabulaires.length;
+	var start = (currentPage-1)*limite;
+	var position = start+limite;
+	position = (position<=listesVocabulaires.length)?position:position-(position-listesVocabulaires.length);
+	for(var i=start; i<position; i++){
+		var listElemt = createListeElement(listesVocabulaires[i], i+1);
+		div.appendChild(listElemt);
+	}
+	$("#listesContainer").append(div);
+	div.appendChild(createPaginationElement(parseInt(listesVocabulaires.length/limite  + 0.9) , currentPage));
+	return div;
+}
+
+function createListeElement(listeMotDef, index){
+	var div = createElem({tag:"div"});
+	index = (!index)?"":index;
+	var elem = index+'.<b>'+
+		listeMotDef.categorie+'<->'+listeMotDef.categorie2+
+		': </b> <a href="afficher?id='+listeMotDef.id+'">'+
+		listeMotDef.titre+'</a> (Note: '+listeMotDef.note+'/5 et '+
+		listeMotDef.vue+' vues)<br /><small> par <a href="profil?m='+listeMotDef.membre+'">'+
+		listeMotDef.membre+'</a> le '+listeMotDef.date+'</small><br /><br/>';
+	div.innerHTML = elem;
+	return div;
+}
+
+function pagineListesMot(page){
+	$("#listesContainer").html("");
+	createListeByCateg(window.listeMotsDef.listesMot, page, window.listeMotsDef.nbLimite);
+	window.scrollTo(0,0);
+}
+
+function reversableSort(button){
+	var i = 0;
+	var reverse = false;	
+	if(button){
+		i = 1;
+		reverse = (button.reverse)?button.reverse:false;
+		button.reverse = !reverse;
+		if(button.value.indexOf("/\\") != -1){
+			button.value = button.value.replace("/\\","\\/");
+		}else if(button.value.indexOf("\\/") != -1){
+			button.value = button.value.replace("\\/","/\\");
+		}
+	}
+	var props = new Array();
+	for(i; i<arguments.length; i++){
+		if(i == 1 && reverse){
+			arguments[i] = "-" + arguments[i]
+		}
+		props.push(arguments[i]);
+	}
+	window.listeMotsDef.listesMot.sort(dynamicSortMultiple(props));
+	pagineListesMot(1);
+}
+
 </script>
 <!-- Début de la présentation -->
-<div id="presentation1">
-</div>
+<div id="presentation1"></div>
 <!-- Fin de la présentation -->
 <!-- Début du contenu -->
 <div id="content">
 	<div id="bloc">
-  		<div id="title">Catégories </div>
-  		<?php
-  		if(isset($_GET['cat'])) {
-  			$id = addslashes($_GET['cat']);
-  			$id = mysql_real_escape_string($id);
-  			$fonction = getCategorieById($id);
-  			if(empty($fonction)){
-  				echo 'Veuillez préciser une catégorie existante.';
-  				echo '</div></div>';
-  				include("footer.php");
-  				die();
-  			} 
-  		}
-  		?>
+		<div id="title">Catégories</div>
+
 		<form action="recherche" method="post">
 			<p>
-				Catégorie? <select id="categorie" name="categorie"></select>
-				<br />Faire la recherche sur : <select name="sur" >
+				Catégorie : <select id="categorie" name="categorie"></select> <br />Faire
+				la recherche sur : <select name="sur">
 					<option value="titre">le titre des listes</option>
 					<option value="mots">le contenu des listes</option>
 					<option value="tous">les deux</option>
-				</select>
-				<input type="text" name="requete" value="Mots-clés" size="30">
-				<input type="submit" value="Recherche">
+				</select> <input type="text" name="requete" value="Mots-clés"
+					size="30"> <input type="submit" value="Recherche">
 			</p>
 		</form>
-		<a href="entrer_liste" >Entrer une nouvelle liste</a><br />
+		<a href="entrer_liste">Entrer une nouvelle liste</a><br />
+
+		<div>
+			Trier par : <select id="trier"></select> 
+		</div>
+		<br />
+		<div id="listesContainer"></div>
 		<?php
-		if(isset($_POST['ok']) OR isset($_GET['cat'])) {
-			if(isset($_GET['cat'])) {
-				$categorie = addslashes($_GET['cat']);
-				$categorie = mysql_real_escape_string($categorie);
-				$fonction = getCategorieById($categorie);
-				foreach($fonction as $resultat_fonction){
-					$categorie1 = $resultat_fonction->nom();
-				}
-			}
-			echo '<center><h2>'.htmlspecialchars($categorie1).'</h2></center>';
-			$listesById = getListeByCategorie($categorie1);
-			$nombre = count($listesById);
-			if($nombre == 0) {
-				echo 'Il n\'y a aucune liste de disponible pour cette catégorie.';
-			}
-			else {
-				$messagesParPage=30; //Nous allons afficher 5 messages par page.
-				
-				//Une connexion SQL doit être ouverte avant cette ligne...
-				$retour_total=getNbListeByCategorie($categorie1); //Nous récupérons le contenu de la requête dans $retour_total
-				//On range retour sous la forme d'un tableau.
-				$total= $retour_total; //On récupère le total pour le placer dans la variable $total.
-				//Nous allons maintenant compter le nombre de pages.
-				$nombreDePages=ceil($total/$messagesParPage);
-				
-				if(isset($_GET['nb_page'])) // Si la variable $_GET['page'] existe...
-				{
-					if(is_numeric($_GET['nb_page'])) {
-						 $pageActuelle=intval(addslashes($_GET['nb_page']));
-						 
-						 if($pageActuelle>$nombreDePages) // Si la valeur de $pageActuelle (le numéro de la page) est plus grande que $nombreDePages...
-						 {
-							  $pageActuelle=$nombreDePages;
-						 }
-					}
-					else {
-						$pageActuelle=1;
-					}
-				}
-				else // Sinon
-				{
-				     $pageActuelle=1; // La page actuelle est la n°1    
-				}
-				
-				$premiereEntree=($pageActuelle-1)*$messagesParPage; // On calcul la première entrée à lire
-				
-				// La requête sql pour récupérer les messages de la page actuelle.
-				if(isset($_POST['critere'])){
-					$class = $_POST['critere'];
-				}
-				elseif(isset($_GET['class'])){
-					$class = htmlspecialchars(mysql_real_escape_string($_GET['class']));
-				}else {
-					$class = 'vues';
-				}	
-				echo '<p align="center">Page : '; //Pour l'affichage, on centre la liste des pages
-				for($i=1; $i<=$nombreDePages; $i++) //On fait notre boucle
-				{
-					//On va faire notre condition
-					if($i==$pageActuelle) //Si il s'agit de la page actuelle...
-					{
-						echo ' [ '.$i.' ] ';
-					}
-					else
-					{
-						$cat = $_GET['cat'];
-						echo ' <a href="categories?nb_page='.$i.'&class='.$class.'&cat='.$cat.'">'.$i.'</a> ';
-					}
-				}
-				echo '</p>';
-				$i = '1';
-				$requete_total = rechercheByCriteres($categorie1, 'titre', '', $class, $premiereEntree, $messagesParPage);
-				?>
-				<form method="post" action="categories?cat=<?php echo $_GET['cat'] ?>&nb_page=<?php echo $i ?>&class=<?php echo $class ?>" >
-					<select name="critere" onchange='this.form.submit()'>
-						<option>Trier par?</option>
-						<option value="note">Trier par note</option>
-						<option value="vues">Trier par popularité</option>
-						<option value="pseudo">Trier par auteur</option>
-						<option value="date">Trier par date de mise en ligne</option>
-					</select>
-				</form>
-				<b>Triées par <?php echo $class ?>.</b><br /><br /><?php
-				$i = ($premiereEntree + 1);
-				foreach($requete_total as $donnees) {
-					echo "".$i.".";
-					?>
-					<a href="afficher?id=<?php echo $donnees->id(); ?>"><?php echo $donnees->titre(); ?></a> <small>entré le <?php echo $donnees->date() ?><br/>
-					par <a href="profil?m=<?php echo $donnees->membre()?>"><?php echo $donnees->membre() ?></a> dans les catégories <?php echo $donnees->categorie() ?> <-> <?php echo $donnees->categorie2() ?>  (<?php echo $donnees->note() ?>/5) (<?php echo $donnees->vue() ?> vues)</small><br /><br />
-					<?php
-					$i++;
-				}
-				echo '<p align="center">Page : '; //Pour l'affichage, on centre la liste des pages
-				for($i=1; $i<=$nombreDePages; $i++) //On fait notre boucle
-				{
-					//On va faire notre condition
-					if($i==$pageActuelle) //Si il s'agit de la page actuelle...
-					{
-						echo ' [ '.$i.' ] '; 
-					}	
-					else
-					{
-						$cat = $_GET['cat'];
-				   	 	echo ' <a href="categories?nb_page='.$i.'&class='.$class.'&cat='.$cat.'">'.$i.'</a> ';
-					}
-				}
-				echo '</p>';
-			}
-		}		
-		$mysql = getCategorieByGeneral('1');
-		$mysql2 = getCategorieByGeneral('4');
-		$mysql3 = getCategorieByGeneral('2');
-		$mysql4 = getCategorieByGeneral('3');
+		$groupe = getGroupesCategorie();
 		?>
 		<div id="left">
-			<h2>Europe</h2>	
+			<h2>
+				<?php echo $groupe["1"];?>
+			</h2>
 			<ul type="circle">
 				<?php
-				foreach($mysql as $mysql_r){
-					?><li><a href="<?php echo $mysql_r->url() ?>"><?php echo $mysql_r->nom()?></a> - 								
-					<?php $cat = $mysql_r->nom();
-					$retour = getNbListeByCategorie($cat);?>
-					(<i><?php echo $retour ?> listes </i>)<br /></li><?php
+				foreach(getCategorieByGeneral("1") as $categorie){
+					?>
+				<li><a href="<?php echo $categorie->url() ?>"><?php echo $categorie->nom()?>
+				</a> - <?php 
+				$cat = $categorie->nom();
+				$retour = getNbListeByCategorie($cat);
+				?> (<i><?php echo $retour ?> listes </i>)<br /></li>
+				<?php
 				}
 				?>
 			</ul>
-			<h2>Europe de l'Est</h2>	
+			<h2>
+				<?php echo $groupe["3"];?>
+			</h2>
 			<ul type="circle">
 				<?php
-				foreach($mysql2 as $mysql2_r){
-					?><li><a href="<?php echo $mysql2_r->url() ?>"><?php echo $mysql2_r->nom()?></a> - 								
-					<?php $cat = $mysql2_r->nom();
-					$retour = getNbListeByCategorie($cat);?>
-					(<i><?php echo $retour ?> listes </i>)<br /></li><?php
-				}
-				?>
-			</ul>		
+				foreach(getCategorieByGeneral("3") as $categorie){
+						?>
+				<li><a href="<?php echo $categorie->url() ?>"><?php echo $categorie->nom()?>
+				</a> - <?php 
+				$cat = $categorie->nom();
+				$retour = getNbListeByCategorie($cat);?> (<i><?php echo $retour ?>
+						listes </i>)<br /></li>
+				<?php
+					}
+					?>
+			</ul>
 		</div>
-		<div id="right"> 
-			<h2>Asie</h2>	
+		<div id="right">
+			<h2>
+				<?php echo $groupe["2"];?>
+			</h2>
 			<ul type="circle">
 				<?php
-				foreach($mysql3 as $mysql3_r){
-					?><li><a href="<?php echo $mysql3_r->url() ?>"><?php echo $mysql3_r->nom()?></a> - 								
-					<?php $cat = $mysql3_r->nom();
-					$retour = getNbListeByCategorie($cat);?>
-					(<i><?php echo $retour ?> listes </i>)<br /></li><?php
-				}
-				?>
+				foreach(getCategorieByGeneral("2") as $categorie){
+						?>
+				<li><a href="<?php echo $categorie->url() ?>"><?php echo $categorie->nom()?>
+				</a> - <?php $cat = $categorie->nom();
+				$retour = getNbListeByCategorie($cat);?> (<i><?php echo $retour ?>
+						listes </i>)<br /></li>
+				<?php
+					}
+					?>
 			</ul>
-			<h2>Moyen Orient</h2>	
+			<h2>
+				<?php echo $groupe["4"];?>
+			</h2>
 			<ul type="circle">
 				<?php
-				foreach($mysql4 as $mysql4_r){
-					?><li><a href="<?php echo $mysql4_r->url() ?>"><?php echo $mysql4_r->nom()?></a> - 								
-					<?php $cat = $mysql4_r->nom();
-					$retour = getNbListeByCategorie($cat);?>
-					(<i><?php echo $retour ?> listes </i>)<br /></li><?php
-				}
-				?>
+				foreach(getCategorieByGeneral("4") as $categorie){
+						?>
+				<li><a href="<?php echo $categorie->url() ?>"><?php echo $categorie->nom()?>
+				</a> - <?php $cat = $categorie->nom();
+				$retour = getNbListeByCategorie($cat);?> (<i><?php echo $retour ?>
+						listes </i>)<br /></li>
+				<?php
+					}
+					?>
 			</ul>
 		</div>
 	</div>

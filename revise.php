@@ -1,3 +1,8 @@
+<script type="text/javascript">
+	$(function(){
+		initRevise();
+	});
+</script>
 <!-- Début de la présentation -->
 <div id="presentation1">
 </div>

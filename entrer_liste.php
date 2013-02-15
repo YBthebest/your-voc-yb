@@ -81,8 +81,8 @@ if(isset($_SESSION['login'])){
 			if($("#etape1").length >0){
 				createListeButtonCharSpec($('#rowSpecChar')[0]);						
 			}
-			createListeSelectLangue("categorie", 1);
-			createListeSelectLangue("categorie2", 2);
+			createListeSelect("categorie", <?php echo getJsCategorieListe();?>, 1);
+			createListeSelect("categorie2", <?php echo getJsCategorieListe();?>, 2);
 			createLigneMotTraduction();	
 		});
 		

@@ -218,7 +218,7 @@ function validerListe(){
 function createElem(defElement){
 	var elem = null;
 	if(!defElement.tag){
-		alert("Pour créer un élément du DOM merci de passer un objet avec la propriété tag");
+		alert("Pour créer un élément du DOM, passer un objet avec la propriété tag");
 	}else if(defElement.tag == "text"){
 		elem = document.createTextNode(defElement.text);
 	}else{	
@@ -238,25 +238,31 @@ function removeElem(elem){
 	}
 }
 
-function createOptionsLangue(selectElem){
-	var optionsLang = [
-		{label:"Europe", langues:["Allemand","Français","Anglais","Espagnol","Italien","Croate","Danois","Finnois","Grec","Irlandais","Latin","Néerlandais","Norvégien","Portugais","Suédois"]}, 
-		{label:"Asie", langues:["Chinois (Cantonnais)","Chinois (Mandarin)","Coréen","Filipino","Indien","Indonésien","Japonais","Mongolien","Thai","Vietnamien"]}, 
-		{label:"Slaves", langues:["Russe","Serbe","Polonais","Tcheque"]},
-		{label:"Moyen Orient", langues:["Arabe","Hébreu","Turc"]}
-	];
-	for(var i=0; i<optionsLang.length; i++){
-		var defOption = optionsLang[i];
-		var optionGroup = createElem({tag:'optgroup', label:defOption.label});
-		selectElem.appendChild(optionGroup);
-		for(var o=0; o<defOption.langues.length; o++){
-			var langue = defOption.langues[o];
-			var option = createElem({tag:'option', value:langue});
-			option.appendChild(createElem({tag:'text', text:langue}));
-			selectElem.appendChild(option);
-		}				
+function createOptions(selectElem, optionsListeDef){	
+	for(var i=0; i<optionsListeDef.length; i++){
+		var optionsDef = optionsListeDef[i];
+		if(optionsDef.options){
+			if(optionsDef.label){
+				var optionGroup = createElem({tag:'optgroup', label:optionsDef.label});
+				selectElem.appendChild(optionGroup);
+			}			
+			for(var o=0; o<optionsDef.options.length; o++){
+				var optionDef = optionsDef.options[o];
+				var text = "";
+				var value = "";
+				if(!optionDef.text && !optionDef.value){
+					text = optionDef;
+					value = optionDef;
+				}else{
+					text = optionDef.text;
+					value = optionDef.value;
+				}
+				var option = createElem({tag:'option', value:value});
+				option.appendChild(createElem({tag:'text', text:text}));
+				selectElem.appendChild(option);
+			}
+		}
 	}
-	
 }
 
 function createListeButtonCharSpec(parentElement){
@@ -269,14 +275,82 @@ function createListeButtonCharSpec(parentElement){
 	parentElement.appendChild(container);
 }
 
-function createListeSelectLangue(idSelect, indexSelected){
+function createListeSelect(idSelect, optionsDef, indexSelected){
 	var selectCateg = $("#" + idSelect)[0];
-	var optionTout = createElem({tag:'option', value:"aucun"});
-	optionTout.appendChild(createElem({tag:'text', text:"Toutes"}));
-	selectCateg.appendChild(optionTout);
-	createOptionsLangue(selectCateg);
+	createOptions(selectCateg, optionsDef);
 	if(!indexSelected){
 		indexSelected = 0;
 	}
 	selectCateg.options[indexSelected].selected = "true";
+	return selectCateg;
+}
+
+function createListeSelectWithDefault (idSelect, optionsDef, indexSelected){
+	optionsDef.unshift({options:[{value:"aucun", text:"Toutes"}]});	
+	return createListeSelect(idSelect, optionsDef, indexSelected);
+}
+
+
+Array.prototype.sortByProperties = function(properties){
+	
+}
+
+function dynamicSort(property) {
+    var sortOrder = 1;
+    if(property[0] === "-") {
+        sortOrder = -1;
+        property = property.substr(1, property.length - 1);
+    }
+    return function (a,b) {
+        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+        return result * sortOrder;
+    }
+}
+
+
+function dynamicSortMultiple(properties) {
+    var props = properties;
+    return function (obj1, obj2) {
+        var i = 0, result = 0, numberOfProperties = props.length;
+        while(result === 0 && i < numberOfProperties) {
+            result = dynamicSort(props[i])(obj1, obj2);
+            i++;
+        }
+        return result;
+    }
+}
+
+function createPaginationElement(nbPage, currentPage){	
+	var pagineur = createElem({tag:"p"});	
+	pagineur.style.cssText = "height:20px;margin-bottom:20px;";	
+	var style = "float:left; text-align:center; margin:2px; cursor:pointer; height:20px; color:#be3737";
+	var firstpage = createElem({tag:"div"});
+	firstpage.style.cssText = style;
+	firstpage.appendChild(createElem({tag:"text", text:"<<"}));
+	firstpage.onclick = function(){
+		pagineListesMot(1);
+	}
+	pagineur.appendChild(firstpage);
+	for(var i=1; i<=nbPage; i++){
+		var numPage = createElem({tag:"div"});
+		numPage.style.cssText = style;	
+		var text = i;
+		if(i == currentPage){
+			numPage.style.color = "white";
+			text = "[ " + i + " ]";
+		}
+		numPage.appendChild(createElem({tag:"text", text:text}));
+		numPage.onclick = (function(page){
+			return function (){pagineListesMot(page)};
+		})(i);
+		pagineur.appendChild(numPage);
+	}
+	var lastpage = createElem({tag:"div"});
+	lastpage.style.cssText = style;
+	lastpage.appendChild(createElem({tag:"text", text:">>"}));
+	lastpage.onclick = function(){
+		pagineListesMot(nbPage);
+	}
+	pagineur.appendChild(lastpage);
+	return pagineur;
 }

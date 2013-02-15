@@ -64,6 +64,54 @@ function getProperty($propertyName){
 	return $props[$propertyName];
 }
 
+
+function getGroupesCategorie(){
+	$groupeCategorie = array("1"=>"Europe","2"=>"Asie","3"=>"Europe de l'Est", "4"=>"Europe de l'Est");
+	return $groupeCategorie;
+}
+
+function getJsCategorieListe(){
+	$catByGroupe = getCategoriesByGroupe();
+	$igroupe = sizeof($catByGroupe);
+	$groupeListejs = "";
+	foreach ($catByGroupe as $key => $categories){
+		$igroupe--;
+		$icat = sizeof($categories);
+		$categorieListejs = "";
+		foreach ($categories as $categorie){
+			$icat--;
+			$categorieListejs .= '{value:"'.$categorie.'",text:"'.$categorie.'"}';
+			if($icat > 0){
+				$categorieListejs .= ",";
+			}
+		}
+		$groupeListejs .= '{label:"'.$key.'",options:['.$categorieListejs.']}';
+		if($igroupe > 0){
+			$groupeListejs.=",";
+		}
+	}
+	$javascriptObject = "[$groupeListejs]";
+	return $javascriptObject;
+}
+
+function getCategoriesByGroupe(){
+	$categories = getCategories();
+	$catByGroupe = array();
+	$groupe="";
+	$groupeIndex="";
+	$groupeArray = getGroupesCategorie();
+	$i = 0;
+	foreach ($categories as $categorie){
+		if($groupeIndex != $categorie->groupe()){
+			$groupeIndex = $categorie->groupe();
+			$groupe = $groupeArray[$groupeIndex];
+			$catByGroupe[$groupe] = array();
+		}
+		$catByGroupe[$groupe][] = $categorie->nom();
+	}
+	return $catByGroupe;
+}
+
 function getMembre($login, $mdp){
 	$result = "";
 	if(empty($login)){

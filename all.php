@@ -10,7 +10,7 @@ $(function(){
       this.value= this.value==='' ? save : this.value;
     };
   });
-  createListeSelectLangue("categorie");
+  createListeSelectWithDefault("categorie", <?php echo getJsCategorieListe();?>);
 });
 </script>
 <!-- Début de la présentation -->
