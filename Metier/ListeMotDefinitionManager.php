@@ -28,7 +28,7 @@ class ListeMotDefinitionManager extends DbManager {
 		if(isset($donnees['pseudo']))$entity->setMembre($donnees['pseudo']);
 		if(isset($donnees['date'])){
 			if(!preg_match("(.*\s2[0-9]{3])", $donnees['date'])){
-				$donnees['date'] .=  "2012";
+				$donnees['date'] .=  " 2012";
 			}
 			$entity->setDate($donnees['date']);
 		}

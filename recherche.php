@@ -10,8 +10,15 @@ $(function(){
       this.value= this.value==='' ? save : this.value;
     };
   });
-  createListeSelectLangue("categorie");
-});
+  if($("#categorie").length == 1){
+	 createListeSelectWithDefault("categorie", <?php echo getJsCategorieListe();?>);
+  }
+
+  if($("#critere").length > 0){
+	  
+	 $("#critere option[value='<?php echo $_POST['critere'];?>']").attr("selected", "selected");
+  }
+ });
 </script>
 <!-- Début de la présentation -->
 <div id="presentation1">
@@ -104,12 +111,12 @@ $(function(){
 					<input type="hidden" name="requete" value="<?php echo $requete ?>" />
 					<input type="hidden" name="sur" value="<?php echo $sur ?>" />
 					<input type="hidden" name="categorie" value="<?php echo $categorie ?>" />
-					<select name="critere" onchange='this.form.submit()'>
-						<option>Trier par?</option>
-						<option value="note">Trier par note</option>
-						<option value="vues">Trier par popularité</option>
-						<option value="pseudo">Trier par auteur</option>
-						<option value="date">Trier par date de mise en ligne</option>
+					Trier par :
+					<select name="critere" id="critere" onchange='this.form.submit()'>
+						<option value="note">Note</option>
+						<option value="vue">Popularité</option>
+						<option value="pseudo">Auteur</option>
+						<option value="date">Date de mise en ligne</option>
 					</select>
 					</form><br />
 					<p>

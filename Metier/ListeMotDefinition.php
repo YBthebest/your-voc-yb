@@ -11,25 +11,7 @@ class ListeMotDefinition extends Entity{
 	private $commentaire;
 	private static $separator = " ";
 	
-	public function __construct ($donnees=array()){
-		if(isset($donnees['id']))$this->setId($donnees['id']);
-		if(isset($donnees['titre']))$this->setTitre($donnees['titre']);
-		if(isset($donnees['pseudo']))$this->setMembre($donnees['pseudo']);
-		if(isset($donnees['date'])){
-			if(!preg_match("(.*\s2[0-9]{3}])", $donnees['date'])){
-				$donnees['date'] .=  " 2012";
-			}
-			$this->setDate($donnees['date']);
-		}
-		if(isset($donnees['liste'])){
-			//$this->listeMot = explode($separator, $donnees['listeMot']);
-			$this->setListeMot($donnees['liste']);
-		}
-		if(isset($donnees['categorie']))$this->setCategorie($donnees['categorie']);
-		if(isset($donnees['categorie2']))$this->setCategorie2($donnees['categorie2']);
-		if(isset($donnees['note']))$this->setNote($donnees['note']);
-		if(isset($donnees['vues']))$this->setVue($donnees['vues']);
-		if(isset($donnees['commentaire']))$this->setCommentaire($donnees['commentaire']);
+	public function __construct (){
 	}        
 	
     public function setDatas(array $donnees){
