@@ -1,7 +1,5 @@
 <?php 
-if(isValidClass('vues')){
+if(error_get_last() == null){
 	echo 'ok';
-}else{
-	echo 'not ok';
 }
 ?>
