@@ -1,3 +1,10 @@
+<?php  
+	$critere = "note";
+	if(isset($_POST['critere'])){
+		$critere = $_POST['critere'];
+	}
+?>
+
 <script type="text/javascript">
 $(function(){
   var save='';
@@ -14,9 +21,8 @@ $(function(){
 	 createListeSelectWithDefault("categorie", <?php echo getJsCategorieListe();?>);
   }
 
-  if($("#critere").length > 0){
-	  
-	 $("#critere option[value='<?php echo $_POST['critere'];?>']").attr("selected", "selected");
+  if($("#critere").length > 0){	  
+	 $("#critere option[value='<?php  echo $critere;?>']").attr("selected", "selected");
   }
  });
 </script>
