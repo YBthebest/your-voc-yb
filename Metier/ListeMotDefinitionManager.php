@@ -26,7 +26,12 @@ class ListeMotDefinitionManager extends DbManager {
 		if(isset($donnees['id']))$entity->setId($donnees['id']);
 		if(isset($donnees['titre']))$entity->setTitre($donnees['titre']);
 		if(isset($donnees['pseudo']))$entity->setMembre($donnees['pseudo']);
-		if(isset($donnees['date']))$entity->setDate($donnees['date']);
+		if(isset($donnees['date'])){
+			setlocale(LC_TIME, 'fr_FR.UTF8','fra');
+			$timestamp = $donnees['date'];
+			$donnees['date'] = strftime( "%d %B %Y %H:%M:%S", $timestamp);
+			$entity->setDate($donnees['date']);
+		}
 		if(isset($donnees['liste'])){
 			//$this->listeMot = explode($separator, $donnees['listeMot']);
 			$entity->setListeMot($donnees['liste']);

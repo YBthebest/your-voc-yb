@@ -8,7 +8,12 @@ class Commentaire extends Entity{
 		if(isset($donnees['id_liste']))$this->id_liste = $donnees['id_liste'];
 		if(isset($donnees['pseudo']))$this->membre = $donnees['pseudo'];
 		if(isset($donnees['commentaire']))$this->commentaire = $donnees['commentaire'];
-		if(isset($donnees['date']))$this->date = $donnees['date'];
+		if(isset($donnees['date'])){
+			setlocale(LC_TIME, 'fr_FR.UTF8','fra');
+			$timestamp = $donnees['date'];
+			$donnees['date'] = strftime( "%d %B %Y %H:%M:%S", $timestamp);
+			$this->date = $donnees['date'];
+		}
 	}
 	
 	public function id(){

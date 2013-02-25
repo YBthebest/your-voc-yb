@@ -60,7 +60,7 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 				}
 			}
 			if(isset($_GET['id']) AND !empty($_GET['id'])) {
-				$time = strftime("%A %d %B %Y %X"); 
+				$time = time(); 
 				$id = mysql_real_escape_string($_GET['id']);
 				$listeMotDefinition = getListeById($id);
 				if(!empty($listeMotDefinition)) {

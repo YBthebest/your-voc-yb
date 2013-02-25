@@ -434,4 +434,8 @@ function getCombinaisonByPseudoLimit15($pseudo){
 	$combinaisons = DBHelper::getDBManager("Combinaison")->getCombinaisonByPseudoLimit15($pseudo);
 	return $combinaisons;
 }
+function getAllCommentaires(){
+	$commentaires = DBHelper::getDBManager("Commentaire")->getAllCommentaires();
+	return $commentaires;
+}
 ?>

@@ -35,7 +35,7 @@ function getHTML_Etape2() {
 		$categorie2= $_POST['categorie2'];
 		$commentaire = htmlspecialchars($_POST['commentaire']);
 		setlocale(LC_TIME, 'fr_FR.utf8','fra'); 
-		$time = strftime("%A %d %B %Y %H:%M:%S");
+		$time= time();
 		if(strlen($commentaire) > 300) {
 			$html = 'Votre commentaire est trop long. Veuillez réessayer.';
 		} else if(!isset($mots) OR empty($mots)) {

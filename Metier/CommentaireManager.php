@@ -35,5 +35,10 @@ class CommentaireManager extends DbManager{
 		$statement = $this->_db->prepare($query);
 		$statement->execute();
 	}
+	public function getAllCommentaires(){
+		$query = "select * from ".$this->table."";
+		$entity = "";
+		return $this->select($query, $entity);		
+	}
 }
 ?>
