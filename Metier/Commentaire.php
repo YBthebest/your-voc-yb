@@ -2,6 +2,8 @@
 class Commentaire extends Entity{
 	private $id_liste;
 	private $membre;
+	private $commentaire;
+	private $date;
 	
 	function __construct(array $donnees){
 		if(isset($donnees['id']))$this->id = $donnees['id'];
@@ -9,10 +11,7 @@ class Commentaire extends Entity{
 		if(isset($donnees['pseudo']))$this->membre = $donnees['pseudo'];
 		if(isset($donnees['commentaire']))$this->commentaire = $donnees['commentaire'];
 		if(isset($donnees['date'])){
-			setlocale(LC_TIME, 'fr_FR.UTF8','fra');
-			$timestamp = $donnees['date'];
-			$donnees['date'] = strftime( "%d %B %Y %H:%M:%S", $timestamp);
-			$this->date = $donnees['date'];
+			$this->date = timestampToString($donnees['date']);
 		}
 	}
 	

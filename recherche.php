@@ -1,7 +1,9 @@
 <?php  
-	$critere = "note";
+	$critere = "titre";
 	if(isset($_POST['critere'])){
 		$critere = $_POST['critere'];
+	}else if(isset($_GET['critere'])){
+		$critere = mysql_real_escape_string($_GET['critere']);
 	}
 ?>
 
@@ -36,11 +38,11 @@ $(function(){
 		<div id="text-center">
             <div id="title">Recherche </div>
 			<?php
-			if(isset($_POST['requete']) && $_POST['requete'] != NULL OR isset($_GET['requete'])) {
+			if(isset($_POST['requete']) && (isset($_POST['requete']) OR isset($_GET['requete']))) {
 				$categorie = (isset($_POST['categorie']))?$_POST['categorie']:htmlspecialchars(mysql_real_escape_string($_GET['categorie']));
 				$critere = (isset($_POST['sur']))?$_POST['sur']:htmlspecialchars(mysql_real_escape_string($_GET['sur']));
 				$search = (isset($_POST['requete']))?$_POST['requete']:htmlspecialchars(mysql_real_escape_string($_GET['requete']));
-				$tri = (isset($_POST['critere']))?$_POST['critere']:htmlspecialchars(mysql_real_escape_string($_GET['critere']));
+				$tri = $critere;
 				$messagesParPage=30; //Nous allons afficher 5 messages par page.
 				
 				//Une connexion SQL doit être ouverte avant cette ligne...
@@ -119,6 +121,7 @@ $(function(){
 					<input type="hidden" name="categorie" value="<?php echo $categorie ?>" />
 					Trier par :
 					<select name="critere" id="critere" onchange='this.form.submit()'>
+						<option value="titre">Titre</option>
 						<option value="note">Note</option>
 						<option value="vue">Popularité</option>
 						<option value="pseudo">Auteur</option>

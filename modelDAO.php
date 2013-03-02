@@ -20,6 +20,8 @@ require "/Metier/Vote.php";
 require "/Metier/VoteManager.php";
 require "/Metier/Combinaison.php";
 require "/Metier/CombinaisonManager.php";
+require "/Utils.php";
+require "/ConfigPage.php";
 
 function dbconnect(){
 	dbConfiguration();
@@ -171,7 +173,9 @@ function getConfigPage(){
 	$configPage->setPageName(getPage());
 	initTitle($configPage->pageName());
 	$configPage->setTitle($_ENV['title']);
+	print_r($_ENV['metaContent']);
 	$configPage->setMetaContent($_ENV['metaContent']);
+	header("Content-Type: text/html; charset=utf-8");
 	return $configPage;
 }
 
@@ -186,7 +190,7 @@ function insertListeMot($login, $listeMots, $titre, $date, $categorie, $categori
 	$listeMot->setCommentaire($commentaire);
 	$listeMot->setNote($note);
 	$listeMot->setVue($vues);
-	return DBHelper::getDBManager("ListeMotDefinition")->add($listeMot);
+	return DBHelper::getDBManager("ListeMotDefinition")->save($listeMot);
 }
 
 function getCategoriesWithNbListe($nb=0){
@@ -253,41 +257,6 @@ function get_comment($news_id){
 function insert_comment($comment){
 }
 
-function callConstructor($instance, $constructName, $nbArgs, $args){
-	$isValidConstruct = true;
-	if (method_exists($instance, $constructName, $args)) {
-		call_user_func_array(array($this, $constructName), $args);
-	}else{
-		trigger_error('Les arguments passé en parametre ne correspondent a aucun constructeur', E_USER_WARNING);
-	}
-}
-
-class ConfigPage{
-	private $pageName;
-	private $title;
-	private $metaContent;
-	
-	function pageName(){
-		return $this->pageName;
-	}	
-	function setPageName($p_pageName){
-		$this->pageName = $p_pageName;
-	}
-	
-	function title(){
-		return $this->title;
-	}	
-	function setTitle($p_title){
-		$this->title = $p_title;
-	}
-	
-	function metaContent(){
-		return $this->metaContent;
-	}	
-	function setMetaContent($p_metaContent){
-		$this->metaContent = $p_metaContent;
-	}
-}
 function getCategorieByName($name){
 	$categorie = DBHelper::getDBManager("Categorie")->getCategorieByName($name);
 	return $categorie;

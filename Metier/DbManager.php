@@ -58,16 +58,6 @@ abstract class DbManager {
 		return $statement->execute()->fetchColumn();;
 	}
 	
-	private function save($entity){
-		
-		$statement = $this->bind($entity);
-		$this->_db->beginTransaction();
-// 		$this->_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-// 		$error = $this->_db->errorInfo();
-// 		$result = $statement->execute();
-		return $statement->execute();
-	}
-	
 	public function delete($entity){
 		$query = "DELETE FROM ".$this->table." WHERE $ID_COLUMN = :$ID_COLUMN".$entity->id();
 		$this->_db->exec($query);
@@ -90,7 +80,7 @@ abstract class DbManager {
 		return $statement;
 	}
 	
-	public function add($entity){
+	public function save($entity){
 		$query = "INSERT INTO ".$this->table;
 		$i = 1;		
 		$arrayBind = $this->arrayBinding;
@@ -109,7 +99,9 @@ abstract class DbManager {
 			$i++;
 		}
 		$query.= " ($columns) values ($values)";
-		return $this->saveOrUpdate($query, $entity);
+		$statement = $this->bind($query, $entity);
+		$this->_db->beginTransaction();
+		return $statement->execute();
 	}
 	
 	public function get($id){

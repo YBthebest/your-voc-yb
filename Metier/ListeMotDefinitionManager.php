@@ -27,10 +27,7 @@ class ListeMotDefinitionManager extends DbManager {
 		if(isset($donnees['titre']))$entity->setTitre($donnees['titre']);
 		if(isset($donnees['pseudo']))$entity->setMembre($donnees['pseudo']);
 		if(isset($donnees['date'])){
-			setlocale(LC_TIME, 'fr_FR.UTF8','fra');
-			$timestamp = $donnees['date'];
-			$donnees['date'] = strftime( "%d %B %Y %H:%M:%S", $timestamp);
-			$entity->setDate($donnees['date']);
+			$entity->setTimestamp($donnees['date']);
 		}
 		if(isset($donnees['liste'])){
 			//$this->listeMot = explode($separator, $donnees['listeMot']);
@@ -101,9 +98,10 @@ class ListeMotDefinitionManager extends DbManager {
 		return $this->select($query, $entity);		
 	}
 	public function getListeByCategorie($categorie){
-		$query = "select * from ".$this->table." where categorie = :categorie";
+		$query = "select * from ".$this->table." where categorie = :categorie or categorie2 = :categorie2";
 		$entity = new ListeMotDefinition();
 		$entity->setCategorie($categorie);
+		$entity->setCategorie2($categorie);
 		return $this->select($query, $entity);
 	}
 	public function getListeOrderByVues(){

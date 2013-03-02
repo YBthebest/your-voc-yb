@@ -14,7 +14,7 @@
 
 		<link rel="icon" type="image/ico" href="http://your-voc.com/img/favicon.ico" />
 		<!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" /><![endif]-->
-       <meta http-equiv="Content-Language" content="fr" />
+       	<meta http-equiv="Content-Language" content="fr" />
 		<meta name="Identifier-url" content="http://your-voc.com" />
 		<meta name="Abstract" content="Sur Your-Voc.com, tu peux réviser ton vocabulaire très facilement, avec tes propres mots ou d'après les listes déjà disponibles." />
 		<meta name="keywords" lang="fr" content="your, voc, vocabulaire, apprendre, son, creer, liste, chercher, espagnol, allemand, anglais, italien, réviser" />

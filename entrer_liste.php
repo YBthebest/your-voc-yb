@@ -83,7 +83,7 @@ if(isset($_SESSION['login'])){
 			}
 			createListeSelect("categorie", <?php echo getJsCategorieListe();?>, 1);
 			createListeSelect("categorie2", <?php echo getJsCategorieListe();?>, 2);
-			createLigneMotTraduction();	
+			//createLigneMotTraduction();	
 		});
 		
 		function toucheclavier(touche) {
@@ -132,7 +132,7 @@ if(isset($_SESSION['login'])){
 				?>
 					<div id='rowSpecChar'></div>					
 					Titre(par exemple, Allemand Genial Unité 12) : 
-					<br><br>
+					<br>
 					<input type="text" name="titre" style="margin-bottom:4px;"/>						
 					<br>
 					<span style="font-style: italic;">
@@ -154,7 +154,7 @@ if(isset($_SESSION['login'])){
 					<textarea name="commentaire" rows="2" cols="70">Commentaire de l'auteur concernant la liste en général. (optionnel - maximum 300 caractères)</textarea><br />
 					<input type="submit" name="valider" value="ok" />
 					
-					<table id="listeMots"></table>
+					
 				<?php 
 					}else if($etape == "etape2"){
 						echo $content;
@@ -162,6 +162,7 @@ if(isset($_SESSION['login'])){
 				?>	
 				</div>
 			</form>
+			<!--  table id="listeMots"></table-->
             <br /><br />
 		</div> 
 	</div>

@@ -3,6 +3,7 @@ class ListeMotDefinition extends Entity{
 	private $titre;
 	private $membre;
 	private $listeMot;// = array();	
+	private $timestamp;
 	private $date;
 	private $categorie;
 	private $categorie2;
@@ -42,8 +43,12 @@ class ListeMotDefinition extends Entity{
 	public function date(){
 		return $this->date;
 	}
-	public function setDate($date){
-		$this->date = $date;
+	public function timestamp(){
+		return $this->timestamp;
+	}
+	public function setTimestamp($timestamp){
+		$this->date = timestampToString($timestamp);
+		$this->timestamp = $timestamp;
 	}
 	public function categorie(){
 		return $this->categorie;

@@ -92,6 +92,16 @@ function onPress(e){
 		return false ;
 	}
 }
+function isValideReponse(reponse, solution){
+	var listeSoluce = solution.split("/");
+	for(var i=0; i<listeSoluce.length; i++){
+		if(reponse == listeSoluce[i]){
+			return true;
+		}
+	}
+	return false;
+}
+
 function nextMots(){
 	var blockQuestion = getBlockQuestion(indiceReponseListSort[0]);
 	if(!caseSensitive){
@@ -100,7 +110,7 @@ function nextMots(){
 	}
 	if( blockQuestion.reponse != ""){
 		cacheElement(infoScore);
-		if(blockQuestion.reponse == blockQuestion.solution){
+		if(isValideReponse(blockQuestion.reponse, blockQuestion.solution)){
 			cacheElement(buttonValidError);
 			formulaire.bon++ ;
 			afficheScoreJuste(blockQuestion.question, blockQuestion.solution);
@@ -318,39 +328,4 @@ function dynamicSortMultiple(properties) {
         }
         return result;
     }
-}
-
-function createPaginationElement(nbPage, currentPage){	
-	var pagineur = createElem({tag:"p"});	
-	pagineur.style.cssText = "height:20px;margin-bottom:20px;";	
-	var style = "float:left; text-align:center; margin:2px; cursor:pointer; height:20px; color:#be3737";
-	var firstpage = createElem({tag:"div"});
-	firstpage.style.cssText = style;
-	firstpage.appendChild(createElem({tag:"text", text:"<<"}));
-	firstpage.onclick = function(){
-		pagineListesMot(1);
-	}
-	pagineur.appendChild(firstpage);
-	for(var i=1; i<=nbPage; i++){
-		var numPage = createElem({tag:"div"});
-		numPage.style.cssText = style;	
-		var text = i;
-		if(i == currentPage){
-			numPage.style.color = "white";
-			text = "[ " + i + " ]";
-		}
-		numPage.appendChild(createElem({tag:"text", text:text}));
-		numPage.onclick = (function(page){
-			return function (){pagineListesMot(page)};
-		})(i);
-		pagineur.appendChild(numPage);
-	}
-	var lastpage = createElem({tag:"div"});
-	lastpage.style.cssText = style;
-	lastpage.appendChild(createElem({tag:"text", text:">>"}));
-	lastpage.onclick = function(){
-		pagineListesMot(nbPage);
-	}
-	pagineur.appendChild(lastpage);
-	return pagineur;
 }

@@ -51,7 +51,7 @@
 				}
 				function getHTML_Etape2() {
 					$test = $_POST['sens'];
-					$html = "<form id=\"formulaire\" name=\"formulaire\" method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "\">";
+					$html = "<form id=\"formulaire\" name=\"formulaire\" method=\"post\" action=\"revise\">";
 					if(isset($_POST['id_liste']) OR isset($_SESSION['id'])) {
 						if(isset($_POST['id_liste'])) {
 							$id = $_POST['id_liste'];
@@ -287,7 +287,7 @@ for($j = 0; $j < sizeof($solutionTest[$i]); ++$j){
 							$pseudo = 'visiteur';
 						}
 						setlocale(LC_TIME, 'fr_FR.utf8','fra'); 
-						$time = strftime("%A %d %B %Y %T"); 
+						$time = strftime("%A %d %B %Y %X"); 
 						mysql_query("INSERT INTO revise VALUES('', '".$_SESSION['id']."', '".$pseudo."', '".$moyenne."', '".$time."')")or die(mysql_error());
 						unset($_SESSION['mots']);
 						unset($_SESSION['majuscules']);
