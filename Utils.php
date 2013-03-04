@@ -46,8 +46,12 @@ function callConstructor($instance, $constructName, $nbArgs, $args){
 }
 
 function timestampToString($timestamp){
-	setlocale(LC_TIME, 'fr_FR.UTF-8','fra');
-	return utf8_encode(strftime( "%A %d %B %Y %H:%M:%S", $timestamp));
+	if(preg_match("/[0-9]{10,20}/", $timestamp)){
+  		setlocale(LC_TIME, 'fr_FR.UTF-8','fra');
+  		return utf8_encode(strftime( "%A %d %B %Y %H:%M:%S", $timestamp));
+ 	}else{
+ 		 return $timestamp;
+ 	}
 }
 
 function startswith($hay, $needle) {

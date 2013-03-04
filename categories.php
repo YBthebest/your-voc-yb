@@ -59,8 +59,9 @@ $(function(){
 	var listeTri = [{options:[
 		{value:"categorie",text:"catégorie"},
 		{value:"note",text:"note"},
+		{value:"-vue",text:"popularité"},
 		{value:"membre",text:"auteur"},
-		{value:"timestamp",text:"date"},
+		{value:"-timestamp",text:"date"},
 		{value:"titre",text:"titre"}
 	]}];
 

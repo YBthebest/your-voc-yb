@@ -22,6 +22,8 @@ if($executer !== ""){
 		$listes = getAllListe();
 	}else if($executer==="commentaires" || $executer==="update_commentaires"){
 		$listes = getAllCommentaires();
+	}else if($executer==="revise" || $executer==="update_revise"){
+		$listes = getAllRevisions();
 	}
 }
 foreach($listes as $res){
@@ -55,6 +57,7 @@ foreach($listes as $res){
 	<select name="executer">
 		<option value="listes_public">listes mot</option>
 		<option value="commentaires">commentaires</option>
+		<option value="revise">revise</option>
 		<?php if($listeOk){?>		
 			<option value="update_<?php echo $listeOk;?>">update <?php echo $listeOk;?></option>
 		<?php }?>

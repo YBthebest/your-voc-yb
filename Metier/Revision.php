@@ -4,13 +4,16 @@ class Revision extends Entity{
 	private $id_liste;
 	private $moyenne;
 	private $date;
+	private $timestamp;
 	
 	public function __construct(array $donnees){
 		if(isset($donnees['id']))$this->id = $donnees['id'];
 		if(isset($donnees['pseudo']))$this->nom = $donnees['pseudo'];
 		if(isset($donnees['id_liste']))$this->id_liste = $donnees['id_liste'];
 		if(isset($donnees['moyenne']))$this->moyenne = $donnees['moyenne'];
-		if(isset($donnees['date']))$this->date = $donnees['date'];
+		if(isset($donnees['date'])){
+			$this->setTimestamp($donnees['date']);			
+		}
 	}
 
 	public function id(){
@@ -40,8 +43,12 @@ class Revision extends Entity{
 	public function date(){
 		return $this->date;
 	}
-	public function setDate($p_date){
-		$this->date = $p_date;
+	public function timestamp(){
+		return $this->timestamp;
+	}
+	public function setTimestamp($timestamp){
+		$this->date = timestampToString($timestamp);
+		$this->timestamp = $timestamp;
 	}
 }
 ?>

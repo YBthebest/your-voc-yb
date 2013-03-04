@@ -16,7 +16,7 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 					if(isset($_POST['type'])) {
 						if(isset($_POST['message'])) {
 							if(isset($_POST['pseudo'])) {
-								$time = strftime("%A %d %B %Y %T"); 
+								$time = time(); 
 								$type = $_POST['type'];
 								$id_liste = $_POST['id_liste'];
 								$message = $_POST['message'];

@@ -135,7 +135,7 @@
 									$mutliMotTab =  explode("/",$mot[1]);
 									$questionCourante = $mutliMotTab[0];
 									array_push($question,  " <br />
-									<span class=\"motTraduc\">" . stripslashes($questionCourante) ."</span> <br /><br /><br />
+									<h2><span class=\"motTraduc\">" . stripslashes($questionCourante) ."</span></h2> <br /><br /><br />
 									<small>Réponse:</small><br /> <input type=\"text\" autocomplete=\"off\" name='reponse[]' id=\"$questionCourante \" size=\"100\" />
 									<input type='hidden' name='question[]' value=\"$questionCourante \"/>
 									<input type='hidden' name='solution[]' value=\"$mot[0]\"/>
@@ -147,7 +147,7 @@
 								$mutliMotTab =  explode("/",$mot[0]);
 								$questionCourante = $mutliMotTab[0];	
 								array_push($question, " <br />
-								<span class=\"motTraduc\"><b>" . stripslashes($questionCourante) ."</b></span> <br /><br /><br />
+								<h2><span class=\"motTraduc\"><b>" . stripslashes($questionCourante) ."</b></span></h2> <br /><br /><br />
 								<small>Réponse:</small><br /> <input type=\"text\" autocomplete=\"off\" name='reponse[]' id=\"$questionCourante \" size=\"100\" />
 							   
 								<input type='hidden' name='question[]' value=\"$questionCourante \"/>
@@ -287,7 +287,7 @@ for($j = 0; $j < sizeof($solutionTest[$i]); ++$j){
 							$pseudo = 'visiteur';
 						}
 						setlocale(LC_TIME, 'fr_FR.utf8','fra'); 
-						$time = strftime("%A %d %B %Y %X"); 
+						$time = time();
 						mysql_query("INSERT INTO revise VALUES('', '".$_SESSION['id']."', '".$pseudo."', '".$moyenne."', '".$time."')")or die(mysql_error());
 						unset($_SESSION['mots']);
 						unset($_SESSION['majuscules']);

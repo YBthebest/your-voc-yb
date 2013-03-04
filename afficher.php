@@ -87,7 +87,7 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 						$resultat_note = sizeof($requete_note);
 						echo ''.$vues.' vues / '.$resultat_note.' votes / ';
 						if($resultat_note < 1){
-							echo 'Pas assez de vote pour donner une moyenne.   ';
+							echo 'Pas assez de vote pour donner une moyenne.  <br />';
 						}
 						else {
 							$total = 0;
@@ -96,7 +96,7 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 							}
 							$resultat_final = ($total / $resultat_note);
 							$resultat_final = round($resultat_final, 2);
-							echo '<b>Note: '.$resultat_final.'/5</b> .   ';
+							echo '<b>Note: '.$resultat_final.'/5</b> .   <br />';
 						}
 						if(isset($_SESSION['login'])) {
 							$pseudo = $_SESSION['login'];
@@ -151,10 +151,8 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 							echo '<br /><small><a href="connexion">Se connecter pour noter cette liste et l\'ajouter aux favoris</a></small>';
 						}
 						?>
-						<form method="post" action="combiner">
-							<input type="hidden" name="liste" id="liste" value="<?php echo $result['liste']?>" />
+						<form method="get" action="new_combiner">
 							<input type="hidden" name="id" value="<?php echo $_GET['id']?>" />
-							<input type="hidden" name="titre" value="<?php echo $result['titre']?>" />
 							<input type="submit" value="Combiner avec une autre liste" />
 						</form>
 						<?php

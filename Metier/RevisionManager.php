@@ -31,5 +31,10 @@ class RevisionManager extends DbManager{
 		$entity->setMembre($pseudo);
 		return $this->select($query, $entity);
 	}
+	public function getAllRevisions(){
+		$query = "select * from ".$this->table."";
+		$entity = "";
+		return $this->select($query, $entity);
+	}
 }
 ?>

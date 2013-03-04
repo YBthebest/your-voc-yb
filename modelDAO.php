@@ -179,12 +179,12 @@ function getConfigPage(){
 	return $configPage;
 }
 
-function insertListeMot($login, $listeMots, $titre, $date, $categorie, $categorie2, $commentaire, $vues, $note){
+function insertListeMot($login, $listeMots, $titre, $timestamp, $categorie, $categorie2, $commentaire, $vues, $note){
 	$listeMot = new ListeMotDefinition();
 	$listeMot->setMembre($login);
 	$listeMot->setListeMot($listeMots);
 	$listeMot->setTitre($titre);
-	$listeMot->setDate($date);
+	$listeMot->setTimestamp($timestamp);
 	$listeMot->setCategorie($categorie);
 	$listeMot->setCategorie2($categorie2);
 	$listeMot->setCommentaire($commentaire);
@@ -406,5 +406,9 @@ function getCombinaisonByPseudoLimit15($pseudo){
 function getAllCommentaires(){
 	$commentaires = DBHelper::getDBManager("Commentaire")->getAllCommentaires();
 	return $commentaires;
+}
+function getAllRevisions(){
+	$revisions = DBHelper::getDBManager("Revision")->getAllRevisions();
+	return $revisions;
 }
 ?>

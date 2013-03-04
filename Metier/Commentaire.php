@@ -4,6 +4,7 @@ class Commentaire extends Entity{
 	private $membre;
 	private $commentaire;
 	private $date;
+	private $timestamp;
 	
 	function __construct(array $donnees){
 		if(isset($donnees['id']))$this->id = $donnees['id'];
@@ -11,7 +12,7 @@ class Commentaire extends Entity{
 		if(isset($donnees['pseudo']))$this->membre = $donnees['pseudo'];
 		if(isset($donnees['commentaire']))$this->commentaire = $donnees['commentaire'];
 		if(isset($donnees['date'])){
-			$this->date = timestampToString($donnees['date']);
+			$this->setTimestamp($donnees['date']);		
 		}
 	}
 	
@@ -46,8 +47,12 @@ class Commentaire extends Entity{
 	public function date(){
 		return $this->date;
 	}
-	public function setDate($date){
-		$this->date = $date;
+	public function timestamp(){
+		return $this->timestamp;
+	}
+	public function setTimestamp($timestamp){
+		$this->date = timestampToString($timestamp);
+		$this->timestamp = $timestamp;
 	}
 }
 ?>

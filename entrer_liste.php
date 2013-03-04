@@ -29,7 +29,7 @@ function getHTML_Etape2() {
     }
     // si il est a des mot valide , on continu
     if( $mot_present != 0) {
-		$mots = $_POST['mots'];
+		$mots = htmlspecialchars($_POST['mots']);
 		$titre = htmlspecialchars($_POST['titre']);
 		$categorie = $_POST['categorie'];
 		$categorie2= $_POST['categorie2'];
@@ -45,9 +45,9 @@ function getHTML_Etape2() {
 		} else if(isset($time) OR !empty($time)) {
 			$titre = strip_tags(mysql_real_escape_string($titre));
 			$login = strip_tags($_SESSION['login']);
-			$isSuccess = insertListeMot($login, mysql_real_escape_string($mots), $titre, $time, mysql_real_escape_string($categorie), mysql_real_escape_string($categorie2), strip_tags(mysql_real_escape_string($commentaire)), 0, '');
+			$isSuccess = insertListeMot($login, strip_tags(mysql_real_escape_string($mots)), strip_tags(mysql_real_escape_string($titre)), $time, mysql_real_escape_string($categorie), mysql_real_escape_string($categorie2), strip_tags(mysql_real_escape_string($commentaire)), 0, '');
 			if($isSuccess){
-				$html = 'Votre liste <span style="color:green;">"'.$titre.'"</span> a bien été enregistrer sous votre login <span style="color:blue;">"'.$login.'"</span>. Merci de votre contribution.';
+				$html = 'Votre liste <span style="color:green;">"'.$titre.'"</span> a bien été enregistrer sous votre login <span style="color:#be3737;">"'.$login.'"</span>. Merci de votre contribution.';
 			}else{
 				$html = 'Un probleme est survenu pendant la sauvegarde.';
 			}

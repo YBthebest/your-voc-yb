@@ -125,20 +125,27 @@
 				}
 			}
 			if(isset($_POST['id'])) {
+				$id = mysql_real_escape_string($_POST['id']);
 				if(isset($_POST['pseudo'])) {
 					if($_POST['type'] == 'supprimer') {
-						if($_POST['pseudo'] == $_SESSION['login']) {
-							$id = mysql_real_escape_string($_POST['id']);
-							if(deleteListeByIdAndPseudo($id, $pseudo)) {
-								echo 'La liste a été supprimée avec succès.';
-								echo '<a href="javascript:history.back()">Revenez à la page précédente!</a><br /> ';
-							}
-							else {
+						if(!isset($_POST['confirmer'])){
+							?><form method="post">
+								<input type="submit" name="confirmer" value="Voulez-vous vraiment supprimer cette liste?" />
+								<input type="hidden" name="type" value="supprimer" />
+								<input type="hidden" value="<?php echo $id ?>" name="id" />
+								<input type="hidden" value="<?php echo $_POST['pseudo']?>" name="pseudo" />
+							</form><?php
+						}else{
+							if($_POST['pseudo'] == $_SESSION['login']) {
+								if(deleteListeByIdAndPseudo($id, $pseudo)) {
+									echo 'La liste a été supprimée avec succès.';
+								}
+								else {
+									echo 'Un problème est survenu. Veuillez réessayer.<br />';
+								}
+							}else {
 								echo 'Un problème est survenu. Veuillez réessayer.<br />';
-								echo '<a href="javascript:history.back()">Revenez à la page précédente!</a> ';
 							}
-							include("footer.php");
-							die();
 						}
 					}
 				}

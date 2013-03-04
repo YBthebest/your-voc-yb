@@ -9,7 +9,12 @@ class Erreur extends Entity{
 		if(isset($donnees['pseudo']))$this->membre = $donnees['pseudo'];
 		if(isset($donnees['type']))$this->type = $donnees['type'];
 		if(isset($donnees['message']))$this->message = $donnees['message'];
-		if(isset($donnees['date']))$this->date = $donnees['date'];
+		if(isset($donnees['date'])){
+			setlocale(LC_TIME, 'fr_FR.UTF-8','fra');
+			$timestamp = $donnees['date'];
+			$donnees['date'] = utf8_encode(strftime( "%d %B %Y %H:%M:%S", $timestamp));
+			$entity->setDate($donnees['date']);
+		}
 	}
 	
 	public function id(){
