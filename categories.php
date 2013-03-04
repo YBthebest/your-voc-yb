@@ -63,7 +63,18 @@ $(function(){
 		{value:"timestamp",text:"date"},
 		{value:"titre",text:"titre"}
 	]}];
+
+  $("#categorie").val('<?php echo $valueSelected;?>');
+  window.listeMotsDef = {
+		listesMot:<?php echo $jsObject?>,
+		currentPage:1,
+		nbLimite:20
+  }
   var selectTri = createListeSelect("trier", listeTri);
+  reversableSort(selectTri, "categorie", 'titre');
+  var pagineur = createPaginationElement(parseInt(window.listeMotsDef.listesMot.length/window.listeMotsDef.nbLimite  + 0.9), window.listeMotsDef.currentPage);
+  $("#sliderContainer").after(pagineur);  
+  $("#sliderContainer").before(pagineur); 
   selectTri.onchange = function(){
 	  var value = this.options[this.selectedIndex].value;
 	  var alternate = 'titre';
@@ -74,16 +85,8 @@ $(function(){
 		  value = "-"+value;
 	  }
 	  reversableSort(this, value, 'titre');
+	  pagineur.select($("#page_1")[0]);
   };
-  $("#categorie").val('<?php echo $valueSelected;?>');
-  window.listeMotsDef = {
-		listesMot:<?php echo $jsObject?>,
-		currentPage:1,
-		nbLimite:20
-  }
-  reversableSort(selectTri, "categorie", 'titre');
-  $("#sliderContainer").after(createPaginationElement(parseInt(window.listeMotsDef.listesMot.length/window.listeMotsDef.nbLimite  + 0.9), window.listeMotsDef.currentPage));
-
 });
 
 function createListeByCateg(listesVocabulaires, currentPage, limite){
@@ -139,7 +142,7 @@ function slidePage(allList, page, index){
 	},function(){
 		elemContainer.remove();
 	});
-	$("#listesContainer").focus();
+	$("#pagineur").focus();
 }
 
 function reversableSort(button){
@@ -167,16 +170,17 @@ function createPaginationElement(nbPage, currentPage){
 		}
 		elem.innerHTML = "[ "+elem.value+" ]";
 		elem.style.color = "white";
+		elem.style.cursor = "";
 		this.selected = elem;
 	}
-	addPaginerChild("<<", "first", 1, pagineur);
+	addPaginerChild("<< ", "first", 1, pagineur);
 	for(var i=1; i<=nbPage; i++){
 		pageSelector = addPaginerChild(i, "page_"+i, i, pagineur);
 		if(i == currentPage){
 			pagineur.select(pageSelector);
 		}
 	}
-	addPaginerChild(">>", "last", nbPage, pagineur);
+	addPaginerChild(" >>", "last", nbPage, pagineur);
 	
 	return pagineur;
 }
@@ -188,13 +192,15 @@ function addPaginerChild(text, id, numPage, paginer){
 	pageSelector.value = text;
 	pageSelector.onclick = (function(p_numPage){
 		return function (){
-			paginer.select($('#page_'+p_numPage)[0]);
-			var current = 0;
-			if(paginer.selected){
-				current = paginer.selected.value
+			if(this != paginer.selected){
+				paginer.select($('#page_'+p_numPage)[0]);
+				var current = 0;
+				if(paginer.selected){
+					current = paginer.selected.value;
+				}
+				slidePage(window.listeMotsDef.listesMot, p_numPage, current);
+				//pagineListesMot(page);
 			}
-			slidePage(window.listeMotsDef.listesMot, p_numPage, current);
-			//pagineListesMot(page);
 		};
 	})(numPage);
 	paginer.appendChild(pageSelector);
