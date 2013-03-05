@@ -173,7 +173,6 @@ function getConfigPage(){
 	$configPage->setPageName(getPage());
 	initTitle($configPage->pageName());
 	$configPage->setTitle($_ENV['title']);
-	print_r($_ENV['metaContent']);
 	$configPage->setMetaContent($_ENV['metaContent']);
 	header("Content-Type: text/html; charset=utf-8");
 	return $configPage;

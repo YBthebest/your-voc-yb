@@ -12,9 +12,8 @@
  	list-style-image : url("../images/puce.png");
  	margin-top  : 2px;
  }
- a
- {
-	
+ img {
+	border : 0px;
  }
  #clear
  {

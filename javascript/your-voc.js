@@ -303,7 +303,7 @@ function createListeSelectWithDefault (idSelect, optionsDef, indexSelected){
 
 Array.prototype.sortByProperties = function(properties){
 	
-}
+};
 
 function dynamicSort(property) {
     var sortOrder = 1;
@@ -312,9 +312,18 @@ function dynamicSort(property) {
         property = property.substr(1, property.length - 1);
     }
     return function (a,b) {
-        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+    	var exp = new RegExp("^[0-9]+(.|,)?[0-9]*$");
+    	var valueA = a[property];
+    	var valueB = b[property];
+    	if(exp.test(valueA) && exp.test(valueB)){
+    		valueA = valueA.replace(",",".");
+    		valueB = valueB.replace(",",".");
+    		valueA = parseFloat(valueA);
+    		valueB = parseFloat(valueB);
+    	}
+        var result = (valueA < valueB) ? -1 : (valueA > valueB) ? 1 : 0;
         return result * sortOrder;
-    }
+    };
 }
 
 

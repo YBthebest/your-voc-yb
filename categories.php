@@ -1,11 +1,11 @@
 <?php
 $valueSelected = "aucune";
-$id = (isset($_GET['cat']))?addslashes($_GET['cat']):-1;
-if($id != -1){
+$id = (isset($_GET['cat']))?intval(addslashes($_GET['cat'])):-1;
+if($id !== -1){
 	$id = mysql_real_escape_string($id);
 	$categorie = getCategorieById($id);
-	$listesMot = getListeByCategorie($valueSelected);
 	$valueSelected = $categorie->nom();
+	$listesMot = getListeByCategorie($valueSelected);
 }else{
 	$listesMot = getAllListe();
 }
@@ -22,8 +22,7 @@ foreach($listesMot as $listeMot){
 $jsObject .= "]";
 
 function convertToJavascriptObject($phpObject){
-	$ref = new ReflectionObject($phpObject);
-	$pros = $ref->getProperties(ReflectionProperty::IS_PRIVATE);
+	$pros = getClassProperties(get_class($phpObject));
 	$jsObject = "{";
 	$i=0;
 	$size = sizeof($pros);
@@ -40,6 +39,28 @@ function convertToJavascriptObject($phpObject){
 	}
 	$jsObject .= "}";
 	return $jsObject;
+}
+
+function getClassProperties($className, $types=''){
+	$ref = new ReflectionClass($className); 
+    $props = $ref->getProperties(); 
+    $props_arr = array(); 
+    foreach($props as $prop){ 
+        $f = $prop->getName(); 
+        
+//         if($prop->isPublic() and (stripos($types, 'public') === FALSE)) continue; 
+//         if($prop->isPrivate() and (stripos($types, 'private') === FALSE)) continue; 
+//         if($prop->isProtected() and (stripos($types, 'protected') === FALSE)) continue; 
+//         if($prop->isStatic() and (stripos($types, 'static') === FALSE)) continue; 
+        
+        $props_arr[$f] = $prop; 
+    } 
+    if($parentClass = $ref->getParentClass()){ 
+        $parent_props_arr = getClassProperties($parentClass->getName());//RECURSION 
+        if(count($parent_props_arr) > 0) 
+            $props_arr = array_merge($parent_props_arr, $props_arr); 
+    } 
+    return $props_arr; 
 }
 ?>
 
@@ -58,7 +79,7 @@ $(function(){
   createListeSelectWithDefault("categorie", <?php echo getJsCategorieListe();?>);
 	var listeTri = [{options:[
 		{value:"categorie",text:"catégorie"},
-		{value:"note",text:"note"},
+		{value:"-note",text:"note"},
 		{value:"-vue",text:"popularité"},
 		{value:"membre",text:"auteur"},
 		{value:"-timestamp",text:"date"},
@@ -72,7 +93,7 @@ $(function(){
 		nbLimite:20
   }
   var selectTri = createListeSelect("trier", listeTri);
-  reversableSort(selectTri, "categorie", 'titre');
+  reversableSort("categorie", 'titre');
   var pagineur = createPaginationElement(parseInt(window.listeMotsDef.listesMot.length/window.listeMotsDef.nbLimite  + 0.9), window.listeMotsDef.currentPage);
   $("#sliderContainer").after(pagineur);  
   $("#sliderContainer").before(pagineur); 
@@ -82,10 +103,7 @@ $(function(){
 	  if(value == alternate){
 		  value = "categorie";
 	  }
-	  if("note" == value){
-		  value = "-"+value;
-	  }
-	  reversableSort(this, value, 'titre');
+	  reversableSort(value, 'titre');
 	  pagineur.select($("#page_1")[0]);
   };
 });
@@ -126,14 +144,18 @@ function pagineListesMot(page){
 
 
 function slidePage(allList, page, index){
-	var elemContainer = $("#listesContainer");
+	var elemContainer = $("#listesContainer");	
+	elemContainer.css('width', elemContainer[0].offsetWidth);
+/*	var slider = $("#sliderList");
+	slider.css(elemContainer.css('width'));
+	slider.css("overflow","hidden");
+	slider.css("height",elemContainer[0].offsetHeight);*/
 	elemContainer.css("float","left");
 	elemContainer.css("position", "absolute");
 	var nextContainer = elemContainer.clone();
-	nextContainer.appendTo("#sliderList");
 	nextContainer.css('left', elemContainer[0].offsetWidth);
-	nextContainer.css('width', elemContainer[0].offsetWidth);
-	elemContainer.attr("id","#listesContainerToDelete");
+	elemContainer.attr("id","#listesContainerToDelete");	
+	nextContainer.appendTo("#sliderList");
 	pagineListesMot(page);
 	elemContainer.animate({
 		'left' : '-' + elemContainer[0].offsetWidth + 'px'
@@ -146,7 +168,7 @@ function slidePage(allList, page, index){
 	$("#pagineur").focus();
 }
 
-function reversableSort(button){
+function reversableSort(listePropTri){
 	var i = 0;
 	var props = new Array();
 	var reverse = false;
