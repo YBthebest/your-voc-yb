@@ -33,7 +33,7 @@ function getHTML_Etape2() {
 		$titre = htmlspecialchars($_POST['titre']);
 		$categorie = $_POST['categorie'];
 		$categorie2= $_POST['categorie2'];
-		$commentaire = htmlspecialchars($_POST['commentaire']);
+		$commentaire = mysql_real_escape_string(strip_tags(htmlspecialchars($_POST['commentaire'])));
 		setlocale(LC_TIME, 'fr_FR.utf8','fra'); 
 		$time= time();
 		if(strlen($commentaire) > 300) {
@@ -45,7 +45,7 @@ function getHTML_Etape2() {
 		} else if(isset($time) OR !empty($time)) {
 			$titre = strip_tags(mysql_real_escape_string($titre));
 			$login = strip_tags($_SESSION['login']);
-			$isSuccess = insertListeMot($login, strip_tags(mysql_real_escape_string($mots)), strip_tags(mysql_real_escape_string($titre)), $time, mysql_real_escape_string($categorie), mysql_real_escape_string($categorie2), strip_tags(mysql_real_escape_string($commentaire)), 0, '');
+			$isSuccess = insertListeMot($login, strip_tags(mysql_real_escape_string($mots)), strip_tags(mysql_real_escape_string($titre)), $time, mysql_real_escape_string($categorie), mysql_real_escape_string($categorie2), $commentaire, 0, '');
 			if($isSuccess){
 				$html = 'Votre liste <span style="color:green;">"'.$titre.'"</span> a bien été enregistrer sous votre login <span style="color:#be3737;">"'.$login.'"</span>. Merci de votre contribution.';
 			}else{

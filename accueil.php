@@ -27,7 +27,7 @@ $(function(){
             <div id="bloc">
 				<div id="container">
 					<div id="col1">
-						<h3>Catégories</h3>
+						<h3><a href="categories">Catégories</a></h3>
 						<ul type="circle">
 							<?php
 								$allCat = getCategoriesWithNbListe(7);

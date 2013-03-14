@@ -183,7 +183,7 @@ function insertListeMot($login, $listeMots, $titre, $timestamp, $categorie, $cat
 	$listeMot->setMembre($login);
 	$listeMot->setListeMot($listeMots);
 	$listeMot->setTitre($titre);
-	$listeMot->setTimestamp($timestamp);
+	$listeMot->setDate($timestamp);
 	$listeMot->setCategorie($categorie);
 	$listeMot->setCategorie2($categorie2);
 	$listeMot->setCommentaire($commentaire);

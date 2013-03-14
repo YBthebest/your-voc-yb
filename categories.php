@@ -238,7 +238,19 @@ function addPaginerChild(text, id, numPage, paginer){
 <!-- Début du contenu -->
 <div id="content">
 	<div id="bloc">
-		<div id="title">Catégories</div>
+		<div id="title">
+		<?php 
+		if(isset($valueSelected)){
+			if($valueSelected=='aucune'){
+				$nom="Catégories";
+			}else{
+				$nom=$valueSelected;
+			}
+		}else{
+			$nom="Catégories";		
+		}
+		echo $nom;
+		?></div>
 
 		<form action="recherche" method="post" onsubmit="var req=$('#requete');if(req.val()=='Mots-clés'){req.val('')}">
 			<p>
@@ -274,7 +286,7 @@ function addPaginerChild(text, id, numPage, paginer){
 				<?php
 				foreach(getCategorieByGeneral("1") as $categorie){
 					?>
-				<li><a href="<?php echo $categorie->url() ?>"><?php echo $categorie->nom()?>
+				<li><a href="categories?cat=<?php echo $categorie->id() ?>"><?php echo $categorie->nom()?>
 				</a> - <?php 
 				$cat = $categorie->nom();
 				$retour = getNbListeByCategorie($cat);
@@ -290,7 +302,7 @@ function addPaginerChild(text, id, numPage, paginer){
 				<?php
 				foreach(getCategorieByGeneral("3") as $categorie){
 						?>
-				<li><a href="<?php echo $categorie->url() ?>"><?php echo $categorie->nom()?>
+				<li><a href="categories?cat=<?php echo $categorie->id() ?>"><?php echo $categorie->nom()?>
 				</a> - <?php 
 				$cat = $categorie->nom();
 				$retour = getNbListeByCategorie($cat);?> (<i><?php echo $retour ?>
@@ -308,7 +320,7 @@ function addPaginerChild(text, id, numPage, paginer){
 				<?php
 				foreach(getCategorieByGeneral("2") as $categorie){
 						?>
-				<li><a href="<?php echo $categorie->url() ?>"><?php echo $categorie->nom()?>
+				<li><a href="categories?cat=<?php echo $categorie->id() ?>"><?php echo $categorie->nom()?>
 				</a> - <?php $cat = $categorie->nom();
 				$retour = getNbListeByCategorie($cat);?> (<i><?php echo $retour ?>
 						listes </i>)<br /></li>
@@ -323,7 +335,7 @@ function addPaginerChild(text, id, numPage, paginer){
 				<?php
 				foreach(getCategorieByGeneral("4") as $categorie){
 						?>
-				<li><a href="<?php echo $categorie->url() ?>"><?php echo $categorie->nom()?>
+				<li><a href="categories?cat=<?php echo $categorie->id() ?>"><?php echo $categorie->nom()?>
 				</a> - <?php $cat = $categorie->nom();
 				$retour = getNbListeByCategorie($cat);?> (<i><?php echo $retour ?>
 						listes </i>)<br /></li>

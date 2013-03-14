@@ -188,7 +188,7 @@ function manageDisplay(indiceCache, indiceMontre){
 function displayNote(){
 	var faux = formulaire.faux;
 	var pourCent = ((formulaire.bon/(formulaire.bon+faux))*100) ;
-	infoScore.innerHTML += "<br/><span class='color: #096A09;'>"
+	infoScore.innerHTML += "<br/><span style='color: #096A09;'>"
 		+ formulaire.bon + " mots justes</span> et <span style='color: #E61700;'>"
 		+ (faux) + " mots faux</span>.<br />"
 		+ "Moyenne : " + pourCent.toFixed(2) + " %" ;

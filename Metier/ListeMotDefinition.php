@@ -43,6 +43,9 @@ class ListeMotDefinition extends Entity{
 	public function date(){
 		return $this->date;
 	}
+	public function setDate($date){
+		$this->date = $date;
+	}
 	public function timestamp(){
 		return $this->timestamp;
 	}

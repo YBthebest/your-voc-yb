@@ -201,6 +201,60 @@ width:160px;
 float:left;
 }
 
+#container4 {
+	clear:left;
+	float:left;
+	width:100%;
+	overflow:hidden;
+}
+#container3 {
+	clear:left;
+	float:left;
+	width:100%;
+	position:relative;
+	right:25%;
+}
+#container2 {
+	clear:left;
+	float:left;
+	width:100%;
+	position:relative;
+	right:25%;
+}
+#container1 {
+	float:left;
+	width:100%;
+	position:relative;
+	right:25%;
+}
+#col1_ {
+	float:left;
+	width:21%;
+	position:relative;
+	left:77%;
+	overflow:hidden;
+}
+#col2 {
+	float:left;
+	width:21%;
+	position:relative;
+	left:81%;
+	overflow:hidden;
+}
+#col3 {
+	float:left;
+	width:21%;
+	position:relative;
+	left:85%;
+	overflow:hidden;
+}
+#col4 {
+	float:left;
+	width:21%;
+	position:relative;
+	left:89%;
+	overflow:hidden;
+}
 #container { width: 900px;; margin: 0 0 0 20px; /* top right bottom left */ padding: 0; }
 #container #col1 { width: 280px; float: left; } #container #col2outer { width: 610px; float: right; margin: 0; padding: 0; }
 #col2outer #col2mid { width: 300px; float: left; } #col2outer #col2side { width: 300px; float: right; }

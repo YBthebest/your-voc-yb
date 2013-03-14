@@ -78,7 +78,7 @@ $(function(){
 						$categories = getCategories('12');
 						foreach($categories as $requete2) {
 							$cat = $requete2->nom();
-							?><li><a href="<?php echo $requete2->url() ?>"><?php echo $requete2->nom() ?></a><br />
+							?><li><a href="categories?cat=<?php echo $requete2->id() ?>"><?php echo $requete2->nom() ?></a><br />
 							<?php $retour = getNbListeByCategorie($cat);?>
 							<i><?php echo $retour ?> listes </i></li>
 						<?php }
