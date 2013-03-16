@@ -9,21 +9,9 @@ if(isset($_GET['q'])){
 	foreach($liste as $result){
 		$titre = $result->titre();
 		$id = $result->id();
-		$arr[$i]['titre'] = $titre;
-		$arr[$i]['id'] = $id;
-		$i++;
-	}
-	echo json_encode($arr);
-}elseif(isset($_GET['l'])){
-	$liste_id = $_GET['l'];
-	$liste = getListeById($liste_id);
-	$arr = array();
-	$i = 0;
-	foreach($liste as $result){
-		$titre = $result->titre();
-		$mots = $result->listeMot();
-		$arr[$i]['titre'] = $titre;
-		$arr[$i]['mots'] = $mots;
+		$arr[$i]['id'] = $result->id();
+		$arr[$i]['titre'] = $result->titre();
+		$arr[$i]['mots'] = $result->listeMot();
 		$i++;
 	}
 	echo json_encode($arr);
