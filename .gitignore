@@ -2,4 +2,4 @@
 .project
 .buildpath
 .settings
-your_voc.sql
+*.sql
