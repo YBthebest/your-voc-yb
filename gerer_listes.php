@@ -174,7 +174,9 @@
 			echo '<a href="entrer_liste" >Entrer une nouvelle liste</a><br />';
 			?><a href="revise" >Réviser quelques mots sans créer une liste</a><br /><br /><?php
 			$liste = getListeByPseudo($pseudo);
-			$liste = array_reverse($liste);
+			usort($liste, function ($a, $b){
+			    return strcmp($b->timestamp(), $a->timestamp());
+			   });
 			?>
 			<table border="0" cellspacing="10">
 			  <tr>

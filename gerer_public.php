@@ -42,7 +42,9 @@ $(function(){
 				<ul type="circle">
 					<?php
 					$liste = getAllListe();
-					$liste = array_reverse($liste);
+					usort($liste, function ($a, $b){
+						return strcmp($b->timestamp(), $a->timestamp());
+					});
 					$liste = array_slice($liste, 0, 6);
 					foreach($liste as $requete) {
 						?><li><b><?php echo $requete->categorie() ?> <-> <?php echo $requete->categorie2() ?>: </b><br /><a href="afficher?id=<?php echo $requete->id(); ?>"><?php echo $requete->titre() ?></a><br /><small>par <a href="profil?m=<?php echo $requete->membre()?>"><?php echo $requete->membre()?></a> le <?php echo $requete->date() ?></small></li>

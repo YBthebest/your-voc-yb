@@ -88,13 +88,11 @@ abstract class DbManager {
 		$columns = "";
 		$values = "";
 		foreach ($arrayBind as $key=>$binding){
-			if($key != $this->ID_COLUMN){
-				$columns.= $key ;
-				$values.= ":".$key;
-				if($i < $length){
-					$columns.= "," ;
-					$values.= ",";
-				}
+			$columns.= $key ;
+			$values.= ":".$key;
+			if($i < $length){
+				$columns.= "," ;
+				$values.= ",";
 			}
 			$i++;
 		}

@@ -180,6 +180,7 @@ function getConfigPage(){
 
 function insertListeMot($login, $listeMots, $titre, $timestamp, $categorie, $categorie2, $commentaire, $vues, $note){
 	$listeMot = new ListeMotDefinition();
+	$listeMot->setId('');
 	$listeMot->setMembre($login);
 	$listeMot->setListeMot($listeMots);
 	$listeMot->setTitre($titre);
