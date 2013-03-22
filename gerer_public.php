@@ -38,7 +38,7 @@ $(function(){
 				<div id="title" style="text-align: center">
 					<a href="all">Voir toutes les listes</a><br /><br />
 				</div>
-				<h3>Dernières listes ajoutées</h3>
+				<h3><a href="all">Dernières listes ajoutées</a></h3>
 				<ul type="circle">
 					<?php
 					$liste = getAllListe();
@@ -57,7 +57,7 @@ $(function(){
 					<div id="title" style="text-align: center">
 						<a href="entrer_liste" >Entrer une nouvelle liste</a><br /><br />
 					</div>
-					<h3>Listes les plus populaires</h3>
+					<h3><a href="all">Listes les plus populaires</a></h3>
 					<ul type="circle">
 						<?php
 						$populaire = getListeOrderByVues();
@@ -74,7 +74,7 @@ $(function(){
 						<a href="revise" >Réviser quelques mots sans liste</a>					
 						<br /><br />
 					</div>
-					<h3>Catégories</h3>
+					<h3><a href="categories">Catégories</a></h3>
 					<ul type="circle">
 						<?php
 						$categories = getCategories('12');

@@ -13,7 +13,7 @@ class Erreur extends Entity{
 			setlocale(LC_TIME, 'fr_FR.UTF-8','fra');
 			$timestamp = $donnees['date'];
 			$donnees['date'] = utf8_encode(strftime( "%d %B %Y %H:%M:%S", $timestamp));
-			$entity->setDate($donnees['date']);
+			$this->setDate($donnees['date']);
 		}
 	}
 	

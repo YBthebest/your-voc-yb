@@ -74,10 +74,14 @@
 									}
 									else {
 										$query = getListeById($id);
-										foreach($query as $query_r){
-											$titre = $query_r->titre();
+										if(empty($query)){
+											$id_liste = 'Liste supprimée';		
+										}else{
+											foreach($query as $query_r){
+												$titre = $query_r->titre();
+												$id_liste = '<a href="afficher?id='.$id.'">'.$titre.'</a>';
+											}
 										}
-										$id_liste = '<a href="afficher?id='.$id.'">'.$titre.'</a>';
 									}
 								}
 								?><?php echo $i ?>. <?php echo $id_liste ?> - <b>Moyenne de la révision: <?php echo $resultat->moyenne() ?>%</b> - <small>Revisé le <?php echo $resultat->date()?>. </small><br /><br /> <?php

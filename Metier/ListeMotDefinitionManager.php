@@ -129,7 +129,7 @@ class ListeMotDefinitionManager extends DbManager {
 			"4" => "ORDER BY note DESC ",
 			"4a" => "ORDER BY (vues + 0) DESC ",
 			"4b" => "ORDER BY pseudo DESC ",
-			"4c" => "ORDER BY id DESC ",
+			"4c" => "ORDER BY date DESC ",
 			"5" => "LIMIT $premiereEntree, $messagesParPage",
 			"5a" => ""
 		);

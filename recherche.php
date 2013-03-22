@@ -38,11 +38,11 @@ $(function(){
 		<div id="text-center">
             <div id="title">Recherche </div>
 			<?php
-			if(isset($_POST['requete']) && (isset($_POST['requete']) OR isset($_GET['requete']))) {
+			if((isset($_POST['requete']) OR isset($_GET['requete']))) {
 				$categorie = (isset($_POST['categorie']))?$_POST['categorie']:htmlspecialchars(mysql_real_escape_string($_GET['categorie']));
 				$critere = (isset($_POST['sur']))?$_POST['sur']:htmlspecialchars(mysql_real_escape_string($_GET['sur']));
 				$search = (isset($_POST['requete']))?$_POST['requete']:htmlspecialchars(mysql_real_escape_string($_GET['requete']));
-				$tri = $critere;
+				$tri = (isset($_POST['critere']))?$_POST['critere']:htmlspecialchars(mysql_real_escape_string($_GET['critere']));
 				$messagesParPage=30; //Nous allons afficher 5 messages par page.
 				
 				//Une connexion SQL doit être ouverte avant cette ligne...
@@ -164,7 +164,7 @@ $(function(){
 				{ // de nouveau, un peu de HTML
 					?>
 					<h3>Pas de résultats</h3>
-					<p>Nous n'avons trouvé aucun résultat pour votre requête "<?php  echo $search ?>". <a href="recherche">Réessayez</a> avec autre chose.</p>
+					<p>Nous n'avons trouvé aucun résultat pour votre requête "<?php  echo stripslashes($search) ?>". <a href="recherche">Réessayez</a> avec autre chose.</p>
 					<?php
 				}// Fini d'afficher l'erreur ^^
 			}

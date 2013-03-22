@@ -43,7 +43,6 @@ function getHTML_Etape2() {
 		} else if(!isset($titre) OR empty($titre)) {
 			$html = 'Veuillez préciser un titre! <a href="entrer_liste">Retour</a>';
 		} else if(isset($time) OR !empty($time)) {
-			$titre = strip_tags(mysql_real_escape_string($titre));
 			$login = strip_tags($_SESSION['login']);
 			$isSuccess = insertListeMot($login, strip_tags(mysql_real_escape_string($mots)), strip_tags(mysql_real_escape_string($titre)), $time, mysql_real_escape_string($categorie), mysql_real_escape_string($categorie2), $commentaire, 0, '');
 			if($isSuccess){
@@ -151,7 +150,7 @@ if(isset($_SESSION['login'])){
 					<select id="categorie2" name="categorie2">
 					</select>
 					<br><br>
-					<textarea name="commentaire" rows="2" cols="70">Commentaire de l'auteur concernant la liste en général. (optionnel - maximum 300 caractères)</textarea><br />
+					<textarea name="commentaire" rows="2" cols="70" onFocus="if(this.value=='Commentaire de l\'auteur concernant la liste en général. (optionnel - maximum 300 caractères)')this.value=''" >Commentaire de l'auteur concernant la liste en général. (optionnel - maximum 300 caractères)</textarea><br />
 					<input type="submit" name="valider" value="ok" />
 					
 					

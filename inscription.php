@@ -33,7 +33,7 @@
 									$erreur = 'Votre mot de passe est invalide. Caractères spéciaux non-autorisés. Minimum 6 caractères.';
 								}else{
 									// on recherche si ce login est déjà utilisé par un autre membre
-									$login = mysql_escape_string($_POST['login']);
+									$login = mysql_real_escape_string($_POST['login']);
 									$membre = getMembreByLogin($login);			
 									if (empty($membre)) {
 										if(!isValidMail($_POST['email'])){
@@ -42,7 +42,7 @@
 											if(!isValidPseudo($_POST['login'])) {
 												$erreur = 'Votre pseudo est invalide. Caractères autorisés: lettres, chiffres,et _! Minimum 5 caractères, maximum 20.';
 											}else{
-												$email = mysql_escape_string($_POST['email']);
+												$email = mysql_real_escape_string($_POST['email']);
 												$fonction1 = getMembreByEmail($email);
 												if (empty($fonction1)) {
 													createMembre($_POST['login'], $_POST['email'], md5($_POST['pass']));

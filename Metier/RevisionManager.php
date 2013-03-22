@@ -36,5 +36,10 @@ class RevisionManager extends DbManager{
 		$entity = "";
 		return $this->select($query, $entity);
 	}
+	public function createNewRevision($id, $membre, $moyenne, $time){
+		$query = "insert into ".$this->table." values('', '".$id."', '".$membre."', '".$moyenne."', '".$time."')" ;
+		$statement = $this->_db->prepare($query);
+		$statement->execute();
+	}
 }
 ?>

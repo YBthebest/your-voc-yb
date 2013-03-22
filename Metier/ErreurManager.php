@@ -20,5 +20,11 @@ class ErreurManager extends DbManager{
 	protected function newInstanceEntity($donnees){
 		return new Erreur($donnees);
 	}
+	
+	public function createNewErreur($id_liste, $type, $message, $pseudo, $time){
+		$query = "insert into ".$this->table." values('', '".$id_liste."', '".$type."', '".$message."', '".$pseudo."', '".$time."')" ;
+		$statement = $this->_db->prepare($query);
+		$statement->execute();
+	}
 }
 ?>

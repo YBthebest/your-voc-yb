@@ -20,8 +20,12 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 								$type = $_POST['type'];
 								$id_liste = $_POST['id_liste'];
 								$message = $_POST['message'];
-								$pseudo = $_POST['pseudo'];
-								mysql_query("INSERT INTO erreurs VALUES('', '".$id_liste."', '".$type."', '".$message."', '".$pseudo."', '".$time."')")or die(mysql_error());
+								if(isset($_SESSION['login'])){
+									$pseudo = $_SESSION['login'];
+								}else{
+									$pseudo = $_POST['pseudo'];
+								}
+								createNewErreur($id_liste, $type, $message, $pseudo, $time);
 								echo 'Votre erreur a bien été signalée, merci beaucoup. Nous ferrons les modifications nécessaire dès que possible.';
 							}
 							else {

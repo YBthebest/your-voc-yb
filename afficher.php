@@ -198,8 +198,8 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 										<option value=\"2\">".$categorie2."-".$categorie."</option>
 									</select><br />
 									Ne pas compter les fautes de: <br />
-									<input type=\"checkbox\" name=\"majuscules\" value=\"majuscules\" checked=\"checked\" /> Insensible à  la casse (Your-Voc = your-voc)<br />
-									<input type=\"checkbox\" name=\"mfs\" value=\"mfs\" /> Redemander un mot faux au bout de quelques questions<br />
+									<input type=\"checkbox\" name=\"majuscules\" value=\"majuscules\"  /> Insensible à  la casse (Your-Voc = your-voc)<br />
+									<input type=\"checkbox\" name=\"mfs\" value=\"mfs\" checked=\"checked\" /> Redemander un mot faux au bout de quelques questions<br />
 									<input type=\"submit\" value=\"Réviser cette liste\" />
 									<input type=\"button\" value=\"Copier la liste dans le presse papier\" onclick=\"copyToClipboard();\" />
 									<br />
@@ -237,63 +237,26 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 							
 								if (!$resp->is_valid) {
 								// What happens when the CAPTCHA was entered incorrectly
-								echo ("Le captcha n'a pas été entré correctement. Veuillez réessayer. <br /><br />");
+								echo ("<b>Le captcha n'a pas été entré correctement. Veuillez réessayer. </b><br /><br />");
 								} else {
-								$email = $_POST['email'];
-								$commentaire = $_POST['commentaire'];
-								$pseudo = $_POST['pseudo'];
-								if(isset($_SESSION['login'])) {
-									$regex = '/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/';
-									if(!preg_match($regex, $email)) {
-										 echo 'L\'email entré est invalide.';
-									}
-									else {
-										$id_liste = htmlspecialchars(mysql_escape_string($id));
-										$pseudo = htmlspecialchars(mysql_escape_string($pseudo));
-										$time = htmlspecialchars(mysql_escape_string($time));
-										$commentaire = htmlspecialchars(mysql_escape_string($commentaire));
-										createCommentaire($id_liste, $pseudo, $time, $commentaire);
-										echo 'Votre commentaire a bien été sauvegardé. <br />';	
-										?><META HTTP-EQUIV="Refresh" CONTENT="0; URL=afficher?id=<?php echo $_GET['id']?>"><?php													
-									}
-								}			
-								else {
-									$getMembreByLogin = getMembreByLogin($pseudo);
-									if (empty($getMembreByLogin)) {
-										$getMembreByEmail = getMembreByEmail($email);
-										if (empty($getMembreByEmail)) {
-											$regex = '/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/';
-											if(!preg_match($regex, $email)) {
-												 echo 'L\'email entré est invalide.';
-											}
-											else {
-												$regex = '/^[a-z\d_]{5,20}$/i';
-												if(!preg_match($regex, $pseudo)) {
-													echo 'Votre pseudo est invalide. Caractères autorisés: lettres, chiffres,et _! Minimum 5 caractères, maximum 20.';
-												}
-												else {
-													$id_liste = htmlspecialchars(mysql_escape_string($id));
-													$pseudo = htmlspecialchars(mysql_escape_string($pseudo));
-													$time = htmlspecialchars(mysql_escape_string($time));
-													$commentaire = htmlspecialchars(mysql_escape_string($commentaire));
-													if(createCommentaire($id_liste, $pseudo, $time, $commentaire)) {
-													echo 'Votre commentaire a bien été sauvegardé. <br />';	
-													?><META HTTP-EQUIV="Refresh" CONTENT="0; URL=afficher?id=<?php echo $_GET['id']?>"><?php
-													}
-													else {
-														die();
-													}
-												}
-											}
+									$email = $_POST['email'];
+									$commentaire = $_POST['commentaire'];
+									$pseudo = $_POST['pseudo'];
+									if(isset($_SESSION['login'])) {
+										$regex = '/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/';
+										if(!preg_match($regex, $email)) {
+											 echo 'L\'email entré est invalide.';
 										}
 										else {
-											echo 'Cet email est déjà utilisé par un membre.';
+											$id_liste = htmlspecialchars(mysql_real_escape_string($id));
+											$pseudo = htmlspecialchars(mysql_real_escape_string($pseudo));
+											$time = htmlspecialchars(mysql_real_escape_string($time));
+											$commentaire = htmlspecialchars(mysql_real_escape_string($commentaire));
+											createCommentaire($id_liste, $pseudo, $time, $commentaire);
+											echo 'Votre commentaire a bien été sauvegardé. <br />';	
+											?><META HTTP-EQUIV="Refresh" CONTENT="0; URL=afficher?id=<?php echo $_GET['id']?>#commentaire"><?php													
 										}
-									}
-									else {
-										echo 'Ce pseudo est déjà utilisé par un membre.';
-									}
-								}
+									}			
 								}
 							}
 							else {
@@ -302,27 +265,27 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 				
 						}
 						?><br />
-						<form method="post" action="afficher?id=<?php echo $id ?>">
 						<?php 
 						if(isset($_SESSION['login'])) {
+						?>
+						<form method="post" action="afficher?id=<?php echo $id ?>#commentaire">
+						<?php
 							$pseudo = $_SESSION['login'];
 							$result = getMembreByLogin($pseudo);
 							foreach($result as $result1){
-								echo 'Connecté en tant que '.$_SESSION['login'].'. Pas vous? <a href="deconnexion">Déconnectez-vous!</a> <input type="hidden" name="pseudo" value='.$pseudo.' />  <input type="hidden" name="email" value="'.$result1->email().'" />';
+								echo 'Connecté en tant que <b>'.$_SESSION['login'].'</b>.<br /> Pas vous? <a href="deconnexion">Déconnectez-vous!</a> <input type="hidden" name="pseudo" value='.$pseudo.' />  <input type="hidden" name="email" value="'.$result1->email().'" />';
+							}						
+							?>
+							<br />Commentaire ou correction: <br /><textarea name="commentaire" rows="10" cols="50"></textarea><br />
+							<?php  require_once('recaptchalib.php');
+							$publickey = "6LdsCMMSAAAAAPx045E5nK50AEwInK8YSva0jLRh"; // you got this from the signup page
+							echo recaptcha_get_html($publickey);
+							?><input type="submit" name="submit" value="Envoyer" /></p></form><br /><?php
+							}else{
+								echo '<h3><b>Veuillez <a href="inscription">vous inscrire</a> ou <a href="connexion">vous connecter</a> pour poster un commentaire.</b></h3>';
 							}
-						}
-						else {
-							echo '<p>Pseudo : <br /><input type="text" name="pseudo" /><br />';
-							echo 'Email : <br /><input type="text" name="email" /><br />';
-						}
-						?>
-						<br />Commentaire ou correction: <br /><textarea name="commentaire" rows="10" cols="50"></textarea><br />
-						<?php  require_once('recaptchalib.php');
-						$publickey = "6LdsCMMSAAAAAPx045E5nK50AEwInK8YSva0jLRh"; // you got this from the signup page
-						echo recaptcha_get_html($publickey);
-					      ?>
-						<input type="submit" name="submit" value="Envoyer" /></p></form><br />
-						<div></center><?php
+						    ?>
+							<div></center><?php
 					}
 				}
 				else {

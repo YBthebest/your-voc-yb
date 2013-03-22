@@ -411,4 +411,14 @@ function getAllRevisions(){
 	$revisions = DBHelper::getDBManager("Revision")->getAllRevisions();
 	return $revisions;
 }
+function createNewRevision($id, $membre, $moyenne, $time){
+	$newRevision = new Revision(array("id_liste" => $id, "membre" => $membre, "moyenne" => $moyenne, "date" => $time));
+	DBHelper::getDBManager("Revision")->CreateNewRevision($id, $membre, $moyenne, $time);
+	return $newRevision;
+}
+function createNewErreur($id_liste, $type, $message, $pseudo, $time){
+	$newErreur = new Erreur(array("id_liste" => $id_liste, "membre" => $pseudo, "type" => $type, "message" => $message, "date" => $time));
+	DBHelper::getDBManager("Erreur")->createNewErreur($id_liste, $type, $message, $pseudo, $time);
+	return $newErreur;
+}
 ?>

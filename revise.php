@@ -41,8 +41,8 @@
 																		<option value=\"2\">Réponse-Question</option>
 																</select><br />
 																Ne pas compter les fautes de: <br />
-																<input type=\"checkbox\" name=\"majuscules\" value=\"majuscules\" checked=\"checked\" /> Insensible à la casse (Your-Voc = your-voc)<br />
-									<input type=\"checkbox\" name=\"mfs\" value=\"mfs\" /> Redemander un mot faux au bout de quelques questions<br />
+																<input type=\"checkbox\" name=\"majuscules\" value=\"majuscules\"  /> Insensible à la casse (Your-Voc = your-voc)<br />
+									<input type=\"checkbox\" name=\"mfs\" value=\"mfs\" checked=\"checked\" /> Redemander un mot faux au bout de quelques questions<br />
 				 <input type=\"submit\" name=\"valider\" value=\"ok\" /></p>
 										<div id=\"index\" ><textarea name=\"new_mot\" rows=\"15\" cols=\"70\" >". $_POST['new_mot']."</textarea><br />
 									</div></form>
@@ -271,8 +271,8 @@ for($j = 0; $j < sizeof($solutionTest[$i]); ++$j){
 													<option value=\"1\">Question-Réponse</option>
 													<option value=\"2\">Réponse-Question</option>
 												</select><br />
-												<input type=\"checkbox\" name=\"majuscules\" value=\"majuscules\" checked=\"checked\" /> Insensible à la casse (Your-Voc = your-voc)<br />
-							    					<input type=\"checkbox\" name=\"mfs\" value=\"mfs\" /> Redemander un mot faux au bout de quelques questions<br />
+												<input type=\"checkbox\" name=\"majuscules\" value=\"majuscules\"  /> Insensible à la casse (Your-Voc = your-voc)<br />
+							    					<input type=\"checkbox\" name=\"mfs\" value=\"mfs\" checked=\"checked\" /> Redemander un mot faux au bout de quelques questions<br />
 												Quels mots voulez-vous réviser?
 												<select name=\"faux\">
 													<option value=\"1\">Les mots faux</option>
@@ -288,7 +288,7 @@ for($j = 0; $j < sizeof($solutionTest[$i]); ++$j){
 						}
 						setlocale(LC_TIME, 'fr_FR.utf8','fra'); 
 						$time = time();
-						mysql_query("INSERT INTO revise VALUES('', '".$_SESSION['id']."', '".$pseudo."', '".$moyenne."', '".$time."')")or die(mysql_error());
+						createNewRevision($id_liste, $pseudo, $moyenne, $time);
 						unset($_SESSION['mots']);
 						unset($_SESSION['majuscules']);
 						unset($_SESSION['id']);
