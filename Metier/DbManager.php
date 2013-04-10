@@ -116,8 +116,23 @@ abstract class DbManager {
 	
 	public function update($entity){
 		$query = "UPDATE $this->table SET ";
-		$this->setValuesQuery($query, $entity);
-		$this->saveOrUpdate($query);
+		$arrayBind = $this->arrayBinding;
+		$i = 1;
+		$length = count($arrayBind);
+		$querySet = "";
+		foreach ($arrayBind as $key=>$binding){
+			if($key != $this->ID_COLUMN){
+				$querySet.= $key."=".$key;
+				if($i < $length){
+					$querySet.= "," ;
+				}
+				$i++;
+			}
+		}
+		$query.= $querySet." where ".$this->ID_COLUMN."=:".$this->ID_COLUMN;
+		$statement = $this->bind($query, $entity);
+		$this->_db->beginTransaction();
+		return $statement->execute();
 	}	
 	
 	protected function find($query, $arrayCritere){

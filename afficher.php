@@ -1,29 +1,16 @@
 <?php
-setlocale(LC_TIME, 'fr_FR.utf8','fra'); 
-?>
-<!-- Début de la présentation -->
-<div id="presentation1">
-</div>
-<!-- Fin de la présentation -->
-<!-- Début du contenu -->
-<div id="content">
-	<div id="bloc">
-		<div id="text-center">
-			<div id="title"><a href="">Réviser cette liste</a> </div>
-			<?php
-			if(isset($_POST['favoris'])) {
-				$id_liste = mysql_real_escape_string($_GET['id']);
-				$membre = $_POST['membre'];
-				if(createFavori($id_liste, $membre)) {
-					echo 'Ajouté aux favoris!';
-				}
-			}
-			if(isset($_POST['retirer'])) {
-				$id_liste = mysql_real_escape_string($_GET['id']);
-				$membre = $_POST['membre'];
-				if(deleteFavoriByIdAndMembre($id_liste, $membre)) {
-					echo 'Supprimé des favoris!';
-					?><META HTTP-EQUIV="Refresh" CONTENT="1; URL=afficher?id=<?php echo $_GET['id']?>"><?php
+ini_set('display_errors',1);
+if(isset($_POST['favoris'])) {
+	if(createFavori($_GET['id'], $_POST['membre'])) {
+		echo 'Ajouté aux favoris!';
+	}
+}
+if(isset($_POST['retirer'])) {
+	$id_liste = mysql_real_escape_string($_GET['id']);
+	$membre = $_POST['membre'];
+	if(deleteFavoriByIdAndMembre($id_liste, $membre)) {
+		echo 'Supprimé des favoris!';
+		?><META HTTP-EQUIV="Refresh" CONTENT="1; URL=afficher?id=<?php echo $_GET['id']?>"><?php
 				}
 			}
 			if(isset($_POST['note_submit'])) {
@@ -64,7 +51,10 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 				$id = mysql_real_escape_string($_GET['id']);
 				$listeMotDefinition = getListeById($id);
 				if(!empty($listeMotDefinition)) {
-					foreach ($listeMotDefinition as $fonction){
+					$listeMotDefinition = $listeMotDefinition[0];
+					$listeToJson = json_encode($listeMotDefinition);
+					print_r($listeMotDefinition);
+					$fonction = $listeMotDefinition;
 						$titre = $fonction->titre();
 						$categorie = $fonction->categorie();
 						$categorie2 = $fonction->categorie2();
@@ -135,8 +125,7 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 								<input type="submit" value="Ajouter aux favoris" />
 								</form>
 								<?php
-							}
-							elseif($resultat_fav != 0) {
+						} elseif($resultat_fav != 0) {
 								echo '  /   Cette liste est dans vos favoris.';
 								?>
 								<form method="post" action="afficher?id=<?php echo $id ?>">
@@ -145,8 +134,8 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 								<input type="submit" value="La retirer des favoris?" />
 								</form>
 								<?php
-							}
 						}
+					}
 						else {
 							echo '<br /><small><a href="connexion">Se connecter pour noter cette liste et l\'ajouter aux favoris</a></small>';
 						}
@@ -222,8 +211,7 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 								echo '<b>'.$comm_r->commentaire().'</b><br />';
 								echo '<small>Par <a href="profil?m='.$comm_r->membre().'">'.$comm_r->membre().'</a> le '.$comm_r->date().'</small><br /><br />';
 							}
-						}
-						else {
+						} else {
 							echo 'Il n\'y a aucun commentaire pour cette liste.<br /><br />';
 						}
 				if(isset($_POST['submit'])) {
@@ -277,16 +265,12 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 							}						
 							?>
 							<br />Commentaire ou correction: <br /><textarea name="commentaire" rows="10" cols="50"></textarea><br />
-							<?php  require_once('recaptchalib.php');
-							$publickey = "6LdsCMMSAAAAAPx045E5nK50AEwInK8YSva0jLRh"; // you got this from the signup page
-							echo recaptcha_get_html($publickey);
-							?><input type="submit" name="submit" value="Envoyer" /></p></form><br /><?php
+							<input type="submit" name="submit" value="Envoyer" /></p></form><br /><?php
 							}else{
 								echo '<h3><b>Veuillez <a href="inscription">vous inscrire</a> ou <a href="connexion">vous connecter</a> pour poster un commentaire.</b></h3>';
 							}
 						    ?>
 							<div></center><?php
-					}
 				}
 				else {
 					echo 'Veuillez préciser un id valable svp.';
@@ -295,7 +279,159 @@ setlocale(LC_TIME, 'fr_FR.utf8','fra');
 			else{
 				echo 'Veuillez préciser un id valable svp.';
 			}
-			?>
+
+?>
+<script type="text/javascript">
+	$(function(){
+		$("#login").val(<?php echo @$_SESSION['login'];?>);
+		var liste = <?php echo str_replace('\\', '\\\\',$listeToJson);?>;		
+		displayTableListeMot(liste);
+
+		var commentaires = <?php echo str_replace('\\', '\\\\',$listeToJson);?>;
+	})
+	
+	function displayTableListeMot(listeMotDefinition){
+		var listeMot = listeMotDefinition.listeMot.replace(/\\[/]/g, "/");
+		listeMotDefinition.listeMot = listeMot.split("\\r\\n");
+		var $table = $("#tableListeMot");
+		$.each(listeMotDefinition.listeMot, function(index, data){
+			var voc = data.split("=");
+			$table.append("<tr><td><b><span style=\"color:white;\">"+voc[0]+"</span></td><td>=</td><td><b><span style=\"color:gray;\">"+voc[1]+"</span></td></tr>");
+		})
+		if(listeMotDefinition.commentaire != ""){
+			$("#commentaireAuteur").append("Commentaire de l'auteur : <span style=\"font-style:italic;\">" + listeMotDefinition.commentaire + "");
+		}
+	}
+</script>
+<!-- Fin de la présentation -->
+<!-- Début du contenu -->
+<div id="content">
+	<div id="bloc">
+		<div id="text-center">
+			<div id="title"><a href="">Réviser cette liste</a> </div>
+			
+			<input id="login" type="hidden" name="membre" />
+			
+			<div id="titreCategorie">
+				<h2><?php echo $titre ?> <small><?php echo $categorie ?> =&gt; <?php echo $categorie2 ?> (<?php echo $nombre_lignes ?> mots)</small></h2>
+			</div>
+			
+			<div id="vueVote">
+				<?php echo $vues ?> vues / <?php echo $resultat_note ?> vote<?php echo ($resultat_note > 1)?"s":($resultat_note == 0)?" / Pas assez de vote pour donner une moyenne. ":" / <b>Note: '.$resultat_final.'/5</b>"?>
+			</div>
+			
+			<br>
+			
+			<a href="#commentaire"><small>Accéder directement aux commentaires</small></a>  
+			/  
+			<a href="signaler?id=<?php echo $id ?>"><small>Signaler une erreur dans la liste</small></a>
+			
+			<br>
+			<div id="noter">
+				<?php if(isset($_SESSION['login'])){ ?>
+				<form action="afficher?id=<?php echo $_GET['id'] ?>" method="post" >
+					<input type="hidden" name="nbMots" id="nbMots" value="<?php echo $nombre_lignes ?>"/>  
+					<p>
+						<select name="note" id="note">
+						   <option value="1">1</option>
+						   <option value="2">2</option>
+						   <option value="3">3</option>
+						   <option value="4">4</option>
+						   <option value="5">5</option>
+					   	</select>
+					   	<input type="submit" name="note_submit" value="Noter cette liste" />
+					</p>
+				</form>
+				<?php } else { ?>
+				<small><a href="connexion">Se connecter pour noter cette liste et l'ajouter aux favoris</a></small>
+				<?php } ?>
+			</div>
+			
+			<div id="combiner">
+				<form method="get" action="new_combiner">
+					<input type="hidden" name="id" value="<?php echo $_GET['id']?>" />
+					<input type="submit" value="Combiner avec une autre liste" />
+				</form>
+			</div>
+			
+			<div id="favoris">	
+				<form method="post" action="afficher?id=<?php echo $id ?>">
+					<input type="hidden" name="membre" value="<?php echo $_SESSION['login'] ?>" />
+					<input type="hidden" name="favoris" value="oui" />
+					<input id="buttonFav" type="button" value="favoris" />
+				</form>
+			</div>
+			
+			<div id="reviser" style="margin:auto;">				
+				<form method="post" action="revise" >				
+					<p>
+						<input type="hidden" value="2" name="step" />
+						<input type="hidden" value="<?php echo $_GET['id'] ?>" name="id_liste" />
+						<input type="hidden" value="<?php echo $liste ?>" name="new_mot" />
+						Nombre de questions à  reviser (laisser vide pour tout) :
+						<input type="text" name='nbQuestion' id="nbQuestion" /><br />
+						Dans quel sens voulez-vous réviser cette liste? 
+						<select name="sens">
+							<option value="1"><?php echo $categorie ?> - <?php echo $categorie2 ?></option>
+							<option value="2"><?php echo $categorie2 ?> - <?php echo $categorie ?></option>
+						</select><br />
+						Ne pas compter les fautes de: <br />
+						<input type="checkbox" name="majuscules" value="majuscules"  /> Insensible à  la casse (Your-Voc = your-voc)<br />
+						<input type="checkbox" name="mfs" value="mfs" checked="checked" /> Redemander un mot faux au bout de quelques questions<br />
+						<input type="submit" value="Réviser cette liste" />
+						<input type="button" value="Copier la liste dans le presse papier" onclick="copyToClipboard();" />
+						<br />
+					</p>
+				</form>
+				
+				<div id="commentaireAuteur">
+					
+				</div>
+				
+				<div id="listeMot">
+					<table  id="tableListeMot" style="text-align:left;border-spacing:20px;margin:auto; border:0;max-width: 30em;">
+					</table>
+				</div>	
+				
+				<div id="commentairesMembres">
+					<small>
+						Liste crée par <a href="profil?m=<?php echo $pseudo?>"><?php echo $pseudo?></a>  
+						le <b><?php echo $date ?></b><br />
+					</small>
+					<div id="commentaire">
+						<h2>Commentaires (<?php echo $retour ?>)</h2>
+						<?php 
+						if($retour != 0) {
+							$comm = getCommentairesById($id);
+							foreach($comm as $comm_r){
+							?>
+								<div><b><?php echo $comm_r->commentaire(); ?></b></div>
+								<small>Par <a href="profil?m=<?php echo $comm_r->membre(); ?>"><?php echo $comm_r->membre(); ?></a> le <?php echo $comm_r->date(); ?></small>
+							<?php 
+							}
+						} else {
+							?>
+								<div>Il n'y a aucun commentaire pour cette liste</div>
+						<?php }?>
+					</div>
+					<div id="commenter" style="margin: auto;width: 500px;">
+						<?php 
+							if(isset($_SESSION['login']) &&  $_SESSION['login'] != $listeMotDefinition->membre()) {
+						?>
+							Commentaire ou correction : 
+							<textarea rows="10" cols="50" id="commentaireListe">test</textarea>
+							<div id="captcha" style="width:350px;margin:auto;">
+						<?php		
+								require_once('recaptchalib.php');
+								$publickey = "6LdsCMMSAAAAAPx045E5nK50AEwInK8YSva0jLRh";
+								echo recaptcha_get_html($publickey);
+							}
+						?>
+							</div>
+							<input type="button" name="btnCommenter" onclick="" value="Envoyer" />
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

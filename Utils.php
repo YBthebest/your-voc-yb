@@ -1,6 +1,4 @@
 <?php
-
-
 function getJsObjectToString($object){	
 	$result = "";
 	if(is_array($object)){
@@ -60,5 +58,9 @@ function startswith($hay, $needle) {
 
 function endswith($hay, $needle) {
 	return substr($hay, -strlen($needle)) === $needle;
+}
+
+function notEmpty($param){
+	return isset($param) && !empty($param);
 }
 ?>

@@ -1,27 +1,27 @@
 <?php
 require "Metier/DBHelper.php";
-require "Metier/Entity.php";
-require "Metier/DbManager.php";
-require "Metier/Categorie.php";
-require "Metier/CategorieManager.php";
-require "Metier/ListeMotDefinition.php";
-require "Metier/ListeMotDefinitionManager.php";
-require "Metier/Membre.php";
-require "Metier/MembreManager.php";
-require "Metier/Commentaire.php";
-require "Metier/CommentaireManager.php";
-require "Metier/Erreur.php";
-require "Metier/ErreurManager.php";
-require "Metier/Favori.php";
-require "Metier/FavoriManager.php";
-require "Metier/Revision.php";
-require "Metier/RevisionManager.php";
-require "Metier/Vote.php";
-require "Metier/VoteManager.php";
-require "Metier/Combinaison.php";
-require "Metier/CombinaisonManager.php";
-require "Utils.php";
-require "ConfigPage.php";
+require "/Metier/Entity.php";
+require "/Metier/DbManager.php";
+require "/Metier/Categorie.php";
+require "/Metier/CategorieManager.php";
+require "/Metier/ListeMotDefinition.php";
+require "/Metier/ListeMotDefinitionManager.php";
+require "/Metier/Membre.php";
+require "/Metier/MembreManager.php";
+require "/Metier/Commentaire.php";
+require "/Metier/CommentaireManager.php";
+require "/Metier/Erreur.php";
+require "/Metier/ErreurManager.php";
+require "/Metier/Favori.php";
+require "/Metier/FavoriManager.php";
+require "/Metier/Revision.php";
+require "/Metier/RevisionManager.php";
+require "/Metier/Vote.php";
+require "/Metier/VoteManager.php";
+require "/Metier/Combinaison.php";
+require "/Metier/CombinaisonManager.php";
+require "/Utils.php";
+require "/ConfigPage.php";
 
 function dbconnect(){
 	dbConfiguration();
@@ -175,13 +175,11 @@ function getConfigPage(){
 	$configPage->setTitle($_ENV['title']);
 	$configPage->setMetaContent($_ENV['metaContent']);
 	header("Content-Type: text/html; charset=utf-8");
-	setlocale(LC_TIME, 'fr_FR.utf8','fra');
 	return $configPage;
 }
 
 function insertListeMot($login, $listeMots, $titre, $timestamp, $categorie, $categorie2, $commentaire, $vues, $note){
 	$listeMot = new ListeMotDefinition();
-	$listeMot->setId('');
 	$listeMot->setMembre($login);
 	$listeMot->setListeMot($listeMots);
 	$listeMot->setTitre($titre);
@@ -277,10 +275,6 @@ function getListeByPseudo($pseudo){
 function getListeById($id){
 	$liste = DBHelper::getDBManager("ListeMotDefinition")->getListeById($id);
 	return $liste;
-}
-
-function updateListeMot($listeMotDefinition){
-	DBHelper::getDBManager("ListeMotDefinition")->update($listeMotDefinition);
 }
 
 function getNbListeByCategorie($nomCategorie){
@@ -415,16 +409,5 @@ function getAllCommentaires(){
 function getAllRevisions(){
 	$revisions = DBHelper::getDBManager("Revision")->getAllRevisions();
 	return $revisions;
-}
-
-function createNewRevision($id, $membre, $moyenne, $time){
-	$newRevision = new Revision(array("id_liste" => $id, "membre" => $membre, "moyenne" => $moyenne, "date" => $time));
-	DBHelper::getDBManager("Revision")->CreateNewRevision($id, $membre, $moyenne, $time);
-	return $newRevision;
-}
-function createNewErreur($id_liste, $type, $message, $pseudo, $time){
-	$newErreur = new Erreur(array("id_liste" => $id_liste, "membre" => $pseudo, "type" => $type, "message" => $message, "date" => $time));
-	DBHelper::getDBManager("Erreur")->createNewErreur($id_liste, $type, $message, $pseudo, $time);
-	return $newErreur;
 }
 ?>
