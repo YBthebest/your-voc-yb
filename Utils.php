@@ -1,30 +1,95 @@
 <?php
-function getJsObjectToString($object){	
-	$result = "";
-	if(is_array($object)){
-		$size = sizeof($object);
-		foreach ($catByGroupe as $key => $categories){
-			$size--;
-			$icat = sizeof($categories);
-			$categorieListejs = "";
-			foreach ($categories as $categorie){
-				$icat--;
-				$categorieListejs .= '{value:"'.$categorie.'",text:"'.$categorie.'"}';
-				if($icat > 0){
-					$categorieListejs .= ",";
+function convertArrayObjectToJSArray($arrayObject, $dropProperties=null){	
+	$jsObject = "[";
+	$i = 0;
+	$size = sizeof($arrayObject);
+	foreach($arrayObject as $object){
+		$i++;
+		$jsObject .= convertObjectToJs($object, $dropProperties);		
+		if($i < $size){
+			$jsObject .= ",";
+		}
+	}
+	$jsObject .= "]";
+	return $jsObject;
+}
+
+function convertObjectToJs($phpObject, $dropProperties=null){
+	$pros = getClassProperties(get_class($phpObject));
+	$jsObject = "{";
+	$i=0;
+	$size = sizeof($pros);
+	foreach ($pros as $property) {		
+		$i++;
+		$property->setAccessible(true);		
+		if(!contains($property->getName(), $dropProperties)){
+			$value = $property->getValue($phpObject);
+			if(is_array($value)){
+				$firstValue = $value[0];
+				if(is_array($firstValue)){
+					$value = convertArrayObjectToJSArray($value);
+				}else{
+					$value = convertToJsArray($value);
 				}
+			}else if(is_object($value)){
+				$value = convertObjectToJs();
+			} else {
+				$value = '"'.mysql_real_escape_string($value).'"';//mysql_real_escape_string()
 			}
-			$groupeListejs .= '{label:"'.$key.'",options:['.$categorieListejs.']}';
-			if($igroupe > 0){
-				$groupeListejs.=",";
+			$jsObject .= $property->getName().":".$value;
+			if($i < $size){
+				$jsObject .= ",";
 			}
 		}
-		$javascriptObject = "[$groupeListejs]";
-	}else{
-		
 	}
-	
-	return $result;
+	$jsObject .= "}";
+	return $jsObject;
+}
+
+function contains($find, $searchContainer){
+	if($find === null){
+		return false;
+	}else{
+		if(is_array($searchContainer)){
+			return in_array($find, $searchContainer);
+		}else{
+			return $find == $searchContainer;
+		}
+	}
+}
+
+function convertToJsArray($array){
+	$arrayJS = "[";
+	$i = 0;
+	foreach ($array as $value){
+		if($i > 0){
+			$arrayJS .= ",";			
+		}
+		$i++;
+		$arrayJS .= '"'.$value.'"';
+	}
+	$arrayJS .= "]";
+	return $arrayJS;
+}
+
+function getClassProperties($className){
+	$ref = new ReflectionClass($className);
+	$props = $ref->getProperties();
+	$props_arr = array();
+	foreach($props as $prop){
+		$f = $prop->getName();
+		//         if($prop->isPublic() and (stripos($types, 'public') === FALSE)) continue;
+		//         if($prop->isPrivate() and (stripos($types, 'private') === FALSE)) continue;
+		//         if($prop->isProtected() and (stripos($types, 'protected') === FALSE)) continue;
+		//         if($prop->isStatic() and (stripos($types, 'static') === FALSE)) continue;
+		$props_arr[$f] = $prop;
+	}
+	if($parentClass = $ref->getParentClass()){
+		$parent_props_arr = getClassProperties($parentClass->getName());//RECURSION
+		if(count($parent_props_arr) > 0)
+			$props_arr = array_merge($parent_props_arr, $props_arr);
+	}
+	return $props_arr;
 }
 
 function comparatorNumber($a, $b){
@@ -46,7 +111,7 @@ function callConstructor($instance, $constructName, $nbArgs, $args){
 function timestampToString($timestamp){
 	if(preg_match("/[0-9]{10,20}/", $timestamp)){
   		setlocale(LC_TIME, 'fr_FR.UTF-8','fra');
-  		return utf8_encode(strftime( "%A %d %B %Y %H:%M:%S", $timestamp));
+  		return utf8_encode(strftime("%A %d %B %Y %H:%M:%S", $timestamp));
  	}else{
  		 return $timestamp;
  	}

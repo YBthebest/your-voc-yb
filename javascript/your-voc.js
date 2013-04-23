@@ -108,6 +108,7 @@ function nextMots(){
 		blockQuestion.reponse = blockQuestion.reponse.toLowerCase();
 		blockQuestion.solution = blockQuestion.solution.toLowerCase();
 	}
+	withWrong = false;
 	if( blockQuestion.reponse != ""){
 		cacheElement(infoScore);
 		if(isValideReponse(blockQuestion.reponse, blockQuestion.solution)){
@@ -115,6 +116,7 @@ function nextMots(){
 			formulaire.bon++ ;
 			afficheScoreJuste(blockQuestion.question, blockQuestion.solution);
 		}else{
+			withWrong = true;
 			montreElement(buttonValidError);
 			formulaire.faux++ ;
 			if(modeFullSuccess){
@@ -128,7 +130,7 @@ function nextMots(){
 		}
 		indiceReponseListSort.shift();
 	}
-	manageDisplay(blockQuestion.index, indiceReponseListSort[0]);
+	manageDisplay(blockQuestion.index, indiceReponseListSort[0], withWrong);
 	prevReponse = blockQuestion;
 	if(indiceReponseListSort.length == 0){
 		montreElement(buttonSoumettre);
@@ -176,8 +178,12 @@ function valideReponseFausse(){
 		nextMots();
 	}
 }
-function manageDisplay(indiceCache, indiceMontre){
+function manageDisplay(indiceCache, indiceMontre, withWrong){
 	if(divs[indiceCache]){
+		if(withWrong){
+			var nbFaux = parseInt($("#nbFaux_"+indiceCache).val());
+			$("#nbFaux_"+indiceCache).val(nbFaux + 1);
+		}
 		divs[indiceCache].style.display = 'none' ;
 	}
 	if(divs[indiceMontre]){
@@ -191,7 +197,7 @@ function displayNote(){
 	infoScore.innerHTML += "<br/><span style='color: #096A09;'>"
 		+ formulaire.bon + " mots justes</span> et <span style='color: #E61700;'>"
 		+ (faux) + " mots faux</span>.<br />"
-		+ "Moyenne : " + pourCent.toFixed(2) + " %" ;
+		+ "Moyenne : " + pourCent.toFixed(2) + " %";
 	montreElement(infoScore);
 }
 function hasClass(elt,classe){

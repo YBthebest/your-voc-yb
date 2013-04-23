@@ -9,59 +9,8 @@ if($id !== -1){
 }else{
 	$listesMot = getAllListe();
 }
-$jsObject = "[";
-$i = 0;
-$size = sizeof($listesMot);
-foreach($listesMot as $listeMot){
-	$i++;
-	$jsObject .= convertToJavascriptObject($listeMot);
-	if($i < $size){
-		$jsObject .= ",";
-	}
-}
-$jsObject .= "]";
-
-function convertToJavascriptObject($phpObject){
-	$pros = getClassProperties(get_class($phpObject));
-	$jsObject = "{";
-	$i=0;
-	$size = sizeof($pros);
-	foreach ($pros as $property) {
-		$i++;
-		$property->setAccessible(true);
-		$value = $property->getValue($phpObject);
-		if(!preg_match('/\\n/', $value)){
-			$jsObject .= $property->getName().':"'.mysql_real_escape_string($value).'"';
-			if($i < $size){
-				$jsObject .= ",";
-			}
-		}
-	}
-	$jsObject .= "}";
-	return $jsObject;
-}
-
-function getClassProperties($className, $types=''){
-	$ref = new ReflectionClass($className); 
-    $props = $ref->getProperties(); 
-    $props_arr = array(); 
-    foreach($props as $prop){ 
-        $f = $prop->getName(); 
-        
-//         if($prop->isPublic() and (stripos($types, 'public') === FALSE)) continue; 
-//         if($prop->isPrivate() and (stripos($types, 'private') === FALSE)) continue; 
-//         if($prop->isProtected() and (stripos($types, 'protected') === FALSE)) continue; 
-//         if($prop->isStatic() and (stripos($types, 'static') === FALSE)) continue; 
-        
-        $props_arr[$f] = $prop; 
-    } 
-    if($parentClass = $ref->getParentClass()){ 
-        $parent_props_arr = getClassProperties($parentClass->getName());//RECURSION 
-        if(count($parent_props_arr) > 0) 
-            $props_arr = array_merge($parent_props_arr, $props_arr); 
-    } 
-    return $props_arr; 
-}
+$jsObject = convertArrayObjectToJSArray($listesMot, "listeMot");
+//print_r($jsObject);
 ?>
 
 <script type="text/javascript">

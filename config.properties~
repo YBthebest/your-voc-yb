@@ -1,5 +1,0 @@
-db.host.name=localhost
-db.user.name=root
-db.user.mdp=root
-db.name=your_voc
-application.host=localhost

@@ -13,8 +13,9 @@
 		<div id="text-center">
      	   <div id="title"></div>
 				<?php
+			
 function getHTML_Etape1($erreur='') {
-	if( ! isset( $_POST['new_mot'])){
+	if(!isset( $_POST['new_mot'])){
 		 $_POST['new_mot'] = 
 		 "Bienvenue sur Your-Voc, le site qui vous aidera à réviser votre vocabulaire facilement.
 		Entrez-vos mots ici et appuyer sur \"ok\" pour commencer la révision.
@@ -136,6 +137,7 @@ function getHTML_Etape2() {
 					<small>Réponse:</small><br /> <input type=\"text\" autocomplete=\"off\" name='reponse[]' id=\"$questionCourante \" size=\"100\" />
 					<input type='hidden' name='question[]' value=\"$questionCourante \"/>
 					<input type='hidden' name='solution[]' value=\"$mot[0]\"/>
+					<input type='hidden' name='nbFaux[]' id=\"nbFaux_$i\" value=\"0\"/>
 					<br /><br />
 					</span>");
 			}	
@@ -149,6 +151,7 @@ function getHTML_Etape2() {
 			   
 				<input type='hidden' name='question[]' value=\"$questionCourante \"/>
 				<input type='hidden' name='solution[]' value=\"$mot[1]\"/>
+				<input type='hidden' name='nbFaux[]' id=\"nbFaux_$i\" value=\"0\"/>
 				<br /><br />
 				</span>");
 			}
@@ -293,7 +296,7 @@ $html = "";
 // Cela est fait apres juste avoir entrer les mots
 // C'est la page de teste
 if(@$_POST['step'] == "2" && isset($_POST['new_mot'])) {
-		$html = getHTML_Etape2();
+	$html = getHTML_Etape2();
 } elseif ( @$_POST['step'] == "3" ) { // Quant le teste est fini
 	$html = getHTML_Etape3();
 } else { // Page par default

@@ -176,6 +176,9 @@ function getConfigPage(){
 	$configPage->setMetaContent($_ENV['metaContent']);
 	header("Content-Type: text/html; charset=utf-8");
 	setlocale(LC_TIME, 'fr_FR.utf8','fra');
+	if($_SERVER['SERVER_NAME']){
+		ini_set('display_errors',1);
+	}
 	return $configPage;
 }
 

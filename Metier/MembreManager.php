@@ -28,18 +28,18 @@ class MembreManager extends DbManager{
 	public function getMembreById($id){
 		$query = "select * from ".$this->table." where id = :id" ;
 		$entity = new Membre(array("id"=>$id));
-		return $this->select($query, $entity);
+		return $this->selectUniqueResult($query, $entity);
 	}
 	
 	public function getMembreByEmail($email){
 		$query = "select * from ".$this->table." where email = :email" ;
 		$entity = new Membre(array("email"=>$email));
-		return $this->select($query, $entity);
+		return $this->selectUniqueResult($query, $entity);
 	}
 	public function getPassByLogin($login){
 		$query = "select pass_md5 from ".$this->table." where login = :login" ;
 		$entity = new Membre(array("login"=>$login));
-		return $this->select($query, $entity);
+		return $this->selectUniqueResult($query, $entity);
 	}
 	
 	public function saveMembre($pseudo, $email, $password){		

@@ -1,16 +1,16 @@
 <?php
 class ListeMotDefinition extends Entity{
-	private $titre;
-	private $membre;
-	private $listeMot;// = array();	
-	private $timestamp;
-	private $date;
-	private $categorie;
-	private $categorie2;
-	private $note;
-	private $vue;
-	private $commentaire;
-	private static $separator = " ";
+	public $titre;
+	public $membre;
+	public $listeMot = array();	
+	public $timestamp;
+	public $date;
+	public $categorie;
+	public $categorie2;
+	public $note;
+	public $vue;
+	public $commentaire;
+	public static $separator = " ";
 	
 	public function __construct (){
 	}        
@@ -32,8 +32,23 @@ class ListeMotDefinition extends Entity{
                 trigger_error('La liste de mot ne doit pas être null', E_USER_WARNING);
                 return;
         }
-		$this->listeMot = $listeMot;
+        $this->listeMot = $this->convertMotsToArray($listeMot);
 	}
+	
+	private function convertMotsToArray($listeMot){		
+		$normalize = str_replace("\\r\\n", "__", $listeMot);
+		if(strrpos($normalize, "\r\n")  !== false){
+			$normalize = str_replace("\r\n", "__", $listeMot);
+		}
+		if(strrpos($normalize, "\\n")  !== false){
+			$normalize = str_replace("\\n", "__", $listeMot);
+		}else if(strrpos($normalize, "\n")  !== false){
+			$normalize = str_replace("\n", "__", $listeMot);
+		}
+		$normalize = trim($normalize, "__");
+		return explode("__", $normalize);
+	}
+	
 	public function titre(){
 		return $this->titre;
 	}

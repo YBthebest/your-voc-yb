@@ -47,6 +47,17 @@ abstract class DbManager {
 		return $entityListe;
 	}
 	
+	protected function selectUniqueResult($query, $entity){
+		$result = $this->select($query, $entity);
+		if(sizeof($result) == 1){
+			$result = $result[0];
+		}else{
+			$result = null;
+			throw new Exception("Un resultat unique était attendu pour " + get_class($query));
+		}
+		return $result;
+	}
+	
 	protected function count($query, $entity){
 		$liste = $this->select($query, $entity);
 		return sizeof($liste);
@@ -75,6 +86,9 @@ abstract class DbManager {
 		foreach($bindingArrayQuery as $binder){
 			$methodeName = $this->arrayBinding[str_replace(":", "",$binder)];			
 			$value = call_user_func(array($entity, $methodeName));
+			if(is_array($value)){
+				$value = implode("__", $value);				
+			}
 			$statement->bindValue($binder, $value);
 		}
 		return $statement;

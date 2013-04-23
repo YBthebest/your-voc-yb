@@ -95,7 +95,7 @@ class ListeMotDefinitionManager extends DbManager {
 		$query = "select * from ".$this->table." where id = :id";
 		$entity = new ListeMotDefinition();
 		$entity->setId($id);
-		return $this->select($query, $entity);		
+		return $this->selectUniqueResult($query, $entity);		
 	}
 	public function getListeByCategorie($categorie){
 		$query = "select * from ".$this->table." where categorie = :categorie or categorie2 = :categorie2";
