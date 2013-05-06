@@ -2,6 +2,7 @@
 $login = @$_SESSION['login'];
 $id = $_GET['id'];
 $capchaReponse = "";
+$withCapcha = "false";
 $capcha = "";
 $favoriOption = "{}";
 
@@ -45,7 +46,7 @@ if(isset($_POST['note_submit'])) {
 if($id != "") {
 	$time = time(); 
 	if($login != ""){
-		$membre = getMembreByLogin($login);
+		$membre = getMembreByLogin($login)[0];
 	}
 	$listeMotDefinition = getListeById($id);
 	if(isset($listeMotDefinition)) {
@@ -67,6 +68,7 @@ if($id != "") {
 				require_once('recaptchalib.php');
 				$publickey = "6LdsCMMSAAAAAPx045E5nK50AEwInK8YSva0jLRh";
 				$capcha = recaptcha_get_html($publickey);
+				$withCapcha = "true";
 			}
 		}
 		$comm = getCommentairesById($id);
@@ -90,7 +92,6 @@ if($id != "") {
 		}
 	}
 }
-
 ?>
 <script type="text/javascript">
 	$(function(){
@@ -119,10 +120,8 @@ if($id != "") {
 			$("#buttonFav").attr('value', favori.val).attr('name', favori.name);
 		}	
 
-		var capchaCode= '<?php echo $capcha;?>';	
-		if(capchaCode != ""){
-			$("captcha").html(capchaCode);
-		}else{
+		var withCapcha=<?php echo $withCapcha;?>;	
+		if(!withCapcha){
 			$("captchaForm").remove();
 		}
 	});
@@ -224,7 +223,6 @@ if($id != "") {
 					<br />
 				</form>
 				
-				
 				<div id="commentaireAuteur"></div>
 				
 				<div id="listeMot">
@@ -234,7 +232,7 @@ if($id != "") {
 						Liste crée par <a id="profilListeMot" href=""></a>  
 						le <b><span id="dateCommentaire"></span></b><br />
 					</small>
-				</div>	
+				</div>
 				
 				<div id="commentairesMembres">
 					<h2>Commentaires (<span id="nbCommentaires"></span>)</h2>
@@ -257,11 +255,12 @@ if($id != "") {
 					<div id="captchaContainer" style="margin: auto;width: 500px;">
 					<?php if(isset($membre)) {?>
 						<form method="post" action="afficher?id=<?php echo $id ?>" >				
-							<input type="hidden" name="pseudo" value="<?php echo $login; ?>"/>
+							<input type="hidden" name="pseudo" value="<?php echo $login; ?>"/>							
 							<input type="hidden" name="email" value="<?php echo $membre->email(); ?>"/>
 							Commentaire ou correction : 
 							<textarea rows="10" cols="50" id="commentaireListe" name="commentaire">test</textarea>
 							<div id="captcha" style="width:350px;margin:auto;">
+								<?php echo $capcha;?>
 							</div>
 							<input type="submit" name="btnCommenter" value="Envoyer" />
 						</form>
