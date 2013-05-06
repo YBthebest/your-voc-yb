@@ -15,8 +15,8 @@
 				<?php
 			
 function getHTML_Etape1($erreur='') {
-	if(!isset( $_POST['new_mot'])){
-		 $_POST['new_mot'] = 
+	if(!isset( $_POST['listeMot'])){
+		 $_POST['listeMot'] = 
 		 "Bienvenue sur Your-Voc, le site qui vous aidera à réviser votre vocabulaire facilement.
 		Entrez-vos mots ici et appuyer sur \"ok\" pour commencer la révision.
 						 
@@ -45,7 +45,7 @@ function getHTML_Etape1($erreur='') {
 												<input type=\"checkbox\" name=\"majuscules\" value=\"majuscules\"  /> Insensible à la casse (Your-Voc = your-voc)<br />
 					<input type=\"checkbox\" name=\"mfs\" value=\"mfs\" checked=\"checked\" /> Redemander un mot faux au bout de quelques questions<br />
  					<input type=\"submit\" name=\"valider\" value=\"ok\" /></p>
-						<div id=\"index\" ><textarea name=\"new_mot\" rows=\"15\" cols=\"70\" >". $_POST['new_mot']."</textarea><br />
+						<div id=\"index\" ><textarea name=\"listeMot\" rows=\"15\" cols=\"70\" >". $_POST['listeMot']."</textarea><br />
 					</div></form>
 					<br /><br />";
 	return $html;
@@ -87,13 +87,13 @@ function getHTML_Etape2() {
 	
 	if(isset($_POST['faux'])) {
 		if($_POST['faux'] == '1') {
-			$_SESSION['mots'] = $_POST['new_mot'];
+			$_SESSION['mots'] = $_POST['listeMot'];
 		}
 		elseif($_POST['faux'] == '2') {
 			$_SESSION['mots'] = $_POST['mots'];
 		}
 	} else {
-		$_SESSION['mots'] = $_POST['new_mot'];
+		$_SESSION['mots'] = $_POST['listeMot'];
 	}
 	if(isset($_POST['mfs'])){
 		?><script type="text/javascript">modeFullSuccess = true;</script><?php
@@ -260,7 +260,7 @@ function getHTML_Etape3() {
 								<form method=\"post\" action=\"revise\" >                      
 								<input type=\"hidden\" value=\"2\" name=\"step\" />
 								<input type=\"hidden\" name=\"mots\" value='".$mots."'/>
-								<input type=\"hidden\" value=\"".$new_mots."\" name=\"new_mot\" />
+								<input type=\"hidden\" value=\"".$new_mots."\" name=\"listeMot\" />
 								<input type=\"hidden\" value=\"".$id_liste."\" name=\"id_liste\" />
 								<input type=\"hidden\" value=\"\" name=\"nbQuestion\" />
 								Dans quel sens voulez-vous recommencer à réviser cette liste?
@@ -295,7 +295,7 @@ function getHTML_Etape3() {
 $html = "";
 // Cela est fait apres juste avoir entrer les mots
 // C'est la page de teste
-if(@$_POST['step'] == "2" && isset($_POST['new_mot'])) {
+if(@$_POST['step'] == "2" && isset($_POST['listeMot'])) {
 	$html = getHTML_Etape2();
 } elseif ( @$_POST['step'] == "3" ) { // Quant le teste est fini
 	$html = getHTML_Etape3();

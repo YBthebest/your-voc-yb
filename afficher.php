@@ -44,7 +44,9 @@ if(isset($_POST['note_submit'])) {
 			
 if($id != "") {
 	$time = time(); 
-	$membre = getMembreByLogin($login);
+	if($login != ""){
+		$membre = getMembreByLogin($login);
+	}
 	$listeMotDefinition = getListeById($id);
 	if(isset($listeMotDefinition)) {
 		$listeToJson = convertObjectToJS($listeMotDefinition);
@@ -138,12 +140,14 @@ if($id != "") {
 			if(listeMotDefinition.commentaire != ""){
 				$("#commentaireAuteur").append("Commentaire de l'auteur : <span style=\"font-style:italic;\">" + listeMotDefinition.commentaire + "");
 			}
-			$("#new_mot").val(listeToHidden);
+			$("#listeMot").val(listeToHidden);
 		}
 	}
 </script>
-<!-- Fin de la présentation -->
-<!-- Début du contenu -->
+
+<div id="presentation1">
+</div>
+
 <div id="content">
 	<div id="bloc">
 		<div id="text-center">
@@ -204,7 +208,7 @@ if($id != "") {
 				<form method="post" action="revise" >	
 					<input type="hidden" value="2" name="step" />
 					<input type="hidden" value="<?php echo $_GET['id']; ?>" name="id_liste" />
-					<input type="hidden" value="<?php echo $listeMotDefinition->listeMot(); ?>" id="new_mot" name="new_mot" />
+					<input type="hidden" value="<?php echo $listeMotDefinition->listeMot(); ?>" id="listeMot" name="listeMot" />
 					Nombre de questions à  reviser (laisser vide pour tout) :
 					<input type="text" name='nbQuestion' id="nbQuestion" /><br />
 					Dans quel sens voulez-vous réviser cette liste? 
@@ -249,9 +253,11 @@ if($id != "") {
 								<div>Il n'y a aucun commentaire pour cette liste</div>
 						<?php }?>
 					</div>
+					
 					<div id="captchaContainer" style="margin: auto;width: 500px;">
-						<form method="post" action="afficher?id=<?php echo $_GET['id'] ?>" >				
-							<input type="hidden" name="pseudo" value="<?php echo $_SESSION['login']; ?>"/>
+					<?php if(isset($membre)) {?>
+						<form method="post" action="afficher?id=<?php echo $id ?>" >				
+							<input type="hidden" name="pseudo" value="<?php echo $login; ?>"/>
 							<input type="hidden" name="email" value="<?php echo $membre->email(); ?>"/>
 							Commentaire ou correction : 
 							<textarea rows="10" cols="50" id="commentaireListe" name="commentaire">test</textarea>
@@ -259,7 +265,10 @@ if($id != "") {
 							</div>
 							<input type="submit" name="btnCommenter" value="Envoyer" />
 						</form>
-					</div>
+					<?php } else { ?>
+						<h3><b>Veuillez <a href="inscription">vous inscrire</a> ou <a href="connexion">vous connecter</a> pour poster un commentaire.</b></h3>
+					<?php } ?>
+					</div>					
 				</div>
 			</div>
 		</div>

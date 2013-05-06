@@ -1,3 +1,4 @@
+AddDefaultCharset utf-8
 # Activation du module de réécriture d'URL :
 RewriteEngine On
 # redirection de l'accueil

@@ -1,71 +1,41 @@
-<?php 
-$days = array(
-		"janvier"=>"January",
-		"février"=>"February",
-		"mars"=>"March",
-		"avril"=>"April",
-		"mai"=>"May",
-		"juin"=>"June",
-		"juillet"=>"July",
-		"août"=>"August",
-		"septembre"=>"September",
-		"octobre"=>"October",
-		"novembre"=>"November",
-		"décembre"=>"December"
-);
-$listeOk = false;
-$updated = false;
-$listes = array();
-$executer = (isset($_GET['executer']))?$_GET['executer']:"";
-if($executer !== ""){
-	if($executer==="listes_public" || $executer==="update_listes_public"){
-		$listes = getAllListe();
-	}else if($executer==="commentaires" || $executer==="update_commentaires"){
-		$listes = getAllCommentaires();
-	}else if($executer==="revise" || $executer==="update_revise"){
-		$listes = getAllRevisions();
-	}
-}
-foreach($listes as $res){
-	$dateold = $res->timestamp();
-	if(preg_match("/[a-zA-Z]+/", $dateold)){
-		if(!preg_match("/ 201[0-9] /", $dateold)){
-			$dateold = preg_replace("/([0-9]{2}:[0-9]{2}:[0-9]{2})/","2012 $1", $dateold);
-		}
-		$explode = explode(" ", $dateold);
-		$date = $explode[1]." ".$days[$explode[2]]." ".$explode[3]." ".$explode[4];
-		print_r("$dateold => $date = ");
-		$date = strtotime($date);
-		print_r("$date<br>");
-		if(startswith($executer, "update")){
-			$id = $res->id();
-			$query = 'UPDATE '.substr($executer,strpos($executer, "_")+1).' SET date = "'.$date.'" WHERE id = "'.$id.'"';
-			print_r($query);
-			mysql_query($query)or die(mysql_error());
-			$updated = "";
-		}
-		if(!startswith($executer, "update_")){
-			$listeOk = $executer;
-		}
-	}else{
-		print_r("$dateold<br>");
-	}
-}
-?>
-<html>
-<form id="maj">
-	<select name="executer">
-		<option value="listes_public">listes mot</option>
-		<option value="commentaires">commentaires</option>
-		<option value="revise">revise</option>
-		<?php if($listeOk){?>		
-			<option value="update_<?php echo $listeOk;?>">update <?php echo $listeOk;?></option>
-		<?php }?>
-	</select>
-	<input type="submit" value="executer"/>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr" > 
+	<head>
+        <link rel="stylesheet" href="theme/style.css" />		
+		<script type="text/javascript" src="javascript/jquery-1.6.4.js"></script>
+		<script type="text/javascript" src="javascript/your-voc.js"></script>
 
-	<?php if($updated){?>
-		<div>la liste a été mise a jour</div>
-	<?php } ?>
-</form>
+		<link rel="icon" type="image/ico" href="http://your-voc.com/img/favicon.ico" />
+		<!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" /><![endif]-->
+
+		<meta name="Identifier-url" content="http://your-voc.com" />
+		<meta name="Abstract" content="Sur Your-Voc.com, tu peux réviser ton vocabulaire très facilement, avec tes propres mots ou d'après les listes déjà disponibles." />
+		<meta name="keywords" lang="fr" content="your, voc, vocabulaire, apprendre, son, creer, liste, chercher, espagnol, allemand, anglais, italien, réviser" />
+		<meta name="Category" content="Vocabulaire (école)" />
+		<meta name="Date-Creation-yyyymmdd" content="20100325" />
+		<meta name="Date-Revision-yyyymmdd" content="20110401" />
+		<meta name="Author" lang="fr" content="Yannick Bloem" />
+		<meta name="Reply-to" content="yannickbloem@hotmail.com" />
+		<meta name="Copyright" content="©Copyright : © Your-voc.com 2011" />
+		<meta name="Location" content="Switzerland" />
+		<meta name="Distribution" content="Global" />
+		<meta name="Rating" content="General" />
+		<meta name="google-site-verification" content="pErt4j5t31fEifaia0V_gUs2DelP-DSnU0KxKdnvBnA" />
+    </head>
+	<body>
+		<?php 
+		
+$connect = mysql_connect ("localhost", "root", "");
+mysql_select_db ("your_voc_utf8");
+mysql_set_charset('utf8');
+
+$retour = mysql_query("SELECT * FROM categories");
+	while ($data = mysql_fetch_array($retour)){
+		print_r($data);
+		print_r("<br>");
+	}
+?>
+
+test avec char : é ç à è Î ï
+	</body>
 </html>

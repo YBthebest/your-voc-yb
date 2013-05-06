@@ -27,8 +27,9 @@ function dbconnect(){
 	dbConfiguration();
     static $connect = null;
     if ($connect === null) {
-		$connect = mysql_connect (getProperty('db.host.name'), getProperty('db.user.name'), getProperty('db.user.mdp'));
+		$connect = mysql_connect (getProperty('db.host.name'), getProperty('db.user.name'), getProperty('db.user.mdp'));	
 		mysql_select_db (getProperty('db.name'));
+    	mysql_set_charset( 'utf8' );
     }
     return $connect;
 }
@@ -37,7 +38,10 @@ function dbPDO(){
     static $connect = null;
     if ($connect === null) {
 		$dbhost = 'mysql:host='.getProperty('db.host.name').';dbname='.getProperty('db.name');
-		$connect = new PDO($dbhost, getProperty('db.user.name'), getProperty('db.user.mdp'));
+		$options = array(
+				PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+		);
+		$connect = new PDO($dbhost, getProperty('db.user.name'), getProperty('db.user.mdp'), $options);
     }
     return $connect;
 }
@@ -173,8 +177,8 @@ function getConfigPage(){
 	$configPage->setPageName(getPage());
 	initTitle($configPage->pageName());
 	$configPage->setTitle($_ENV['title']);
-	$configPage->setMetaContent($_ENV['metaContent']);
-	header("Content-Type: text/html; charset=utf-8");
+	//$configPage->setMetaContent($_ENV['metaContent']);
+	//header("Content-Type: text/html; charset=utf-8");
 	setlocale(LC_TIME, 'fr_FR.utf8','fra');
 	if($_SERVER['SERVER_NAME']){
 		ini_set('display_errors',1);

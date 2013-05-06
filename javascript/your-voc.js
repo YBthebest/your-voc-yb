@@ -14,7 +14,7 @@ Array.prototype.indexOf = function(obj){
 		}
 	}
 	return -1;
-}
+};
 
 Array.prototype.remove = function(obj){
 	var l = this.length;
@@ -30,7 +30,7 @@ Array.prototype.remove = function(obj){
 	if(replace){
 		this.pop();
 	}
-}
+};
 
 Array.prototype.insert = function(p_index, newObj){
 	var l = this.length;
@@ -50,7 +50,7 @@ Array.prototype.insert = function(p_index, newObj){
 	}else{
 		this.push(newObj);
 	}
-}
+};
 function initRevise(){
 	initProperties();
 	if(formulaire){
@@ -241,7 +241,7 @@ function createElem(defElement){
 		elem = document.createElement(defElement.tag);
 		for(attr in defElement){
 			if(attr != 'tag'){
-				elem.setAttribute(attr, defElement[attr]);
+				elem[attr] = defElement[attr];
 			}
 		}
 	}
@@ -342,5 +342,152 @@ function dynamicSortMultiple(properties) {
             i++;
         }
         return result;
-    }
+    };
+}
+
+Pager = function(nbPage, currentPage) {	
+	this.nbPage = nbPage;
+	this.currentPage = currentPage;
+	this.containers = [];
+	this.defaultSelectorStyle = "float:left; text-align:center; margin:2px; cursor:pointer; height:20px; color:#be3737";	
+	this.addPagerContainer();
+};
+
+Pager.prototype.getContainer = function (index){
+	if(!index){
+		return this.containers[0];
+	}else{
+		return this.containers[index];
+	}
+};
+
+Pager.prototype.addPagerContainer = function (){
+	name = "container"+this.containers.length;
+	var container = createElem({tag:"p", id:"pagineur"+this.containers.length});
+	container.style.cssText = "height:20px;margin-bottom:20px;";
+	this.initSelectors(container);
+	this.containers.push(container);
+	this.select(this.currentPage);
+	return container;
+};
+
+Pager.prototype.initSelectors = function(container){
+	this.addSelector("<< ", "first", 1, container);
+	for(var i=1; i<= this.nbPage; i++){
+		this.addSelector(i, "page_"+i, i, container);		
+	}
+	this.addSelector(" >>", "last", this.nbPage, container);
+};
+
+Pager.prototype.select = function(index){
+	for(var i=0; i<this.containers.length; i++){
+		var $parent = $(this.containers[i]);
+		var elemToSelect = $parent.children('[name="page_'+index+'"]').get(0);
+		if(this.currentPage != index){
+			var elemSelected = $parent.children('[name="page_'+this.currentPage+'"]').get(0);
+			elemSelected.innerHTML = elemSelected.value;
+			elemSelected.style.cssText = this.defaultSelectorStyle;	
+			elemSelected.isSelected = false;
+		}
+		elemToSelect.innerHTML = "[ "+elemToSelect.value+" ]";
+		elemToSelect.style.color = "white";
+		elemToSelect.style.cursor = "";		
+		elemToSelect.isSelected = true;
+	}
+	this.currentPage = index;	
+};
+
+Pager.prototype.addSelector = function(text, name, numPage, parent){
+	var pageSelector = createElem({tag:"div", name:name, value:text, numPage:numPage});
+	pageSelector.style.cssText = this.defaultSelectorStyle;
+	pageSelector.appendChild(createElem({tag:"text", text:text}));
+	var pager = this;
+	pageSelector.onclick = function (){
+		if(!this.isSelected){
+			pager.select(this.numPage);
+			slidePage(window.listeMotsDef.listesMot, this.numPage, this.numPage);
+			//pagineListesMot(page);
+		}
+	};
+	parent.appendChild(pageSelector);
+};
+
+function reversableSort(liste){
+	var i = 1;
+	var props = new Array();
+	var reverse = false;
+	for(i; i<arguments.length; i++){
+		if(i == 1 && reverse){
+			arguments[i] = "-" + arguments[i];
+		}
+		props.push(arguments[i]);
+	}
+	liste.sort(dynamicSortMultiple(props));
+	pagineListesMot(1);
+}
+
+function copyToClipboard(){
+	var listeMots = document.getElementById('listeMot').value;
+	if(window.clipboardData){
+		window.clipboardData.setData("Text", listeMots);
+	}else{
+		//alert('Copie dans le presse papier impossible!/n Nous allons vous afficher un champ avec la liste sélectionné§. /nFaites Ctrl+c pour la mettre dans le presse papier.');
+		selectToCopy();
+	}
+}
+function getClipboard(){
+	var texte = "";
+	if(window.clipboardData){
+		texte = window.clipboardData.getData('Text');
+	}
+	return texte;
+}
+function alertClipboard(){
+	alert(getClipboard());
+}
+function selectToCopy(){
+	var listeMots = document.getElementById('liste').value;
+	var tabMots= listeMots.split("\n");
+	var nbMots = document.getElementById('table').children[0].rows.length;
+	var indexMostLong = 0;
+	for(var i=0, imax=nbMots;i<imax;i++){
+		if(tabMots[i].length>indexMostLong){
+			indexMostLong = tabMots[i].length;
+		}
+	}
+	var cachePage = document.createElement("div");
+	cachePage.id="cachePage";
+	cachePage.style.cssText = "position:absolute; top:0px; left:0px; z-index:999; width:100%; height:"+document.body.offsetHeight+"px; background-color:gray; opacity : 0.7;-moz-opacity : 0.7;-ms-filter:alpha(opacity=70);filter:alpha(opacity=70);";
+	var divContainer = document.createElement("div");  
+	divContainer.id = "blockToCopy";
+	var divClose = document.createElement("div");
+	divClose.innerHTML = "Cliquez ici pour fermer.";
+ 	divClose.style.cssText = "cursor:pointer; background-color:orange; border:3px solid #7E3117;width:"+(indexMostLong*7)+"px"; 
+ 	divClose.onmouseover = function(){this.style.backgroundColor = "#CC6600";};
+ 	divClose.onmouseout = function(){this.style.backgroundColor = "orange";};
+ 
+ 	var texteArea = document.createElement("textarea");  
+ 	texteArea.id = "listeToCopy";
+ 	texteArea.value = listeMots;  
+ 	texteArea.rows = nbMots;
+ 	texteArea.style.cssText = "overflow:auto;width:"+(indexMostLong*7)+"px;margin:0;";
+	divContainer.style.cssText = "position:absolute; top:" + (document.documentElement.scrollTop + 100) +"px; left:40%;z-index:1000; width:"+(indexMostLong*8)+"px";
+	document.body.appendChild(cachePage);
+	document.body.appendChild(divContainer);
+	divContainer.appendChild(divClose);
+	divContainer.appendChild(texteArea);
+	divClose.onclick = function (){
+       closeCachePage();
+	};
+	cachePage.onclick = function (){
+       closeCachePage();
+	};
+	texteArea.select();
+}
+
+function closeCachePage(){
+    var cachePage = document.getElementById("cachePage");
+  	var divContainer = document.getElementById("blockToCopy");
+  	cachePage.parentNode.removeChild(cachePage);
+  	divContainer.parentNode.removeChild(divContainer);
 }
