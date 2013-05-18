@@ -66,7 +66,7 @@ class ListeMotDefinition extends Entity{
 	}
 	public function setTimestamp($timestamp){
 		$this->date = timestampToString($timestamp);
-		$this->timestamp = $timestamp;
+		$this->timestamp = stringDateToTimestamp($timestamp);
 	}
 	public function categorie(){
 		return $this->categorie;

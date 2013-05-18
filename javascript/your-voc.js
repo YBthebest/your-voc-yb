@@ -345,9 +345,18 @@ function dynamicSortMultiple(properties) {
     };
 }
 
-Pager = function(nbPage, currentPage) {	
-	this.nbPage = nbPage;
-	this.currentPage = currentPage;
+function getNbPage(liste, nbPerPage){
+	return parseInt(liste.length/nbPerPage  + 0.9);
+}
+
+Pager = function(listeDefintion, creatorListeDom, pageChanger) {	
+	this.liste = listeDefintion.liste;
+	this.nbPerPage = listeDefintion.nbPerPage;
+	this.currentPage = 1;
+	this.nbPage = getNbPage(this.liste, this.nbPerPage);
+	this.creatorListeDom = (creatorListeDom)?creatorListeDom:this.defaultCreatorListeDom;
+	this.pageChanger = (pageChanger)?pageChanger:this.defaultPageChanger;	
+	this.displaySelectedPage();
 	this.containers = [];
 	this.defaultSelectorStyle = "float:left; text-align:center; margin:2px; cursor:pointer; height:20px; color:#be3737";	
 	this.addPagerContainer();
@@ -394,7 +403,8 @@ Pager.prototype.select = function(index){
 		elemToSelect.style.cursor = "";		
 		elemToSelect.isSelected = true;
 	}
-	this.currentPage = index;	
+	this.currentPage = index;
+	this.displaySelectedPage();
 };
 
 Pager.prototype.addSelector = function(text, name, numPage, parent){
@@ -404,13 +414,117 @@ Pager.prototype.addSelector = function(text, name, numPage, parent){
 	var pager = this;
 	pageSelector.onclick = function (){
 		if(!this.isSelected){
-			pager.select(this.numPage);
-			slidePage(window.listeMotsDef.listesMot, this.numPage, this.numPage);
+			pager.select(this.numPage);			
 			//pagineListesMot(page);
 		}
 	};
 	parent.appendChild(pageSelector);
 };
+
+Pager.prototype.displaySelectedPage = function(){
+	var start = (this.currentPage-1) * this.nbPerPage;
+	var end = start + this.nbPerPage;
+	if(start >= this.liste.length){
+		end = this.liste.length-1;
+	}
+	var listeToDisplay = this.liste.slice(start, end);
+	this.pageChanger(listeToDisplay, start+1);
+};
+
+Pager.prototype.defaultCreatorListeDom = function (){
+	alert("Creator liste DOM not yet implemented");
+};
+
+Pager.prototype.defaultPageChanger = function(){
+
+};
+
+
+function createListSort(selectList, listToSort, defaultSelected, pager){
+	var selectTri = createListeSelect("trier", selectList);
+	defaultSelected = defaultSelected||selectList.options[0].value;
+    selectTri.onchange = function(){
+    	var value = this.options[this.selectedIndex].value;
+  	  	var alternate = defaultSelected;
+  	  	var index=0;
+  	  	while(value == alternate){
+  	  		value = this.options[index++].value;
+  	  	}
+  	  	reversableSort(listToSort, value, alternate);
+  	  	//pagineListesMot(listToSort, 1, nbLimite);
+  	  	pager.select(1);
+    };
+    pager.select(1);
+}
+
+function createListForSortListeMot(listMotToSort, pager){
+	var listeTri = [{options:[
+		{value:"categorie",text:"catégorie"},
+		{value:"titre",text:"titre"},
+		{value:"-note",text:"note"},
+		{value:"-vue",text:"popularité"},
+		{value:"membre",text:"auteur"},
+		{value:"-timestamp",text:"date"}
+	]}];
+	createListSort(listeTri, listMotToSort.liste, listMotToSort.defaultSort, pager);
+}
+
+
+function pagineListesMot(liste, startIndex){
+	$("#listesContainer").html("");
+	createListeByCateg(liste, startIndex);
+}
+
+function createListeByCateg(listesVocabulaires, startIndex){
+	var div = createElem({tag:"div"});
+	startIndexUsed = (startIndex)?startIndex:1;
+	for(var i=0; i<listesVocabulaires.length; i++){
+		var listElemt = createListeMotElement(listesVocabulaires[i], startIndexUsed + i);
+		div.appendChild(listElemt);
+	}
+	$("#listesContainer").append(div);
+	$("#sliderContainer").css("height", $("#listesContainer").css("height"));
+	return div;
+}
+
+function createListeMotElement(listeMotDef, index){
+	var div = createElem({tag:"div"});
+	index = (!index)?"":index;
+	var note = (listeMotDef.note!="")?'Note: '+listeMotDef.note+'/5':"Pas de note";
+	var elem = index+'.<b>'+
+		listeMotDef.categorie+'<->'+listeMotDef.categorie2+
+		': </b> <a href="afficher?id='+listeMotDef.id+'">'+
+		listeMotDef.titre+'</a> (' + note + ' et '+
+		listeMotDef.vue+' vues)<br /><small> par <a href="profil?m='+listeMotDef.membre+'">'+
+		listeMotDef.membre+'</a> le '+listeMotDef.date+'('+listeMotDef.timestamp+')</small><br /><br/>';
+	div.innerHTML = elem;
+	return div;
+}
+
+function slidePage(liste, startIndex){
+	var elemContainer = $("#listesContainer");	
+	elemContainer.css('width', elemContainer[0].offsetWidth);
+/*	var slider = $("#sliderList");
+	slider.css(elemContainer.css('width'));
+	slider.css("overflow","hidden");
+	slider.css("height",elemContainer[0].offsetHeight);*/
+	elemContainer.css("float","left");
+	elemContainer.css("position", "absolute");
+	var nextContainer = elemContainer.clone();
+	nextContainer.css('left', elemContainer[0].offsetWidth);
+	elemContainer.attr("id","#listesContainerToDelete");	
+	nextContainer.appendTo("#sliderList");
+	pagineListesMot(liste, startIndex);
+	elemContainer.animate({
+		'left' : '-' + elemContainer[0].offsetWidth + 'px'
+	});
+	nextContainer.animate({
+        'left' : '0px'
+	},function(){
+		elemContainer.remove();
+	});
+	$("#pagineur").focus();
+}
 
 function reversableSort(liste){
 	var i = 1;
@@ -423,9 +537,7 @@ function reversableSort(liste){
 		props.push(arguments[i]);
 	}
 	liste.sort(dynamicSortMultiple(props));
-	pagineListesMot(1);
 }
-
 function copyToClipboard(){
 	var listeMots = document.getElementById('listeMot').value;
 	if(window.clipboardData){

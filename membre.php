@@ -104,12 +104,10 @@
 							$i = '1';
 							foreach($requete_favoris as $rendu) {
 								$liste = $rendu->id_liste();
-								$requete_listes_r = getListeById($liste);
-								foreach($requete_listes_r as $requete_listes){
-									echo ''.$i.'. ';
-									?><a href="afficher?id=<?php echo $requete_listes->id() ?>"><?php echo $requete_listes->titre() ?></a> - <small><?php echo $requete_listes->categorie() ?></small><br /><?php
-									$i++;
-								}
+								$requete_listes = getListeById($liste);
+								echo ''.$i.'. ';
+								?><a href="afficher?id=<?php echo $requete_listes->id() ?>"><?php echo $requete_listes->titre() ?></a> - <small><?php echo $requete_listes->categorie() ?></small><br /><?php
+								$i++;
 							}
 						?><br><a href="?page=membre_all">Tout voir</a><br><?php
 						}

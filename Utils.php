@@ -1,4 +1,19 @@
 <?php
+$daysMap = array(
+		"janvier"=>"January",
+		"février"=>"February",
+		"mars"=>"March",
+		"avril"=>"April",
+		"mai"=>"May",
+		"juin"=>"June",
+		"juillet"=>"July",
+		"août"=>"August",
+		"septembre"=>"September",
+		"octobre"=>"October",
+		"novembre"=>"November",
+		"décembre"=>"December"
+);
+
 function convertArrayObjectToJSArray($arrayObject, $dropProperties=null){	
 	$jsObject = "[";
 	$i = 0;
@@ -115,6 +130,22 @@ function timestampToString($timestamp){
  	}else{
  		 return $timestamp;
  	}
+}
+
+function stringDateToTimestamp($date){
+	if(!preg_match("/[0-9]{10,20}/", $date)){
+		$dateToParse = $date;
+		if(!preg_match("/ 201[0-9] /", $date)){
+			$dateToParse = preg_replace("/([0-9]{2}:[0-9]{2}:[0-9]{2})/","2012 $1", $date);
+		}
+		$explode = explode(" ", $dateToParse);
+		$daysMap = $GLOBALS['daysMap'];
+		$dateToParse = $explode[1]." ".$daysMap[$explode[2]]." ".$explode[3]." ".$explode[4];
+		$timestamp = strtotime($dateToParse);
+		return $timestamp;
+	}else{
+		return $date;
+	}
 }
 
 function startswith($hay, $needle) {
