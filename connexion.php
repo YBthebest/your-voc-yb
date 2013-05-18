@@ -5,6 +5,7 @@ if(isset($_SESSION['login'])) {
 }
 $login="";
 $mdp = "";
+setcookie('cookie_test', 'test_cookie',    strtotime("+1 year"), '/');
 // on teste si le visiteur a soumis le formulaire de connexion
 if (isset($_POST['connexion']) && $_POST['connexion'] == 'Connexion') {
 	if (isset($_POST['login']) && isset($_POST['pass'])) {
@@ -12,6 +13,13 @@ if (isset($_POST['connexion']) && $_POST['connexion'] == 'Connexion') {
 		$mdp = $_POST['pass'];
 		$membre = getMembre($login, $mdp);
 		if (!is_string($membre)) {
+			if(!isset($_COOKIE['cookie_test'])){
+				echo '<div style="color:red;"><h3>Attention: veuillez s\'il vous plait activer les cookies par défaut dans votre navigateur pour pouvoir vous connecter. Vous allez être redirigé vers la page de connexion.</div>';
+				echo '<META HTTP-EQUIV=Refresh CONTENT="5; URL=connexion">';
+				echo '</div></div></div>';
+				include("footer.php");
+				die();
+			}
 			$_SESSION['login'] = $membre->login();
 			if(isset($_POST['auto'])) {
 				$_SESSION['id'] = $membre->id();
@@ -35,7 +43,7 @@ if (isset($_POST['connexion']) && $_POST['connexion'] == 'Connexion') {
 <div id="content">
 <div id="bloc">
 <div id="title">Connexion</div>
-<?php 
+<?php
 	if(!isset($waitingText)){	
 ?>
 		<div id="formulaire">

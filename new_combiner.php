@@ -55,6 +55,34 @@ function deleteCombiner(idListe){
     window.listeCombi.remove(idListe);
     $('#result_' + idListe).show();
 }
+
+function confirm(){
+	if( $('#detail_combiner').is(':empty') ) {
+		$('#confirm_1').html("");
+    	$('#confirm_1').append('Aucune liste sélectionée.'); 
+	}
+	else{
+		$('#confirm_1').html("");
+    	$('#confirm_1').append('Votre combinaison va etre sauvegardée.'); 		
+	}
+}
+
+function defaultListeByGetId(){
+	var $_GET = <?php echo json_encode($_GET); ?>;
+	var idListe = $_GET['id'];
+	if(typeof idListe != 'undefined'){	
+		 var listeMotDef = getListeMot(idListe);
+		 alert(listeMotDef);	
+		 $('#listeMot').html("");
+		 $('#listeMot').append('<div id="liste_'+listeMotDef.id+'"><div style="color:#be3737">' + listeMotDef.titre + " : </div></br><div><pre>" + listeMotDef.mots + "</pre></div></div>");       
+		 elem.style.color = "#be3737";
+		 if(window.selectedElem){
+			 window.selectedElem.style.color = "white";
+		 }
+		 window.selectedElem = elem;
+	}
+}
+//defaultListeByGetId();
 </script>
 <!-- D?but de la pr?sentation -->
 <div id="presentation1"></div>
@@ -63,7 +91,7 @@ function deleteCombiner(idListe){
 <div id="content">
 	<div id="bloc">
 		<div id="title">Combiner</div>
-
+			<div id="confirm_1"></div>
 					<div id="container">
 						<div class="col">
 							<h3>Détails listes combinées</h3>
@@ -73,7 +101,7 @@ function deleteCombiner(idListe){
 						</div>
 						<div class="col">
 							<h3>Titres listes combinées</h3>
-							<button class="confirm">Confirmer la combinaison</button>
+							<button class="confirm" onclick="confirm();">Confirmer la combinaison</button>
 							<br />
 							<div style="border:1px solid #be3737;margin-top:5px;height: 400px; overflow-y: auto;overflow-x: hidden;">
 								<div id="combinaisons"></div>
