@@ -9,6 +9,8 @@
 		<title><?php echo $configPage->title() ?></title>
 		<meta name="Description" lang="fr" content="<?php echo $configPage->metaContent() ?>" />
 		<script type="text/javascript" src="javascript/jquery-1.6.4.js"></script>
+		<script type="text/javascript" src="javascript/Pager.js"></script>
+		<script type="text/javascript" src="javascript/overrideObjects.js"></script>
 		<script type="text/javascript" src="javascript/your-voc.js"></script>
 
 		<link rel="icon" type="image/ico" href="http://your-voc.com/img/favicon.ico" />

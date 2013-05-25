@@ -36,17 +36,22 @@ $(function(){
 		containerListeCreator : createListeByCateg,
 		elementCreator : createListeMotElement,
 		idListeContainer : "listesContainer",
+		classPagerContainer : "pagerContainer",
 		pageChanger : slidePage,
 		defaultSort:"titre",
   };
   
   window.pager = new Pager(window.listeMotsDef);
-//  $("#sliderContainer").before(pager.getContainer()); 
-//  $("#sliderContainer").after(pager.addPagerContainer());  
-
-  createListForSortListeMot(window.listeMotsDef, pager);
+  createListForSortListeMot("trier", window.listeMotsDef, pager);
   
 });
+
+function valideRequete(){
+	var req=$('#requete');
+	if(req.val()=='Mots-clés'){
+		req.val('');
+	}
+}
 
 </script>
 <!-- Début de la présentation -->
@@ -58,29 +63,29 @@ $(function(){
 		<div id="title">
 			<?php 
 			if(isset($valueSelected)){
-			if($valueSelected=='aucune'){
-				$nom="Catégories";
+				if($valueSelected=='aucune'){
+					$nom="Catégories";
+				}else{
+					$nom=$valueSelected;
+				}
 			}else{
-				$nom=$valueSelected;
+				$nom="Catégories";
 			}
-		}else{
-			$nom="Catégories";
-		}
-		echo $nom;
+			echo $nom;
 		?>
 		</div>
 
-		<form action="recherche" method="post"
-			onsubmit="var req=$('#requete');if(req.val()=='Mots-clés'){req.val('')}">
+		<form action="recherche" method="post" onsubmit="valideRequete()">
 			<p>
-				Catégorie : <select id="categorie" name="categorie"></select> <br />Faire
-				la recherche sur : <select name="sur">
+				Catégorie : <select id="categorie" name="categorie"></select> 
+				<br />
+				Faire la recherche sur : 
+				<select name="sur">
 					<option value="titre">le titre des listes</option>
 					<option value="mots">le contenu des listes</option>
 					<option value="tous">les deux</option>
-				</select> <input type="text" id="requete" name="requete"
-					value="Mots-clés" size="30" /> <input type="submit"
-					value="Recherche" />
+				</select> 
+				<input type="text" id="requete" name="requete" value="Mots-clés" size="30" /> <input type="submit" value="Recherche" />
 			</p>
 		</form>
 		<a href="entrer_liste">Entrer une nouvelle liste</a><br />
@@ -89,7 +94,11 @@ $(function(){
 			Trier par : <select id="trier"></select>
 		</div>
 		<br />
+		
+		<div class="pagerContainer"></div>
 		<div id="listesContainer"></div>
+		<div class="pagerContainer"></div>
+		
 		<?php
 		$groupe = getGroupesCategorie();
 		?>
