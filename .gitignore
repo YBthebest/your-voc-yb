@@ -4,4 +4,4 @@
 .settings
 *.sql
 *.save
-conf.properties
+config.properties
