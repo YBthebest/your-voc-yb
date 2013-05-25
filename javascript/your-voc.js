@@ -441,7 +441,7 @@ Pager.prototype.selectElem = function(elem){
 	elem.style.color = "white";
 	elem.style.cursor = "";		
 	elem.isSelected = true;
-}
+};
 
 Pager.prototype.addSelector = function(text, name, numPage, $parent){
 	var pageSelector = createElem({tag:"li", className:name, texte:text, numPage:numPage});

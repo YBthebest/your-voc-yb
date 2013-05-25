@@ -62,19 +62,19 @@
 						if(sizeof($listeRevisions) == 0) {
 							echo 'Aucune liste révisée.<br><a href="?page=gerer_public">Commencer maintenant</a> !';
 						} else {
-							foreach($listeRevisions as $listeRevision) {
-								$idListeMot = $listeRevision->id_liste();
+							foreach($listeRevisions as $revision) {
+								$idListeMot = $revision->id_liste();
 								if(empty($idListeMot) || $idListeMot == 'no') {
-									$id_liste = 'Mots entrés par vous pour une utilisation unique';
+									$displayListe = 'Mots entrés par vous pour une utilisation unique';
 								} else {
-									$listeMot = getListeId($id);
+									$listeMot = getListeById($idListeMot);
 									if(empty($listeMot)){
-										$id_liste = 'Liste supprimée';		
+										$displayListe = 'Liste supprimée';		
 									}else{
-										$id_liste = '<a href="afficher?id='.$idListeMot.'">'.$listeMot->titre.'</a>';
+										$displayListe = '<a href="afficher?id='.$idListeMot.'">'.$listeMot->titre().'</a>';
 									}
 								}
-								?><?php echo $i ?>. <?php echo $id_liste ?> - <b>Moyenne de la révision: <?php echo $resultat->moyenne() ?>%</b> - <small>Revisé le <?php echo $resultat->date()?>. </small><br /><br /> <?php
+								?><?php echo $i ?>. <?php echo $displayListe ?> - <b>Moyenne de la révision: <?php echo $revision->moyenne() ?>%</b> - <small>Revisé le <?php echo $revision->date()?>. </small><br /><br /> <?php
 								$i++;
 							}
 						}
