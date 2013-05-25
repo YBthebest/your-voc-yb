@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="javascript/Pager.js"></script>
 		<script type="text/javascript" src="javascript/overrideObjects.js"></script>
 		<script type="text/javascript" src="javascript/your-voc.js"></script>
-
+		<script type="text/javascript" src="javascript/jquery.watermark.js"></script>
 		<link rel="icon" type="image/ico" href="http://your-voc.com/img/favicon.ico" />
 		<!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" /><![endif]-->
 

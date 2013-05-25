@@ -40,7 +40,9 @@
 				}
 				// Formatage des entrées
 				$f_1=trim(ucwords(mb_ereg_replace("[^a-zA-Z0-9éèàäö\ -]", "", $f_1)));
+				$f_1 = mysql_real_escape_string($f_1);
 				$f_2=strip_tags(trim($f_2));
+				$f_2 = mysql_real_escape_string($f_2);
 				// Verification des champs
 				if(strlen($f_1)<2){
 					$erreur.="<li><span class='txterror'>Le champ &laquo; Nom &raquo; est vide ou incomplet.</span>";

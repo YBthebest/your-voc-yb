@@ -57,6 +57,7 @@ function getHTML_Etape2() {
 	if(isset($_POST['id_liste']) OR isset($_SESSION['id'])) {
 		if(isset($_POST['id_liste'])) {
 			$id = $_POST['id_liste'];
+			$id = mysql_real_escape_string($id);
 			$_SESSION['id'] = $_POST['id_liste'];
 			$vues = mysql_query("SELECT * FROM listes_public WHERE id = '$id'");
 			$result = mysql_fetch_array($vues);

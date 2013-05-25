@@ -1,6 +1,5 @@
 <?php
 $login = @$_SESSION['login'];
-$id = $_GET['id'];
 $capchaReponse = "";
 $withCapcha = "false";
 $capcha = "";
@@ -33,12 +32,14 @@ if(isset($_POST['note_submit'])) {
 }
 
 			
-if($id != "") {
+if(isset($_GET['id']) AND !empty($_GET['id'])) {
+	$id = $_GET['id'];
 	$time = time(); 
 	if($login != ""){
 		$membre = getMembreByLogin($login);
 	}
 	$listeMotDefinition = getListeById($id);
+	if(!empty($listeMotDefinition)){
 	if(isset($listeMotDefinition)) {
 		$listeToJson = convertObjectToJS($listeMotDefinition);
 		$votes = getVotesById($id);
@@ -95,11 +96,6 @@ if($id != "") {
 		$retour = sizeof($commentaires);
 		$commToJson = convertArrayObjectToJSArray($commentaires);
 	}
-	
-	
-	
-	
-}
 ?>
 <script type="text/javascript">
 	$(function(){
@@ -176,7 +172,7 @@ if($id != "") {
 			
 			<br>
 			
-			<a href="#commentaire"><small>Accéder directement aux commentaires</small></a>  
+			<a href="#commentaires"><small>Accéder directement aux commentaires</small></a>  
 			/  
 			<a href="signaler?id=<?php echo $id ?>"><small>Signaler une erreur dans la liste</small></a>
 			
@@ -256,7 +252,7 @@ if($id != "") {
 					
 					<div id="captchaContainer" style="margin: auto;width: 500px; margin-top:10px;">
 					<?php if(isset($membre)) {?>
-						<form method="post" action="afficher?id=<?php echo $id ?>" >				
+						<form method="post" action="afficher?id=<?php echo $id ?>#commentaires" >				
 							<input type="hidden" name="pseudo" value="<?php echo $login; ?>"/>							
 							<input type="hidden" name="email" value="<?php echo $membre->email(); ?>"/>
 							Commentaire ou correction : 
@@ -268,7 +264,14 @@ if($id != "") {
 						</form>
 					<?php } else { ?>
 						<h3><b>Veuillez <a href="inscription">vous inscrire</a> ou <a href="connexion">vous connecter</a> pour poster un commentaire.</b></h3>
-					<?php } ?>
+					<?php }
+						}else{
+							echo '<h2>Veuillez préciser un id valable.</h2>';
+						}
+					}else{
+						echo '<h2>Veuillez préciser un id.</h2>';
+					}				
+					 ?>
 					</div>					
 				</div>
 			</div>

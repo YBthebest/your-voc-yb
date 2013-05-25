@@ -7,13 +7,22 @@ if(isset($_GET['q'])){
 	$arr = array();
 	$i = 0;
 	foreach($liste as $result){
-		$titre = $result->titre();
-		$id = $result->id();
 		$arr[$i]['id'] = $result->id();
 		$arr[$i]['titre'] = $result->titre();
 		$arr[$i]['mots'] = $result->listeMot();
+		$arr[$i]['categorie'] = $result->categorie();
+		$arr[$i]['categorie2'] = $result->categorie2();
 		$i++;
 	}
+	echo json_encode($arr);
+}elseif(isset($_GET['id'])){
+	$id = $_GET['id'];
+	$result = getListeById($id);
+	$arr[0]['id'] = $result->id();
+	$arr[0]['titre'] = $result->titre();
+	$arr[0]['mots'] = $result->listeMot();
+	$arr[0]['categorie'] = $result->categorie();
+	$arr[0]['categorie2'] = $result->categorie2();
 	echo json_encode($arr);
 }
 ?>

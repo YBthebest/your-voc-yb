@@ -1,16 +1,21 @@
 <?php  
 $critere = "titre";
 if(isset($_POST['critere'])){
-	$critere = $_POST['critere'];
+	$critere = mysql_real_escape_string($_POST['critere']);
 }else if(isset($_GET['critere'])){
 	$critere = mysql_real_escape_string($_GET['critere']);
 }
 $jsObject = "[]";
 $search = (isset($_POST['requete']))?$_POST['requete']:@$_GET['requete'];
+$search = htmlspecialchars($search);
+$search = mysql_real_escape_string($search);
 if(!empty($search)){
 	$categorie = (isset($_POST['categorie']))?$_POST['categorie']:@$_GET['categorie'];
+	$categorie = mysql_real_escape_string($categorie);
 	$sur = (isset($_POST['sur']))?$_POST['sur']:@$_GET['sur'];
-print_r($sur);
+	$sur = mysql_real_escape_string($sur);
+	
+	$messagesParPage=20;
 	$listesMot = rechercheByCriteres($categorie, $sur, $search, $critere, "0", "illimite");
 	$jsObject = convertArrayObjectToJSArray($listesMot, "listeMot");
 }
@@ -26,7 +31,16 @@ $(function(){
   	if(liste.length > 0){
 		initializeContextResult(liste);
   	}
-  	
+  	  var save='';
+  	  $('input[type="text"]').each(function(){
+  	    this.onfocus=function(){
+  	      save=this.value;
+  	      this.value='';
+  	    };
+  	    this.onblur=function(){
+  	      this.value= this.value==='' ? save : this.value;
+  	    };
+  	  });
 });
 
 function initializeContextResult(listeObject){
