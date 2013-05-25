@@ -39,10 +39,10 @@
 							if(empty($liste)){
 								$displayListe = 'Liste supprimée';		
 							}else{
-								$displayListe = '<a href="afficher?id='.$id.'">'.$liste->$titre.'</a>';
+								$displayListe = '<a href="afficher?id='.$id.'">'.$liste->titre().'</a>';
 							}
 						}
-						?><?php echo $i ?>. <?php echo $displayListe ?> - <b>Moyenne de la révision: <?php echo $resultat->moyenne() ?>%</b> - <small>Revisé le <?php echo $resultat->date()?>. </small><br /><br /> <?php
+						?><?php echo $i ?>. <?php echo $displayListe ?> - <b>Moyenne de la révision: <?php echo $revision->moyenne() ?>%</b> - <small>Revisé le <?php echo $revision->date()?>. </small><br /><br /> <?php
 						$i++;
 					}
 				}
