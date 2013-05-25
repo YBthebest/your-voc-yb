@@ -10,8 +10,7 @@ $search = (isset($_POST['requete']))?$_POST['requete']:@$_GET['requete'];
 if(!empty($search)){
 	$categorie = (isset($_POST['categorie']))?$_POST['categorie']:@$_GET['categorie'];
 	$sur = (isset($_POST['sur']))?$_POST['sur']:@$_GET['sur'];
-	$critere = (isset($_POST['critere']))?$_POST['critere']:isset($_GET['critere'])?$_GET['critere']:$critere;
-	
+
 	$messagesParPage=20;
 	$listesMot = rechercheByCriteres($categorie, $sur, $search, $critere, "0", "illimite");
 	$total= sizeof($listesMot);
@@ -64,18 +63,20 @@ $(function(){
 	 	createListeSelectWithDefault("categorie", <?php echo getJsCategorieListe();?>);
   	}
 
-	window.listeMotsDef = {
-			listesMot:<?php echo $jsObject?>,
-			currentPage:1,
-  			nbPerPage:20
-  	};
-
-  	reversableSort(window.listeMotsDef.listesMot, "categorie", 'titre');
-  	window.pager = new Pager(parseInt(window.listeMotsDef.listesMot.length/window.listeMotsDef.nbLimite  + 0.9), window.listeMotsDef.currentPage);
-	$("#sliderContainer").before(pager.getContainer()); 
-	$("#sliderContainer").after(pager.addPagerContainer());  
-	createListeTri();
-
+  	window.listeMotsDef = {
+  			liste:<?php echo $jsObject?>,
+  			currentPage:1,
+  			nbPerPage:20,
+  			containerListeCreator : createListeByCateg,
+  			elementCreator : createListeMotElementRecherche,
+  			pageChanger : slidePage,
+  			defaultSort:"titre",
+  	  };
+  	  
+  	  window.pager = new Pager(window.listeMotsDef);
+	//$("#sliderContainer").before(pager.getContainer()); 
+	//$("#sliderContainer").after(pager.addPagerContainer());  
+	
   	if($("#critere").length > 0){	  
 	 	$("#critere option[value='<?php  echo $critere;?>']").attr("selected", "selected");
   	}
@@ -118,13 +119,7 @@ $(function(){
 						</form>
 						<br />
 					<p>
-				</div>
-				<div id="sliderContainer">
-					<div id="sliderList"
-						style="position: absolute; width: 100%; height: 100%">
-						<div id="listesContainer"></div>
-					</div>
-				</div>
+				</div>				
 				<div style="text-align: left;">
 					<?php
 						$subListe = array_slice($listesMot, $start, $end);
@@ -175,7 +170,9 @@ $(function(){
 							<input type="submit" value="Recherche">
 						</p>
 					</form>
-				<?php } ?>
+				<?php } ?>		
 		</div>
+		
+		<div id="listesContainer"></div>
 	</div>
 </div>

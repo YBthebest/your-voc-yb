@@ -51,8 +51,9 @@ abstract class DbManager {
 		$result = $this->select($query, $entity);
 		if(sizeof($result) == 1){
 			$result = $result[0];
-		}else{
+		}else if(sizeof($result) == 0){
 			$result = null;
+		}else {
 			throw new Exception("Un resultat unique était attendu pour " + get_class($query));
 		}
 		return $result;

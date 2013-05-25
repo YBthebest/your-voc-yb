@@ -36,7 +36,7 @@ if(isset($_POST['note_submit'])) {
 if($id != "") {
 	$time = time(); 
 	if($login != ""){
-		$membre = getMembreByLogin($login)[0];
+		$membre = getMembreByLogin($login);
 	}
 	$listeMotDefinition = getListeById($id);
 	if(isset($listeMotDefinition)) {
@@ -113,10 +113,9 @@ if($id != "") {
 		
 		var commentaires = <?php echo $commToJson;?>;
 		$("#nbCommentaires").html(commentaires.length);
-		var commentairesMembre = $("#commentairesMembres");
 		$.each(commentaires, function(index, commentaireDef){
-			var divComment = '<div id="'+commentaireDef.id+'"><b>'+commentaireDef.commentaire+'</b><small>Par <a href="profil?m=commentaireDef.membre;">'+commentaireDef.membre+'</a> le '+commentaireDef.date+'</small></div>"';
-			commentairesMembre.append(divComment);
+			var divComment = '<div id="'+commentaireDef.id+'"><b>'+commentaireDef.commentaire+'</b><br><small>Par <a href="profil?m=commentaireDef.membre;">'+commentaireDef.membre+'</a> le '+commentaireDef.date+'</small></div>';
+			$("#commentairesMembres").append(divComment);
 		});
 
 		var capchaReponse = "<?php echo $capchaReponse?>";
@@ -146,7 +145,7 @@ if($id != "") {
 			var listeToHidden = "";
 			$.each(listeMotDefinition.listeMot, function(index, data){
 				var voc = data.split("=");
-				listeToHidden += data + "\r";
+				listeToHidden += data + "\n";
 				$table.append("<tr><td><b><span style=\"color:white;\">"+voc[0]+"</span></td><td>=</td><td><b><span style=\"color:gray;\">"+voc[1]+"</span></td></tr>");
 			});
 			if(listeMotDefinition.commentaire != ""){
@@ -223,7 +222,7 @@ if($id != "") {
 				<form method="post" action="revise" >	
 					<input type="hidden" value="2" name="step" />
 					<input type="hidden" value="<?php echo $_GET['id']; ?>" name="id_liste" />
-					<input type="hidden" value="<?php echo $listeMotDefinition->listeMot(); ?>" id="listeMot" name="listeMot" />
+					<input type="hidden" value="" id="listeMot" name="listeMot" />
 					Nombre de questions à  reviser (laisser vide pour tout) :
 					<input type="text" name='nbQuestion' id="nbQuestion" /><br />
 					Dans quel sens voulez-vous réviser cette liste? 
@@ -250,21 +249,9 @@ if($id != "") {
 					</small>
 				</div>
 				
-				<div id="commentairesMembres">
+				<div id="commentaireContainer">
 					<h2>Commentaires (<span id="nbCommentaires"></span>)</h2>
-					<div id="commentaires">						
-						<?php 
-						if($retour != 0) {
-							foreach($commentaires as $comm){
-							?>
-								<div><b><?php echo $comm->commentaire(); ?></b></div>
-								<small>Par <a href="profil?m=<?php echo $comm->membre(); ?>"><?php echo $comm->membre(); ?></a> le <?php echo $comm->date(); ?></small>
-							<?php 
-							}
-						} else {
-							?>
-								<div>Il n'y a aucun commentaire pour cette liste</div>
-						<?php }?>
+					<div id="commentairesMembres">	
 					</div>
 					
 					<div id="captchaContainer" style="margin: auto;width: 500px; margin-top:10px;">

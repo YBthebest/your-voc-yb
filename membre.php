@@ -57,31 +57,21 @@
 						</p>
 						<h3>3 dernières listes révisées</h3>
 						<?php
-						$requete = getRevisionsByPseudoLimit3($pseudo);
+						$listeRevisions = getRevisionsByPseudoLimit3($pseudo);
 						$i = 1;
-						if(sizeof($requete) == 0) {
+						if(sizeof($listeRevisions) == 0) {
 							echo 'Aucune liste révisée.<br><a href="?page=gerer_public">Commencer maintenant</a> !';
-						}
-						else {
-							foreach($requete as $resultat) {
-								if($resultat->id_liste() == 'no') {
+						} else {
+							foreach($listeRevisions as $listeRevision) {
+								$idListeMot = $listeRevision->id_liste();
+								if(empty($idListeMot) || $idListeMot == 'no') {
 									$id_liste = 'Mots entrés par vous pour une utilisation unique';
-								}
-								else {
-									$id = $resultat->id_liste();
-									if(empty($id)){
-										$id_liste = 'Mots entrés par vous pour une utilisation unique';
-									}
-									else {
-										$query = getListeById($id);
-										if(empty($query)){
-											$id_liste = 'Liste supprimée';		
-										}else{
-											foreach($query as $query_r){
-												$titre = $query_r->titre();
-												$id_liste = '<a href="afficher?id='.$id.'">'.$titre.'</a>';
-											}
-										}
+								} else {
+									$listeMot = getListeId($id);
+									if(empty($listeMot)){
+										$id_liste = 'Liste supprimée';		
+									}else{
+										$id_liste = '<a href="afficher?id='.$idListeMot.'">'.$listeMot->titre.'</a>';
 									}
 								}
 								?><?php echo $i ?>. <?php echo $id_liste ?> - <b>Moyenne de la révision: <?php echo $resultat->moyenne() ?>%</b> - <small>Revisé le <?php echo $resultat->date()?>. </small><br /><br /> <?php

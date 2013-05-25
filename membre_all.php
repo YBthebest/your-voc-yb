@@ -65,7 +65,7 @@
 						$id_liste = 'Mots entrés par vous pour une utilisation unique';
 					}
 					else {
-						$query = getListeById($id);
+						$query = getListeByPseudo($pseudo);
 						if(empty($query)){
 							$id_liste = 'Liste supprimée';		
 						}else{

@@ -43,8 +43,8 @@
 												$erreur = 'Votre pseudo est invalide. Caractères autorisés: lettres, chiffres,et _! Minimum 5 caractères, maximum 20.';
 											}else{
 												$email = mysql_real_escape_string($_POST['email']);
-												$fonction1 = getMembreByEmail($email);
-												if (empty($fonction1)) {
+												$membreExist = getMembreByEmail($email);
+												if (empty($membreExist)) {
 													createMembre($_POST['login'], $_POST['email'], md5($_POST['pass']));
 													$_SESSION['login'] = $_POST['login'];
 													header('Location: membre');

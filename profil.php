@@ -10,8 +10,8 @@
 			<?php
 			if(isset($_GET['m'])) {
 				$pseudo = mysql_real_escape_string($_GET['m']);
-				$requete = getMembreByLogin($pseudo);
-				if(empty($requete)){
+				$membre = getMembreByLogin($pseudo);
+				if(empty($membre)){
 					echo '<h3>Ce membre n\'existe pas.</h3>';
 					echo '</div></div></div>';
 					include("footer.php");
@@ -24,34 +24,25 @@
 		<div id="container">
 			<div id="col1">
 				<h3>3 dernières listes révisées</h3><?php
-				$requete = getRevisionsByPseudoLimit3($pseudo);
+				$listeRevision = getRevisionsByPseudoLimit3($pseudo);
 				$i = 1;
-				if(sizeof($requete) == 0) {
+				if(sizeof($listeRevision) == 0) {
 					echo 'Aucune liste révisée.<br><a href="?page=gerer_public">Commencer maintenant</a> !';
 				}
 				else {
-					foreach($requete as $resultat) {
-						if($resultat->id_liste() == 'no') {
-							$id_liste = 'Mots entrés par vous pour une utilisation unique';
-						}
-						else {
-							$id = $resultat->id_liste();
-							if(empty($id)){
-								$id_liste = 'Mots entrés par vous pour une utilisation unique';
-							}
-							else {
-								$query = getListeById($id);
-								if(empty($query)){
-									$id_liste = 'Liste supprimée';		
-								}else{
-									foreach($query as $query_r){
-										$titre = $query_r->titre();
-										$id_liste = '<a href="afficher?id='.$id.'">'.$titre.'</a>';
-									}
-								}
+					foreach($listeRevision as $revision) {
+						$id = $revision->id_liste();
+						if($id == 'no' || empty($id)) {
+							$displayListe = 'Mots entrés par vous pour une utilisation unique';
+						} else {
+							$liste = getListeById($id);
+							if(empty($liste)){
+								$displayListe = 'Liste supprimée';		
+							}else{
+								$displayListe = '<a href="afficher?id='.$id.'">'.$liste->$titre.'</a>';
 							}
 						}
-						?><?php echo $i ?>. <?php echo $id_liste ?> - <b>Moyenne de la révision: <?php echo $resultat->moyenne() ?>%</b> - <small>Revisé le <?php echo $resultat->date()?>. </small><br /><br /> <?php
+						?><?php echo $i ?>. <?php echo $displayListe ?> - <b>Moyenne de la révision: <?php echo $resultat->moyenne() ?>%</b> - <small>Revisé le <?php echo $resultat->date()?>. </small><br /><br /> <?php
 						$i++;
 					}
 				}
@@ -61,11 +52,11 @@
 				<div id="col2mid">
 					<h3>Ses derniers ajouts</h3>
 					<?php
-						$fonction = getListeByPseudoLimit3($pseudo);
-						if(empty($fonction)){
+						$listesMots = getListeByPseudoLimit3($pseudo);
+						if(empty($listesMots)){
 							echo ''.$pseudo.' n\'a ajouté aucune liste.';
 						}
-						foreach($fonction as $liste){	    	
+						foreach($listesMots as $liste){	    	
 					    	?><li><b><?php echo $liste->categorie() ?> <-> <?php echo $liste->categorie2() ?>: </b><br /><a href="afficher?id=<?php echo $liste->id(); ?>"><?php echo $liste->titre() ?></a> <small><?php echo $liste->date() ?>   (<?php echo $liste->note() ?>/5 et <?php echo $liste->vue() ?> vues)</small></li>
 							<?php 
 				    	} ?>							    	

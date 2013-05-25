@@ -1,6 +1,7 @@
 <script type="text/javascript">
 $(function(){
 	createListeSelectWithDefault("categorie", <?php echo getJsCategorieListe()?>);
+	defaultListeByGetId()
 });
 
 window.listesMots = [];
@@ -21,7 +22,8 @@ function OnSelectionChange(select){
     var selectedOption = select.options[select.selectedIndex];
     $.getJSON("liste_result.php?q=" + $("#categorie").val(), function(data) {
         $.each(data, function(index, data1) {
-        	$('#result').append('<div id="result_'+data1.id+'"><img src="images/add.png" onclick="addCombiner(\'' + data1.id + '\');"/><span class="listeMot" onclick="displayListe(this, \'' + data1.id + '\');">' + data1.titre + '</span></div>');     			
+            var domResult = '<div id="result_'+data1.id+'"><img src="images/add.png" onclick="addCombiner(\'' + data1.id + '\');"/><span class="listeMot" onclick="displayListe(this, \'' + data1.id + '\');">' + data1.titre + '</span></div>';
+			$('#result').append(domResult);     			
         	window.listesMots.push(data1);
         	if(window.listeCombi.indexOf(data1.id) == -1){                
                window.listeCombi.push(data1.id);
@@ -31,8 +33,13 @@ function OnSelectionChange(select){
 }
 function displayListe(elem, idListe){
 	var listeMotDef = getListeMot(idListe);	
-	 $('#listeMot').html("");
-	 $('#listeMot').append('<div id="liste_'+listeMotDef.id+'"><div style="color:#be3737">' + listeMotDef.titre + " : </div></br><div><pre>" + listeMotDef.mots + "</pre></div></div>");       
+	 var domResult = '<div id="liste_'+listeMotDef.id+'"><div style="color:#be3737">' + listeMotDef.titre + ' : </div>';
+     for(var i=0; i<listeMotDef.mots.length; i++){
+     	domResult += '<div>'+ listeMotDef.mots[i] +'</div>';
+     }  
+     domResult += "</div>";
+     $('#listeMot').html("");
+     $('#listeMot').append(domResult);       
 	 elem.style.color = "#be3737";
 	 if(window.selectedElem){
 		 window.selectedElem.style.color = "white";
@@ -68,19 +75,14 @@ function confirm(){
 }
 
 function defaultListeByGetId(){
-	var $_GET = <?php echo json_encode($_GET); ?>;
-	var idListe = $_GET['id'];
-	if(typeof idListe != 'undefined'){	
-		 var listeMotDef = getListeMot(idListe);
-		 alert(listeMotDef);	
-		 $('#listeMot').html("");
-		 $('#listeMot').append('<div id="liste_'+listeMotDef.id+'"><div style="color:#be3737">' + listeMotDef.titre + " : </div></br><div><pre>" + listeMotDef.mots + "</pre></div></div>");       
-		 elem.style.color = "#be3737";
-		 if(window.selectedElem){
-			 window.selectedElem.style.color = "white";
-		 }
-		 window.selectedElem = elem;
-	}
+	var idListe = <?php echo (isset($_GET['id']))?$_GET['id']:0; ?>;
+    $.getJSON("liste_result.php?id=" + idListe, function(data) {
+        $.each(data, function(index, data1) {
+            window.listesMots.push(data1);      
+        });
+        addCombiner(idListe);
+      });   
+    
 }
 //defaultListeByGetId();
 </script>
@@ -91,35 +93,35 @@ function defaultListeByGetId(){
 <div id="content">
 	<div id="bloc">
 		<div id="title">Combiner</div>
-			<div id="confirm_1"></div>
-					<div id="container">
-						<div class="col">
-							<h3>Détails listes combinées</h3>
-							<div style="border:1px solid #be3737;margin-top:5px;height: 400px; overflow-y: auto;overflow-x: hidden;">
-								<div id="detail_combiner"></div>
-							</div>
-						</div>
-						<div class="col">
-							<h3>Titres listes combinées</h3>
-							<button class="confirm" onclick="confirm();">Confirmer la combinaison</button>
-							<br />
-							<div style="border:1px solid #be3737;margin-top:5px;height: 400px; overflow-y: auto;overflow-x: hidden;">
-								<div id="combinaisons"></div>
-							</div>
-						</div>
-						<div class="col">
-							<h3>Titres listes disponibles</h3>
-							<select id="categorie" name="categorie" onchange="OnSelectionChange(this)"></select>
-							<div style="border:1px solid #be3737;margin-top:5px;height: 400px; overflow-y: auto;overflow-x: hidden;">
-								<div id="result"></div>
-							</div>
-						</div>
-						<div class="col">
-							<h3>Détail liste séléctionnée</h3>
-							<div style="border:1px solid #be3737;margin-top:5px;height: 400px; overflow-y: auto;overflow-x: hidden;">
-								<div id="listeMot"></div>
-							</div>
-						</div>
+		<div id="confirm_1"></div>
+		<div id="container">
+			<div class="col">
+				<h3>Détails listes combinées</h3>
+				<div style="border:1px solid #be3737;margin-top:5px;height: 400px; overflow-y: auto;overflow-x: hidden;">
+					<div id="detail_combiner"></div>
+				</div>
+			</div>
+			<div class="col">
+				<h3>Titres listes combinées</h3>
+				<button class="confirm" onclick="confirm();">Confirmer la combinaison</button>
+				<br />
+				<div style="border:1px solid #be3737;margin-top:5px;height: 400px; overflow-y: auto;overflow-x: hidden;">
+					<div id="combinaisons"></div>
+				</div>
+			</div>
+			<div class="col">
+				<h3>Titres listes disponibles</h3>
+				<select id="categorie" name="categorie" onchange="OnSelectionChange(this)"></select>
+				<div style="border:1px solid #be3737;margin-top:5px;height: 400px; overflow-y: auto;overflow-x: hidden;">
+					<div id="result"></div>
+				</div>
+			</div>
+			<div class="col">
+				<h3>Détail liste séléctionnée</h3>
+				<div style="border:1px solid #be3737;margin-top:5px;height: 400px; overflow-y: auto;overflow-x: hidden;">
+					<div id="listeMot"></div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

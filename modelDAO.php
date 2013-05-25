@@ -147,6 +147,11 @@ function getMembreById($id){
 
 function getMembreByLogin($login){
 	$membre = DBHelper::getDBManager("Membre")->getMembreByLogin($login);
+	if(sizeof($membre) > 0){
+		$membre = $membre[0];
+	}else{
+		$membre = null;
+	}
 	return $membre;
 }
 

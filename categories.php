@@ -33,13 +33,16 @@ $(function(){
 		liste:<?php echo $jsObject?>,
 		currentPage:1,
 		nbPerPage:20,
+		containerListeCreator : createListeByCateg,
+		elementCreator : createListeMotElement,
+		idListeContainer : "listesContainer",
+		pageChanger : slidePage,
 		defaultSort:"titre",
   };
   
-  reversableSort(window.listeMotsDef.liste, "categorie", 'titre');
-  window.pager = new Pager(window.listeMotsDef, createListeByCateg, slidePage);
-  $("#sliderContainer").before(pager.getContainer()); 
-  $("#sliderContainer").after(pager.addPagerContainer());  
+  window.pager = new Pager(window.listeMotsDef);
+//  $("#sliderContainer").before(pager.getContainer()); 
+//  $("#sliderContainer").after(pager.addPagerContainer());  
 
   createListForSortListeMot(window.listeMotsDef, pager);
   
@@ -86,12 +89,7 @@ $(function(){
 			Trier par : <select id="trier"></select>
 		</div>
 		<br />
-		<div id="sliderContainer">
-			<div id="sliderList"
-				style="position: absolute; width: 100%; height: 100%">
-				<div id="listesContainer"></div>
-			</div>
-		</div>
+		<div id="listesContainer"></div>
 		<?php
 		$groupe = getGroupesCategorie();
 		?>

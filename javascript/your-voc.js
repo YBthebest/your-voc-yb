@@ -349,66 +349,102 @@ function getNbPage(liste, nbPerPage){
 	return parseInt(liste.length/nbPerPage  + 0.9);
 }
 
-Pager = function(listeDefintion, creatorListeDom, pageChanger) {	
+Pager = function(listeDefintion) {		
 	this.liste = listeDefintion.liste;
 	this.nbPerPage = listeDefintion.nbPerPage;
-	this.currentPage = 1;
+	this.currentPage = 0;
 	this.nbPage = getNbPage(this.liste, this.nbPerPage);
-	this.creatorListeDom = (creatorListeDom)?creatorListeDom:this.defaultCreatorListeDom;
-	this.pageChanger = (pageChanger)?pageChanger:this.defaultPageChanger;	
-	this.displaySelectedPage();
-	this.containers = [];
-	this.defaultSelectorStyle = "float:left; text-align:center; margin:2px; cursor:pointer; height:20px; color:#be3737";	
+	this.idContainerListe = this.initContainerListe(listeDefintion.idListeContainer);	
+	this.$containersPager = this.initContainerPager(listeDefintion.classPagerContainer);
+	this.containerListeCreator = (listeDefintion.containerListeCreator)?listeDefintion.containerListeCreator:this.defaultContainerListeCreator;
+	this.elementCreator = (listeDefintion.elementCreator)?listeDefintion.elementCreator:this.defaultElementCreator;
+	this.pageChanger = (listeDefintion.pageChanger)?listeDefintion.pageChanger:this.defaultPageChanger;
+	this.defaultSelectorStyle = "list-style:none;float:left; text-align:center; margin:2px; cursor:pointer; height:20px; color:#be3737";	
 	this.addPagerContainer();
+	this.select(1);
 };
 
-Pager.prototype.getContainer = function (index){
-	if(!index){
-		return this.containers[0];
-	}else{
-		return this.containers[index];
+Pager.prototype.initContainerListe = function (id){
+	var idContainer = (id)?id:"idPagerListeContainer";
+	containerListe = $("#"+idContainer);
+	if(containerListe.length == 0){
+		containerListe = $('<div id="'+idContainer+'" />');
+		$('body').append(containerListe);
 	}
+	return idContainer;
+};
+
+Pager.prototype.initContainerPager = function (classe){
+	var classPager = (classe)?classe:"classPagerContainer";
+	containersPager = $("."+classPager);
+	if(containersPager.length == 0 &&  this.nbPage > 1){
+		containersPager = $('<div class="'+classPager+'" />');
+		$("#"+this.idContainerListe).before(containersPager);
+	}
+	return containersPager;
 };
 
 Pager.prototype.addPagerContainer = function (){
-	name = "container"+this.containers.length;
-	var container = createElem({tag:"p", id:"pagineur"+this.containers.length});
-	container.style.cssText = "height:20px;margin-bottom:20px;";
-	this.initSelectors(container);
-	this.containers.push(container);
-	this.select(this.currentPage);
-	return container;
+	if(this.nbPage > 1){
+		for(var i=0; i<this.$containersPager.length; i++){
+			var $container = $('<ul id="pagineur'+i+'" style="height:20px;margin: 10px 0px;padding: 0px;"></ul>');
+			this.initSelectors($container);
+			$(this.$containersPager[i]).append($container);
+			//this.select(this.currentPage);		
+		}
+	}
 };
 
-Pager.prototype.initSelectors = function(container){
-	this.addSelector("<< ", "first", 1, container);
+Pager.prototype.initSelectors = function($container){
+	this.addSelector("<< ", "first", 1, $container);
 	for(var i=1; i<= this.nbPage; i++){
-		this.addSelector(i, "page_"+i, i, container);		
+		this.addSelector(i, "page"+i, i, $container);		
 	}
-	this.addSelector(" >>", "last", this.nbPage, container);
+	this.addSelector(" >>", "last", this.nbPage, $container);
 };
 
 Pager.prototype.select = function(index){
-	for(var i=0; i<this.containers.length; i++){
-		var $parent = $(this.containers[i]);
-		var elemToSelect = $parent.children('[name="page_'+index+'"]').get(0);
+	for(var i=0; i<this.$containersPager.length; i++){
+		var $parent = $(this.$containersPager[i]);
+		var elemToSelect = $parent.find('.page'+index).get(0);
 		if(this.currentPage != index){
-			var elemSelected = $parent.children('[name="page_'+this.currentPage+'"]').get(0);
-			elemSelected.innerHTML = elemSelected.value;
-			elemSelected.style.cssText = this.defaultSelectorStyle;	
-			elemSelected.isSelected = false;
+			var elemSelected = $parent.find('.page'+this.currentPage).get(0);
+			if(elemSelected){
+				this.unSelectElem(elemSelected);				
+			}
+			if(index == 1){
+				this.selectElem($parent.find('.first').get(0));	
+			}else if(this.currentPage == 1){
+				this.unSelectElem($parent.find('.first').get(0));
+			}
+			if(index == this.nbPage){
+				this.selectElem($parent.find('.last').get(0));	
+			}else if(elemToSelect.value == this.nbPage){
+				this.unSelectElem($parent.find('.last').get(0));
+			}
 		}
-		elemToSelect.innerHTML = "[ "+elemToSelect.value+" ]";
-		elemToSelect.style.color = "white";
-		elemToSelect.style.cursor = "";		
-		elemToSelect.isSelected = true;
+		elemToSelect.innerHTML = "[ "+elemToSelect.value+" ]";		
+		this.selectElem(elemToSelect);
+		
 	}
 	this.currentPage = index;
 	this.displaySelectedPage();
 };
 
-Pager.prototype.addSelector = function(text, name, numPage, parent){
-	var pageSelector = createElem({tag:"div", name:name, value:text, numPage:numPage});
+Pager.prototype.unSelectElem = function(elem){
+	elem.innerHTML = elem.texte;
+	elem.style.cssText = this.defaultSelectorStyle;	
+	elem.isSelected = false;
+};
+
+Pager.prototype.selectElem = function(elem){
+	elem.style.color = "white";
+	elem.style.cursor = "";		
+	elem.isSelected = true;
+}
+
+Pager.prototype.addSelector = function(text, name, numPage, $parent){
+	var pageSelector = createElem({tag:"li", className:name, texte:text, numPage:numPage});
 	pageSelector.style.cssText = this.defaultSelectorStyle;
 	pageSelector.appendChild(createElem({tag:"text", text:text}));
 	var pager = this;
@@ -418,7 +454,7 @@ Pager.prototype.addSelector = function(text, name, numPage, parent){
 			//pagineListesMot(page);
 		}
 	};
-	parent.appendChild(pageSelector);
+	$parent.append(pageSelector);
 };
 
 Pager.prototype.displaySelectedPage = function(){
@@ -427,16 +463,19 @@ Pager.prototype.displaySelectedPage = function(){
 	if(start >= this.liste.length){
 		end = this.liste.length-1;
 	}
-	var listeToDisplay = this.liste.slice(start, end);
-	this.pageChanger(listeToDisplay, start+1);
+	this.pageChanger({listeObject:this.liste.slice(start, end), startIndex:start+1, elementCreator:this.elementCreator, idContainerListe:this.idContainerListe});
 };
 
-Pager.prototype.defaultCreatorListeDom = function (){
-	alert("Creator liste DOM not yet implemented");
+Pager.prototype.defaultContainerListeCreator = function (){
+	alert("Creator container liste DOM not yet implemented");
 };
 
 Pager.prototype.defaultPageChanger = function(){
+	alert("Creator page changer DOM not yet implemented");
+};
 
+Pager.prototype.defaultElementCreator = function(){
+	alert("Creator Element DOM not yet implemented");
 };
 
 
@@ -454,7 +493,6 @@ function createListSort(selectList, listToSort, defaultSelected, pager){
   	  	//pagineListesMot(listToSort, 1, nbLimite);
   	  	pager.select(1);
     };
-    pager.select(1);
 }
 
 function createListForSortListeMot(listMotToSort, pager){
@@ -470,20 +508,20 @@ function createListForSortListeMot(listMotToSort, pager){
 }
 
 
-function pagineListesMot(liste, startIndex){
-	$("#listesContainer").html("");
-	createListeByCateg(liste, startIndex);
+function pagineListesMot(domObjectDefine){
+	$("#"+domObjectDefine.idContainerListe).html("");
+	createListeByCateg(domObjectDefine);
 }
 
-function createListeByCateg(listesVocabulaires, startIndex){
+function createListeByCateg(domObjectDefine){	
 	var div = createElem({tag:"div"});
-	startIndexUsed = (startIndex)?startIndex:1;
-	for(var i=0; i<listesVocabulaires.length; i++){
-		var listElemt = createListeMotElement(listesVocabulaires[i], startIndexUsed + i);
+	var startIndexUsed = (domObjectDefine.startIndex)?domObjectDefine.startIndex:1;
+	var elementCreator = (domObjectDefine.elementCreator)?domObjectDefine.elementCreator:createListeMotElement;
+	for(var i=0; i<domObjectDefine.listeObject.length; i++){
+		var listElemt = elementCreator(domObjectDefine.listeObject[i], startIndexUsed + i);
 		div.appendChild(listElemt);
 	}
-	$("#listesContainer").append(div);
-	$("#sliderContainer").css("height", $("#listesContainer").css("height"));
+	$("#"+domObjectDefine.idContainerListe).append(div);	
 	return div;
 }
 
@@ -501,29 +539,57 @@ function createListeMotElement(listeMotDef, index){
 	return div;
 }
 
-function slidePage(liste, startIndex){
-	var elemContainer = $("#listesContainer");	
-	elemContainer.css('width', elemContainer[0].offsetWidth);
-/*	var slider = $("#sliderList");
-	slider.css(elemContainer.css('width'));
-	slider.css("overflow","hidden");
-	slider.css("height",elemContainer[0].offsetHeight);*/
-	elemContainer.css("float","left");
-	elemContainer.css("position", "absolute");
-	var nextContainer = elemContainer.clone();
-	nextContainer.css('left', elemContainer[0].offsetWidth);
-	elemContainer.attr("id","#listesContainerToDelete");	
-	nextContainer.appendTo("#sliderList");
-	pagineListesMot(liste, startIndex);
-	elemContainer.animate({
-		'left' : '-' + elemContainer[0].offsetWidth + 'px'
-	});
-	nextContainer.animate({
-        'left' : '0px'
-	},function(){
-		elemContainer.remove();
-	});
-	$("#pagineur").focus();
+function createListeMotElementRecherche(listeMotDef, index){
+	var div = createElem({tag:"div"});
+	index = (!index)?"":index;
+	var note = (listeMotDef.note!="")?'Note: '+listeMotDef.note+'/5':"Pas de note";
+	var elem = index+'.<b>'+
+		listeMotDef.categorie+'<->'+listeMotDef.categorie2+
+		': </b> <a href="afficher?id='+listeMotDef.id+'">'+
+		listeMotDef.titre+'</a> (' + note + ' et '+
+		listeMotDef.vue+' vues)<br /><small> par <a href="profil?m='+listeMotDef.membre+'">'+
+		listeMotDef.membre+'</a> le '+listeMotDef.date+'('+listeMotDef.timestamp+')</small><br /><br/>';
+	div.innerHTML = elem;
+	return div;
+}
+
+function slidePage(domObjectDefine){
+	var $elemContainer = $("#"+domObjectDefine.idContainerListe);
+	var $sliderContainer = $("#sliderContainer");
+	if($sliderContainer.length == 0){
+		$sliderContainer = $('<div id="sliderContainer" />');
+		$sliderListe = $('<div id="sliderList" style="position: absolute; width: 100%; height: 100%" />');
+		$sliderContainer.append($sliderListe);
+		$elemContainer.before($sliderContainer);
+		$sliderListe.append($elemContainer);
+	}	
+	if($elemContainer.children().length > 0){
+		$elemContainer.css('width', $elemContainer[0].offsetWidth);
+		/*	var slider = $("#sliderList");
+			slider.css(elemContainer.css('width'));
+			slider.css("overflow","hidden");
+			slider.css("height",elemContainer[0].offsetHeight);*/
+		$elemContainer.css("float","left");
+		$elemContainer.css("position", "absolute");
+		var nextContainer = $elemContainer.clone();
+		nextContainer.css('left', $elemContainer[0].offsetWidth);
+		$elemContainer.attr("id","#listesContainerToDelete");	
+		nextContainer.appendTo("#sliderList");
+		domObjectDefine.containerListe = nextContainer;
+		pagineListesMot(domObjectDefine);
+		$elemContainer.animate({
+			'left' : '-' + $elemContainer[0].offsetWidth + 'px'
+		});
+		nextContainer.animate({
+	        'left' : '0px'
+		},function(){
+			$elemContainer.remove();
+		});
+		$("#pagineur").focus();
+	}else{
+		pagineListesMot(domObjectDefine);
+		$sliderContainer.css("height", $elemContainer.css("height"));
+	}		
 }
 
 function reversableSort(liste){
@@ -558,11 +624,10 @@ function alertClipboard(){
 	alert(getClipboard());
 }
 function selectToCopy(){
-	var listeMots = document.getElementById('liste').value;
+	var listeMots = document.getElementById('listeMot').value;
 	var tabMots= listeMots.split("\n");
-	var nbMots = document.getElementById('table').children[0].rows.length;
 	var indexMostLong = 0;
-	for(var i=0, imax=nbMots;i<imax;i++){
+	for(var i=0; i<tabMots.length;i++){
 		if(tabMots[i].length>indexMostLong){
 			indexMostLong = tabMots[i].length;
 		}
@@ -581,7 +646,7 @@ function selectToCopy(){
  	var texteArea = document.createElement("textarea");  
  	texteArea.id = "listeToCopy";
  	texteArea.value = listeMots;  
- 	texteArea.rows = nbMots;
+ 	texteArea.rows = tabMots.length;
  	texteArea.style.cssText = "overflow:auto;width:"+(indexMostLong*7)+"px;margin:0;";
 	divContainer.style.cssText = "position:absolute; top:" + (document.documentElement.scrollTop + 100) +"px; left:40%;z-index:1000; width:"+(indexMostLong*8)+"px";
 	document.body.appendChild(cachePage);
