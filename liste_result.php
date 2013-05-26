@@ -12,6 +12,7 @@ if(isset($_GET['q'])){
 		$arr[$i]['mots'] = $result->listeMot();
 		$arr[$i]['categorie'] = $result->categorie();
 		$arr[$i]['categorie2'] = $result->categorie2();
+		$arr[$i]['pseudo'] = $result->membre();
 		$i++;
 	}
 	echo json_encode($arr);
@@ -23,6 +24,7 @@ if(isset($_GET['q'])){
 	$arr[0]['mots'] = $result->listeMot();
 	$arr[0]['categorie'] = $result->categorie();
 	$arr[0]['categorie2'] = $result->categorie2();
+	$arr[0]['pseudo'] = $result->membre();
 	echo json_encode($arr);
 }
 ?>

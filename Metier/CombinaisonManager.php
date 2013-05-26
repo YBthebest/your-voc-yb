@@ -13,6 +13,7 @@ class CombinaisonManager extends DbManager{
 		$this->arrayBinding["liste"] = "liste";
 		$this->arrayBinding["pseudo"] = "membre";
 		$this->arrayBinding["titre"] = "titre";
+		$this->arrayBinding["date"] = "date";
 		$this->arrayBinding["id_liste"] = "id_liste";
 	}
 	
@@ -29,6 +30,11 @@ class CombinaisonManager extends DbManager{
 		$query = "select * from ".$this->table." where pseudo = :pseudo ORDER BY id DESC LIMIT 15";
 		$entity = new Combinaison(array("pseudo"=>$pseudo));
 		return $this->select($query, $entity);
+	}
+	public function createNewCombinaison($id, $membre, $titre, $mots, $date){
+		$query = "insert into ".$this->table." values('', '".$membre."', '".$mots."', '".$titre."', '".$date."', '".$id."')" ;
+		$statement = $this->_db->prepare($query);
+		$statement->execute();
 	}
 }
 ?>

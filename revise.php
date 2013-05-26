@@ -27,6 +27,8 @@ function getHTML_Etape1($erreur='') {
 			eat=manger
 			drink=boire
 			hit=frapper";
+	}elseif(isset($_POST['reviseCombi'])){
+		$_POST['listeMot'] = $_POST['reviseCombiMots'];
 	}
 	$html = "" ;
 	if( $erreur != ''){

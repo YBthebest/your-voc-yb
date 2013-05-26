@@ -439,4 +439,9 @@ function createNewErreur($id_liste, $type, $message, $pseudo, $time){
 	DBHelper::getDBManager("Erreur")->createNewErreur($id_liste, $type, $message, $pseudo, $time);
 	return $newErreur;
 }
+function createNewCombinaison($id, $membre, $titre, $mots, $date){
+	$newCombinaison = new Combinaison(array("id" => $id, "membre" => $membre, "titre" => $titre, "mots" => $mots, "date" => $date));
+	DBHelper::getDBManager("Combinaison")->createNewCombinaison($id, $membre, $titre, $mots, $date);
+	return $newCombinaison;
+}
 ?>

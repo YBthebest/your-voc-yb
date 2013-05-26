@@ -1,5 +1,10 @@
+<?php
+	if (!isset($_SESSION['login'])) {
+		header ('Location: accueil');
+		exit();
+	} 
+?>
 <script type="text/javascript">
-
 window.listesMots = [];
 window.listeCombi = [];
 window.selectedElem;
@@ -15,7 +20,7 @@ function getListeMot(id){
 
 function displayListe(elem, idListe){
 	var listeMotDef = getListeMot(idListe);	
-	var domResult = '<div id="liste_'+listeMotDef.id+'"><div style="color:#be3737"><a href="afficher?id='+ listeMotDef.id +'">' + listeMotDef.titre + '</a> : </div><br /> <strong>' + listeMotDef.categorie + '->' + listeMotDef.categorie2 + '</strong><br /><br />';
+	var domResult = '<div id="liste_'+listeMotDef.id+'"><div style="color:#be3737"><a href="afficher?id='+ listeMotDef.id +'">' + listeMotDef.titre + '</a> : </div><br /> <strong>' + listeMotDef.categorie + '<->' + listeMotDef.categorie2 + '</strong><br /><br />';
 	for(var i=0; i<listeMotDef.mots.split('\r\n').length; i++){
      domResult += listeMotDef.mots.split('\r\n')[i];
      domResult += '<br />';
@@ -34,8 +39,8 @@ function addCombiner(idListe){
     $('#result_' + idListe).hide();
     $('#result_' + idListe).css("color","white");
     $('#liste_'+ idListe).remove();
-    $('#combinaisons').append('<div id="combi_' + listeMotDef.id + '"><img src="images/delete.png" onclick="deleteCombiner(\'' + listeMotDef.id + '\');"/><a href="afficher?id='+ listeMotDef.id +'">' + listeMotDef.titre + "</a><br /></div>");    
-    window.listeCombi.push(idListe);
+    $('#combinaisons').append('<div id="combi_' + listeMotDef.id + '"><img src="images/delete.png" onclick="deleteCombiner(\'' + listeMotDef.id + '\');"/><a href="afficher?id='+ listeMotDef.id +'">' + listeMotDef.titre + '</a>(<small>' + listeMotDef.categorie + '<->' + listeMotDef.categorie2 + '</small>)<br /></div>');    
+   	window.listeCombi.push(idListe);
     checkCombin();
 }
 
@@ -51,10 +56,7 @@ function defaultListeByGetId(){
     $.getJSON("liste_result.php?id=" + idListe, function(data) {
         $.each(data, function(index, data1) {
         	$('#result').append('<div id="result_'+data1.id+'"><img src="images/add.png" onclick="addCombiner(\'' + data1.id + '\');"/><span class="listeMot" onclick="displayListe(this, \'' + data1.id + '\');">' + data1.titre + '</span></div>');     			
-        	window.listesMots.push(data1);
-        	if(window.listeCombi.indexOf(data1.id) == -1){                
-               window.listeCombi.push(data1.id);
-            }       
+        	window.listesMots.push(data1);      
         });
     	addCombiner(idListe);
   	});
@@ -72,12 +74,9 @@ $(document).ready(function() {
 			$.getJSON("ajax-search.php?keyword=" + faq_search_input, function(data) {
 			    $.each(data, function(index, data1) {					
 				    $('#result').append('<tr>');
-			    	$('#result').append('<div id="result_'+data1.id+'"><td><img src="images/add.png" onclick="addCombiner(\'' + data1.id + '\');"/></td><td><span class="listeMot" onclick="displayListe(this, \'' + data1.id + '\');">' + data1.titre + '</span></td></div>');     			
+			    	$('#result').append('<div id="result_'+data1.id+'"><td><img src="images/add.png" onclick="addCombiner(' + data1.id + ');"/></td><td><span class="listeMot" onclick="displayListe(this, \'' + data1.id + '\');">' + data1.titre + '</span>(<small>' + data1.categorie + ' <-> ' + data1.categorie2 + '</small>)</td></div>');     			
 					$('#result').append('</tr>');
-			    	window.listesMots.push(data1);
-			    	if(window.listeCombi.indexOf(data1.id) == -1){                
-			           window.listeCombi.push(data1.id);
-			        }       
+			    	window.listesMots.push(data1);      
 			    });
 			});
 			$('#result').append('</table>');
@@ -86,7 +85,7 @@ $(document).ready(function() {
 });	
 
 function checkCombin() {      
-	if($('#combinaisons').is(':empty') ) {
+	if(window.listeCombi.length < 2) {
        $("#valider_combin").prop("disabled",true);
     } else {
        $("#valider_combin").prop("disabled",false);
@@ -97,16 +96,66 @@ function checkCombin() {
 jQuery(document).ready(function(){   
      checkCombin();
 });
-</script>
-<?php 
-if(isset($_POST['todo'])){
-	if($_POST['todo'] == 'reviser'){
-		
-	}elseif($_POST['todo'] == 'sauvegarder'){
-	
+
+function checkSubmit(){
+	var e = document.getElementById("todo");
+	var value_submit = e.options[e.selectedIndex].text;
+	if(value_submit == 'sauvegarder'){
+		saveCombin();
+	}else{
+		reviseCombin();
 	}
 }
-?>
+function saveCombin(){
+	var idListeCombiTotal = window.listeCombi;
+	var mots = '';
+	var titre = 'Combinaison de ';
+	var membre = '<?= $_SESSION['login'] ?>';
+	if(window.listeCombi.length > 1){
+		for(var i=0; i<window.listeCombi.length; i++){
+			var idListeCombi = window.listeCombi[i];			
+			var listeMot = getListeMot(idListeCombi);
+			mots += listeMot.mots;
+			titre += listeMot.titre;
+			if(i != (window.listeCombi.length - 1)){
+				titre += ' & ';
+			}
+		};
+		var mesValeurs = { idListe: idListeCombiTotal, mots: mots, titre: titre, membre: membre }
+		var saveData = $.ajax({
+		      type: 'POST',
+		      url: "save_combin.php?action=saveCombin",
+		      data: mesValeurs,
+		      dataType: "text",
+		      success: function(resultData) {
+			       alert("Votre combinaison a bien été sauvgardée.");
+			       setTimeout(function () {
+			    	   window.location.href = "membre";
+			    	}, 1000);  
+			  }
+		});
+		saveData.error(function() { alert("Un problème a eu lieu. Veuillez réessayer."); });
+	}
+}
+function reviseCombin(){
+	var idListeCombiTotal = window.listeCombi;
+	var mots = '';
+	var id = 'no';
+	var membre = '<?= $_SESSION['login'] ?>';
+	if(window.listeCombi.length > 1){
+		for(var i=0; i<window.listeCombi.length; i++){
+			var idListeCombi = window.listeCombi[i];			
+			var listeMot = getListeMot(idListeCombi);
+			mots += listeMot.mots;
+		};
+	}
+	document.write('<form id="reviseCombi" method="post" action="revise"><input name="reviseCombi" type="hidden" value="ok" /><input type="reviseCombiMots" type="hidden" value="'+ mots +'" /></form>');
+	f=document.getElementById('reviseCombi');
+	if(f){
+		f.submit();
+	}
+}
+</script>
 <!-- D?but de la pr?sentation -->
 <div id="presentation1"></div>
 <!-- Fin de la pr?sentation -->
@@ -116,16 +165,14 @@ if(isset($_POST['todo'])){
 		<div id="title">Combiner</div>
 			<div id="confirm_1"></div>
 					<div id="container">
-						<form name="todo_form" method="post">
-							<p>Voulez-vous 
-								<select name="todo">
-									<option value="sauvegarder">sauvegarder</option>
-									<option value="reviser">réviser</option>
-								</select>
-								cette combinaison?
-								<input type="submit" value="Go!" id="valider_combin" />
-							</p>
-						</form>
+						<p>Voulez-vous 
+							<select name="todo" id="todo">
+								<option value="sauvegarder">sauvegarder</option>
+								<option value="reviser">réviser</option>
+							</select>
+							cette combinaison?
+							<input type="submit" value="Go!" id="valider_combin" onClick="checkSubmit()" />
+						</p>
 						<div class="col">
 							<h3>Actuellement en combinaison</h3>
 							<div style="border:1px solid #be3737;margin-top:5px;height: 400px; overflow-y: auto;overflow-x: hidden;">

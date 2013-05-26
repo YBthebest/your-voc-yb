@@ -166,7 +166,7 @@ if(isset($listeMotDefinition)) {
 			<input id="login" type="hidden" name="membre" />
 			
 			<div id="titreCategorie">
-				<h2><?php echo $listeMotDefinition->titre() ?> <small><?php echo $listeMotDefinition->categorie() ?> =&gt; <i><?php echo $listeMotDefinition->categorie2() ?></i> (<span id="nbMots"></span> mots)</small></h2>
+				<h2><?php echo $listeMotDefinition->titre() ?> <small><i><?php echo $listeMotDefinition->categorie() ?> =&gt; <?php echo $listeMotDefinition->categorie2() ?></i> (<span id="nbMots"></span> mots)</small></h2>
 			</div>
 			
 			<div id="vueVote">

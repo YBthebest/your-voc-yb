@@ -1,5 +1,9 @@
-AddDefaultCharset utf-8
+﻿AddDefaultCharset utf-8
 # Activation du module de réécriture d'URL :
 RewriteEngine On
 # redirection de l'accueil
 RewriteRule ^([_a-zA-Z0-9]+)$ index.php?page=$1 [QSA]
+<Files  ~ "\.properties$">
+  Order allow,deny
+  Deny from all
+</Files>

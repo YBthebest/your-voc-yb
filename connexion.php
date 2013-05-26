@@ -60,7 +60,7 @@ if (isset($_POST['connexion']) && $_POST['connexion'] == 'Connexion') {
 				<?php
 					}
 				?>
-				<label for="auto">Connexion automatique :</label><input type="checkbox" name="auto" id="auto" /> <br />
+				<label for="auto">Connexion automatique :</label><input type="checkbox" name="auto" id="auto" checked /> <br />
 				<div style="margin-left: 110px"><input type="submit" name="connexion" value="Connexion" /></div></p>
 			</form>
 		</div>

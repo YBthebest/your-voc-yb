@@ -4,12 +4,17 @@ class Combinaison extends Entity{
 	private $membre;
 	private $liste;
 	private $titre;
+	private $date;
+	private $timestamp;
 	
 	function __construct(array $donnees){
 		if(isset($donnees['id']))$this->id = $donnees['id'];
 		if(isset($donnees['liste']))$this->liste = $donnees['liste'];
 		if(isset($donnees['pseudo']))$this->membre = $donnees['pseudo'];
 		if(isset($donnees['titre']))$this->titre = $donnees['titre'];
+		if(isset($donnees['date'])){
+			$this->setTimestamp($donnees['date']);			
+		}
 		if(isset($donnees['id_liste']))$this->id_liste = $donnees['id_liste'];
 	}
 	
@@ -46,6 +51,10 @@ class Combinaison extends Entity{
 	}
 	public function setId_Liste($idListe){
 		$this->id_liste = $idListe;
+	}
+	public function setTimestamp($timestamp){
+		$this->date = timestampToString($timestamp);
+		$this->timestamp = $timestamp;
 	}
 }
 ?>
