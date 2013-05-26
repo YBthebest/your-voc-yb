@@ -83,18 +83,14 @@
 				$requete_favoris = getFavoriByPseudoLimit50($membre);
 				$nombre = sizeof($requete_favoris);
 				if($nombre == 0){
-					echo 'Vous n\'avez aucune liste en favoris.';
+					echo "Vous n'avez aucune liste en favoris.";
 				}
 				else {
-					$i = '1';
+					$i = 1;
 					foreach($requete_favoris as $rendu) {
-						$liste = $rendu->id_liste();
-						$requete_listes_r = getListeById($liste);
-						foreach($requete_listes_r as $requete_listes){
-							echo ''.$i.'. ';
-							?><a href="afficher?id=<?php echo $requete_listes->id() ?>"><?php echo $requete_listes->titre() ?></a> - <small><?php echo $requete_listes->categorie() ?></small><br /><?php
-							$i++;
-						}
+						$listeMots = getListeById($rendu->id_liste());
+						echo ''.$i++.'. ';
+						?><a href="afficher?id=<?php echo $listeMots->id() ?>"><?php echo $listeMots->titre() ?></a> - <small><?php echo $listeMots->categorie() ?></small><br /><?php
 					}
 				}
 			?>		

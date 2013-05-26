@@ -67,18 +67,16 @@
 					$requete_favoris = getFavoriByPseudoLimit20($pseudo);
 					$nombre = sizeof($requete_favoris);
 					if($nombre == 0){
-						echo ''.$pseudo.' n\'a aucune liste en favoris.';
+						echo "".$pseudo." n'a aucune liste en favoris.";
 					}
 					else {
-						$i = '1';
-						foreach($requete_favoris as $rendu) {
-							$liste = $rendu->id_liste();
-							$requete_listes = getListeById($liste);
-							foreach($requete_listes as $requete_listes_r){
-								echo ''.$i.'. ';
-								?><a href="afficher?id=<?php echo $requete_listes_r->id() ?>"><?php echo $requete_listes_r->titre() ?></a> - <small><?php echo $requete_listes_r->categorie() ?></small><br /><?php
-								$i++;
-							}
+						$i = 1;
+						foreach($requete_favoris as $favoris) {
+							$listeMots = getListeById($favoris->id_liste());
+							echo ''.$i++.'. ';
+					?>
+						<a href="afficher?id=<?php echo $listeMots->id() ?>"><?php echo $listeMots->titre() ?></a> - <small><?php echo $listeMots->categorie() ?></small><br />
+					<?php
 						}
 					}
 					?>

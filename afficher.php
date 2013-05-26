@@ -1,18 +1,26 @@
 <?php
 $login = @$_SESSION['login'];
+$id = @$_GET['id'];
 $capchaReponse = "";
 $withCapcha = "false";
 $capcha = "";
 $favoriOption = "{}";
 $message = "";	
 $voteAdded = false;
+$time = time(); 
+
+
+$listeMotDefinition = getListeById($id);
+if(empty($listeMotDefinition)){
+	header('Location: accueil');
+}
 
 if(isset($_POST['addFavoris'])) {
 	createFavori($id, $login);
 } else if(isset($_POST['delFavoris'])) {
 	deleteFavoriByIdAndMembre($id, $login);
 }
-			
+
 if(isset($_POST['note_submit'])) {
 	$note = $_POST['note'];
 	$checkVote = getVotesByIdAndPseudo($id, $login);
@@ -25,77 +33,72 @@ if(isset($_POST['note_submit'])) {
 		else if(createVote($id, $note, $login)) {
 			$message = "Merci d'avoir voté.";
 			$voteAdded = false;
-		}		
+		}
 	} else {
 		$message = 'Un problème est apparu, veuillez réessayer.';
 	}
 }
 
-			
-if(isset($_GET['id']) AND !empty($_GET['id'])) {
-	$id = $_GET['id'];
-	$time = time(); 
-	if($login != ""){
-		$membre = getMembreByLogin($login);
+if($login != ""){
+	$membre = getMembreByLogin($login);
+}
+if(isset($listeMotDefinition)) {
+	$listeToJson = convertObjectToJS($listeMotDefinition);
+	$votes = getVotesById($id);
+	$votesSyze = sizeof($votes);
+	if($votesSyze > 0){
+		$total = 0;
+		foreach($votes as $vote) {
+			$total += $vote->note();
+		}
+		$moyenneVote = ($total / $votesSyze);
+		$moyenneVote = round($moyenneVote, 2);
+		if($voteAdded == true){
+			updateNoteInListe($id, $moyenneVote);
+		}
 	}
-	$listeMotDefinition = getListeById($id);
-	if(!empty($listeMotDefinition)){
-	if(isset($listeMotDefinition)) {
-		$listeToJson = convertObjectToJS($listeMotDefinition);
-		$votes = getVotesById($id);
-		$votesSyze = sizeof($votes);
-		if($votesSyze > 0){
-			$total = 0;
-			foreach($votes as $vote) {
-				$total += $vote->note();
-			}
-			$moyenneVote = ($total / $votesSyze);
-			$moyenneVote = round($moyenneVote, 2);
-			if($voteAdded == true){
-				updateNoteInListe($id, $moyenneVote);
-			}
+	
+	if(isset($_SESSION['login'])) {					
+		$voteByLogin = getVotesByIdAndPseudo($id, $login);
+		$voteByLoginSize = sizeof($voteByLogin);
+		
+		$sql_favoris = getFavoriByIdAndPseudo($id, $login);
+		if(sizeof($sql_favoris) == 0){
+			$favoriOption = "{val:'Ajouter aux favoris',name:'addFavoris'}";
+		}else{
+			$favoriOption = "{val:'Supprimer des favoris',name:'delFavoris'}";
 		}
 		
-		if(isset($_SESSION['login'])) {					
-			$voteByLogin = getVotesByIdAndPseudo($id, $login);
-			$voteByLoginSize = sizeof($voteByLogin);
-			
-			$sql_favoris = getFavoriByIdAndPseudo($id, $login);
-			if(sizeof($sql_favoris) == 0){
-				$favoriOption = "{val:'Ajouter aux favoris',name:'addFavoris'}";
+		if(isset($_SESSION['login'])) {
+			require_once('recaptchalib.php');
+			$publickey = "6LdsCMMSAAAAAPx045E5nK50AEwInK8YSva0jLRh";
+			$capcha = recaptcha_get_html($publickey);
+			$withCapcha = "true";
+		}
+	}
+	
+	if(isset($_POST['capcha'])) {
+		$email = @$_POST['email'];
+		$commentaire = @$_POST['commentaire'];
+		if (!empty($login) && !empty($email) && !empty($commentaire) && !empty($time)) {
+			require_once('recaptchalib.php');
+			$privatekey = "6LdsCMMSAAAAAKYeqj37ims8IdO_mnYM4O_mH608";
+			$resp = recaptcha_check_answer ($privatekey, $_SERVER["REMOTE_ADDR"], $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"]);
+			if ($resp->is_valid) {
+				createCommentaire($id, $login, $time, $commentaire);
+				$capchaReponse = "Commentaire ajouté avec succès : ".$commentaire;
 			}else{
-				$favoriOption = "{val:'Supprimer des favoris',name:'delFavoris'}";
-			}
-			
-			if(isset($_SESSION['login'])) {
-				require_once('recaptchalib.php');
-				$publickey = "6LdsCMMSAAAAAPx045E5nK50AEwInK8YSva0jLRh";
-				$capcha = recaptcha_get_html($publickey);
-				$withCapcha = "true";
+				// What happens when the CAPTCHA was entered incorrectly
+				$capchaReponse = "Le captcha n'a pas été entré correctement. Veuillez réessayer.";
 			}
 		}
-		
-		if(isset($_POST['capcha'])) {
-			$email = @$_POST['email'];
-			$commentaire = @$_POST['commentaire'];
-			if (!empty($login) && !empty($email) && !empty($commentaire) && !empty($time)) {
-				require_once('recaptchalib.php');
-				$privatekey = "6LdsCMMSAAAAAKYeqj37ims8IdO_mnYM4O_mH608";
-				$resp = recaptcha_check_answer ($privatekey, $_SERVER["REMOTE_ADDR"], $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"]);
-				if ($resp->is_valid) {
-					createCommentaire($id, $login, $time, $commentaire);
-					$capchaReponse = "Commentaire ajouté avec succès : ".$commentaire;
-				}else{
-					// What happens when the CAPTCHA was entered incorrectly
-					$capchaReponse = "Le captcha n'a pas été entré correctement. Veuillez réessayer.";
-				}
-			}
-		}
-		
-		$commentaires = getCommentairesById($id);
-		$retour = sizeof($commentaires);
-		$commToJson = convertArrayObjectToJSArray($commentaires);
 	}
+	
+	$commentaires = getCommentairesById($id);
+	$retour = sizeof($commentaires);
+	$commToJson = convertArrayObjectToJSArray($commentaires);
+}
+
 ?>
 <script type="text/javascript">
 	$(function(){
@@ -172,7 +175,7 @@ if(isset($_GET['id']) AND !empty($_GET['id'])) {
 			
 			<br>
 			
-			<a href="#commentaires"><small>Accéder directement aux commentaires</small></a>  
+			<a href="#commentairesMembres"><small>Accéder directement aux commentaires</small></a>  
 			/  
 			<a href="signaler?id=<?php echo $id ?>"><small>Signaler une erreur dans la liste</small></a>
 			
@@ -252,7 +255,7 @@ if(isset($_GET['id']) AND !empty($_GET['id'])) {
 					
 					<div id="captchaContainer" style="margin: auto;width: 500px; margin-top:10px;">
 					<?php if(isset($membre)) {?>
-						<form method="post" action="afficher?id=<?php echo $id ?>#commentaires" >				
+						<form method="post" action="afficher?id=<?php echo $id ?>#commentairesMembres" >				
 							<input type="hidden" name="pseudo" value="<?php echo $login; ?>"/>							
 							<input type="hidden" name="email" value="<?php echo $membre->email(); ?>"/>
 							Commentaire ou correction : 
@@ -264,14 +267,7 @@ if(isset($_GET['id']) AND !empty($_GET['id'])) {
 						</form>
 					<?php } else { ?>
 						<h3><b>Veuillez <a href="inscription">vous inscrire</a> ou <a href="connexion">vous connecter</a> pour poster un commentaire.</b></h3>
-					<?php }
-						}else{
-							echo '<h2>Veuillez préciser un id valable.</h2>';
-						}
-					}else{
-						echo '<h2>Veuillez préciser un id.</h2>';
-					}				
-					 ?>
+					<?php } ?>
 					</div>					
 				</div>
 			</div>
