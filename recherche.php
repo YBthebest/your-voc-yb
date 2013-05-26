@@ -15,7 +15,6 @@ if(!empty($search)){
 	$sur = (isset($_POST['sur']))?$_POST['sur']:@$_GET['sur'];
 	$sur = mysql_real_escape_string($sur);
 	
-	$messagesParPage=20;
 	$listesMot = rechercheByCriteres($categorie, $sur, $search, $critere, "0", "illimite");
 	$jsObject = convertArrayObjectToJSArray($listesMot, "listeMot");
 }
@@ -28,19 +27,7 @@ $(function(){
   	}
   	
 	var liste = <?php echo $jsObject?>;
-  	if(liste.length > 0){
-		initializeContextResult(liste);
-  	}
-  	  var save='';
-  	  $('input[type="text"]').each(function(){
-  	    this.onfocus=function(){
-  	      save=this.value;
-  	      this.value='';
-  	    };
-  	    this.onblur=function(){
-  	      this.value= this.value==='' ? save : this.value;
-  	    };
-  	  });
+  	initializeContextResult(liste);
 });
 
 function initializeContextResult(listeObject){
@@ -84,7 +71,7 @@ function initializeContextResult(listeObject){
 					<p>
 				</div>	
 				
-				<select id="trier" style="margin:20px 0px;"></select>
+				Trier Par : <select id="trier" style="margin:20px 0px;"></select>
 				<div class="pagerContainer"></div>
 				<div id="listesContainer"></div>
 				<div class="pagerContainer"></div>
