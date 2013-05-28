@@ -18,13 +18,20 @@ if(isset($_GET['q'])){
 	echo json_encode($arr);
 }elseif(isset($_GET['id'])){
 	$id = $_GET['id'];
-	$result = getListeById($id);
-	$arr[0]['id'] = $result->id();
-	$arr[0]['titre'] = $result->titre();
-	$arr[0]['mots'] = $result->listeMot();
-	$arr[0]['categorie'] = $result->categorie();
-	$arr[0]['categorie2'] = $result->categorie2();
-	$arr[0]['pseudo'] = $result->membre();
-	echo json_encode($arr);
+	$query = "select * from listes_public where id = '$id'";
+	$result = mysql_query($query);
+    if(mysql_num_rows($result) != 0){
+       	  $arr = array();
+          $i = 0;
+          while($result1 = mysql_fetch_array($result)){
+       	  	$arr[$i]['id'] = $result1['id'];
+     	    $arr[$i]['titre'] = $result1['titre'];
+           	$arr[$i]['mots'] = $result1['liste'];
+           	$arr[$i]['categorie'] = $result1['categorie'];
+       		$arr[$i]['categorie2'] = $result1['categorie2'];
+       		$i++;
+       	}
+        echo json_encode($arr);
+    }
 }
 ?>

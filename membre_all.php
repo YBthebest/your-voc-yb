@@ -4,6 +4,11 @@
 		exit();
 	} 
 ?>
+<script type="text/javascript">
+function validateDelete(){
+	return confirm("Voulez-vous vraiment supprimer cette combinaison?");
+}
+</script>
 <!-- Début de la présentation -->
 <div id="presentation1"></div>
 <!-- Fin de la présentation -->
@@ -18,32 +23,42 @@
 <div id="container">
 	<div id="col1">
 	<h3>Vos combinaisons</h3>
-	<?php
-	$pseudo = $_SESSION['login'];
-	$query = getCombinaisonByPseudoLimit15($pseudo);
-	$y = 1;
-	if(sizeof($query) == 0) {
-		echo 'Aucune combinaison créée. <br> <a href="gerer_public">Commencer maintenant</a> !';
-	}
-	else {
-		foreach($query as $resultat1) {
-			$titre = $resultat1->titre();
-			$id = $resultat1->id_liste();
-			$liste = $resultat1->liste();
-			echo "$y.Combinaison de $titre - "  
-			?>
-			<form method="post" action="combiner"> 
-			<input type="hidden" name="id" value="<?php echo $id ?>" />
-			<input type="hidden" name="liste1" value="<?php echo $liste ?>" />
-			<input type="hidden" name="id_combi" value="<?php echo $resultat1->id() ?>" />
-			<input type="submit" name="combiner" value="Réviser cette combinaison" />
-			</form>
-			<br> 
-			<?php
-			$y++;
-		}
-	}
-	?>
+					<?php
+					$pseudo = $_SESSION['login'];
+					if(isset($_POST['idListeCombi'])){
+						$idCombi = $_POST['idListeCombi'];
+						if(deleteCombinaisonByIdAndMembre($idCombi, $pseudo)){
+							echo '<h3>Votre combinaison a bien été supprimée.</h3>';
+						}
+					}
+					$query = getCombinaisonByPseudoLimit15($pseudo);
+					$y = 1;
+					if(sizeof($query) == 0) {
+						echo 'Aucune combinaison créée. <br> <a href="combiner">Commencer maintenant</a> !';
+					}
+					else {
+						foreach($query as $resultat1) {
+							$titre = $resultat1->titre();
+							$id = $resultat1->id_liste();
+							$liste = $resultat1->liste();
+							echo "$y. $titre"  
+					?>
+							<form method="post" action="revise"> 
+								<input type="hidden" name="reviseCombi" value="ok" />
+								<input type="hidden" name="reviseCombiMots" value="<?php echo $liste ?>" />
+								<input type="hidden" name="titreCombi" value="<?php echo $titre ?>" />
+								<input type="submit" name="combiner" value="Réviser cette combinaison" />
+							</form>
+							<form method="post" action="membre_all" name="supprimerCombi" onsubmit="return validateDelete();">
+								<input type="hidden" name="idListeCombi" value="<?php echo $resultat1->id() ?>" />
+								<input src="images/delete.png" type=image type="submit" name="supprimer" value="Supprimer cette combinaison" />
+							</form>
+							<br> 
+					<?php
+							$y++;
+						}
+					}
+					?>
 	</div>
 	<div id="col2outer"> 
 		<div id="col2mid">

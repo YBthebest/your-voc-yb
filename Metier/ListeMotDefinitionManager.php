@@ -171,5 +171,10 @@ class ListeMotDefinitionManager extends DbManager {
 		$statement = $this->_db->prepare($query);
 		$statement->execute();
 	}
+	public function getListeByTitreLikeKeyword($keyword){
+		$query = "select * from ".$this->table." where titre like '%$keyword%'";
+		$entity = new ListeMotDefinition();
+		return $this->select($query, $entity);	
+	}
 }
 ?>

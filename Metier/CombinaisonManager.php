@@ -36,5 +36,10 @@ class CombinaisonManager extends DbManager{
 		$statement = $this->_db->prepare($query);
 		$statement->execute();
 	}
+	public function deleteCombinaisonByIdAndMembre($id, $membre){
+		$query = "delete from ".$this->table." where id = '".$id."' and pseudo = '".$membre."'" ;
+		$statement = $this->_db->prepare($query);
+		$statement->execute();
+	}
 }
 ?>

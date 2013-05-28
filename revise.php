@@ -12,11 +12,14 @@
 <div id="content">
 	<div id="bloc">
 		<div id="text-center">
-     	   <div id="title"></div>
+     	   <div id="title"><?php if(isset($_POST['titreCombi'])){ echo mysql_real_escape_string($_POST['titreCombi']); }?></div>
 				<?php
 			
 function getHTML_Etape1($erreur='') {
-	if(!isset( $_POST['listeMot'])){
+	if(isset($_POST['reviseCombi'])){
+		$_POST['listeMot'] = rtrim($_POST['reviseCombiMots']);
+		$_SESSION['id'] = 'no';
+	}elseif(!isset( $_POST['listeMot'])){
 		 $_POST['listeMot'] = 
 		 "Bienvenue sur Your-Voc, le site qui vous aidera à réviser votre vocabulaire facilement.
 		Entrez-vos mots ici et appuyer sur \"ok\" pour commencer la révision.
@@ -27,8 +30,6 @@ function getHTML_Etape1($erreur='') {
 			eat=manger
 			drink=boire
 			hit=frapper";
-	}elseif(isset($_POST['reviseCombi'])){
-		$_POST['listeMot'] = $_POST['reviseCombiMots'];
 	}
 	$html = "" ;
 	if( $erreur != ''){

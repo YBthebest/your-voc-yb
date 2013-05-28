@@ -444,4 +444,13 @@ function createNewCombinaison($id, $membre, $titre, $mots, $date){
 	DBHelper::getDBManager("Combinaison")->createNewCombinaison($id, $membre, $titre, $mots, $date);
 	return $newCombinaison;
 }
+function deleteCombinaisonByIdAndMembre($id, $membre){
+	$deleteCombi = new Combinaison(array("id"=>$id, "membre"=>$membre));
+	DBHelper::getDBManager("Combinaison")->deleteCombinaisonByIdAndMembre($id, $membre);
+	return $deleteCombi;
+}
+function getListeByTitreLikeKeyword($keyword){
+	$liste = DBHelper::getDBManager("ListeMotDefinition")->getListeByTitreLikeKeyword($keyword);
+	return $liste;
+}
 ?>

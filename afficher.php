@@ -211,7 +211,7 @@ if(isset($listeMotDefinition)) {
 		<?php } ?>
 			
 			<div id="combiner">
-				<form method="get" action="new_combiner">
+				<form method="get" action="combiner">
 					<input type="hidden" name="id" value="<?php echo $_GET['id']?>" />
 					<input type="submit" value="Combiner avec une autre liste" />
 				</form>
