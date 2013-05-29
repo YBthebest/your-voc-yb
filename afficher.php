@@ -175,10 +175,8 @@ if(isset($listeMotDefinition)) {
 			
 			<br>
 			
-			<a href="#commentairesMembres"><small>Accéder directement aux commentaires</small></a>  
-			/  
-			<a href="signaler?id=<?php echo $id ?>"><small>Signaler une erreur dans la liste</small></a>
-			
+			<a href="#commentairesMembres"><small>Accéder directement aux commentaires</small></a>   
+		
 			<br>
 			
 		<?php if(isset($login)){ 

@@ -30,7 +30,7 @@
 							// on teste les deux mots de passe
 							if ($_POST['pass'] == $_POST['pass_confirm']) {						
 								if(!isValidPassword($_POST['pass'])){
-									$erreur = 'Votre mot de passe est invalide. Caractères spéciaux non-autorisés. Minimum 6 caractères.';
+									$erreur = 'Votre mot de passe est invalide. Minimum 6 caractères.';
 								}else{
 									// on recherche si ce login est déjà utilisé par un autre membre
 									$login = mysql_real_escape_string($_POST['login']);

@@ -53,7 +53,7 @@
 	}
 	
 	function isValidPassword($password){
-		return !empty($password) && preg_match("/^[a-z0-9_-]{6,40}$/i", $password);
+		return !empty($password) && (strlen($password) > 5);
 	}
 	
 	function isValidClass($class){

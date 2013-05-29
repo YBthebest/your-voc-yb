@@ -5,6 +5,9 @@ if(isset($_GET['action'])){
 	if(isset($_POST['mots']) AND !empty($_POST['mots'])){
 		$mots = mysql_real_escape_string($_POST['mots']);
 		$titre = mysql_real_escape_string($_POST['titre']);
+		if(strlen($titre) > '1000'){
+			die();
+		}
 		if(isset($_SESSION['login'])){
 			$membre = $_SESSION['login'];
 		}else{

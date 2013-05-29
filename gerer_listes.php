@@ -30,17 +30,25 @@ if(isset($_POST['id']) && isset($_POST['type']) && isset($_POST['pseudo']) && $_
 if(isset($_POST['step2'])) {
 	if(isset($_POST['mots'])) {
 		$new_mot = mysql_real_escape_string($_POST['mots']);
-		$categorie = mysql_real_escape_string($_POST['categorie']);
-		$categorie2 = mysql_real_escape_string($_POST['categorie2']);
-		$new_titre = mysql_real_escape_string($_POST['titre']);
-		$id2 = mysql_real_escape_string($_POST['id']);
-		$pseudo2 = mysql_real_escape_string($_POST['pseudo']);
-		$commentaire2 = mysql_real_escape_string($_POST['commentaire']);
-		if(updateListe($new_mot, $categorie, $categorie2, $new_titre, $id2, $pseudo2, $commentaire2)) {
-			$erreurMessage =  '<h4>Votre liste a été modifiée avec succès.</h4><br />';
-		}
-		else {
-			$erreurMessage =  '<h4>Un problème est survenu. Veuillez réessayer.</h4><br />';
+		if(!empty($new_mot)){
+			$categorie = mysql_real_escape_string($_POST['categorie']);
+			$categorie2 = mysql_real_escape_string($_POST['categorie2']);
+			$new_titre = mysql_real_escape_string($_POST['titre']);
+			if(!empty($new_titre)){
+				$id2 = mysql_real_escape_string($_POST['id']);
+				$pseudo2 = mysql_real_escape_string($_POST['pseudo']);
+				$commentaire2 = mysql_real_escape_string($_POST['commentaire']);
+				if(updateListe($new_mot, $categorie, $categorie2, $new_titre, $id2, $pseudo2, $commentaire2)) {
+					$erreurMessage =  '<h4>Votre liste a été modifiée avec succès.</h4><br />';
+				}
+				else {
+					$erreurMessage =  '<h4>Un problème est survenu. Veuillez réessayer.</h4><br />';
+				}
+			}else{
+				$erreurMessage = '<h4>Veuillez remplir le champ "titre".</h4>';
+			}
+		}else{
+			$erreurMessage = '<h4>Veuillez remplir le champ "mots".</h4>';
 		}
 	}
 }
@@ -91,7 +99,7 @@ usort($liste, function ($a, $b){
 				?>
 				<div id="modifier">
 					<h3>Modifier votre liste :</h3><br />
-					<form name="modif" method="post">
+					<form name="modif" method="post" >
 						<input type="hidden" name="step2" /><br />
 						<input type="hidden" name="pseudo" value="<?php echo $_POST['pseudo']; ?>" />
 						<input type="hidden" name="id" value="<?php echo $_POST['id'];  ?>" />

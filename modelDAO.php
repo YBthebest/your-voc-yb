@@ -10,8 +10,6 @@ require "Metier/Membre.php";
 require "Metier/MembreManager.php";
 require "Metier/Commentaire.php";
 require "Metier/CommentaireManager.php";
-require "Metier/Erreur.php";
-require "Metier/ErreurManager.php";
 require "Metier/Favori.php";
 require "Metier/FavoriManager.php";
 require "Metier/Revision.php";
@@ -433,11 +431,6 @@ function createNewRevision($id, $membre, $moyenne, $time){
 	$newRevision = new Revision(array("id_liste" => $id, "membre" => $membre, "moyenne" => $moyenne, "date" => $time));
 	DBHelper::getDBManager("Revision")->CreateNewRevision($id, $membre, $moyenne, $time);
 	return $newRevision;
-}
-function createNewErreur($id_liste, $type, $message, $pseudo, $time){
-	$newErreur = new Erreur(array("id_liste" => $id_liste, "membre" => $pseudo, "type" => $type, "message" => $message, "date" => $time));
-	DBHelper::getDBManager("Erreur")->createNewErreur($id_liste, $type, $message, $pseudo, $time);
-	return $newErreur;
 }
 function createNewCombinaison($id, $membre, $titre, $mots, $date){
 	$newCombinaison = new Combinaison(array("id" => $id, "membre" => $membre, "titre" => $titre, "mots" => $mots, "date" => $date));

@@ -105,7 +105,7 @@ function validateDelete(){
 					foreach($requete_favoris as $rendu) {
 						$listeMots = getListeById($rendu->id_liste());
 						echo ''.$i++.'. ';
-						?><a href="afficher?id=<?php echo $listeMots->id() ?>"><?php echo $listeMots->titre() ?></a> - <small><?php echo $listeMots->categorie() ?></small><br /><?php
+						?><a href="afficher?id=<?php echo $listeMots->id() ?>"><?php echo $listeMots->titre() ?></a> - <small><?php echo $listeMots->categorie() ?> <-> <?php echo $listeMots->categorie2() ?></small><br /><?php
 					}
 				}
 			?>		
