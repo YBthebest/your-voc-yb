@@ -112,7 +112,6 @@ function saveCombin(){
 	var idListeCombiTotal = window.listeCombi;
 	var mots = '';
 	var titre = 'Combinaison de ';
-	var membre = '<?= $_SESSION['login'] ?>';
 	if(window.listeCombi.length > 1){
 		for(var i=0; i<window.listeCombi.length; i++){
 			var idListeCombi = window.listeCombi[i];			
@@ -124,7 +123,7 @@ function saveCombin(){
 				titre += ' & ';
 			}
 		};
-		var mesValeurs = { idListe: idListeCombiTotal, mots: mots, titre: titre, membre: membre }
+		var mesValeurs = { idListe: idListeCombiTotal, mots: mots, titre: titre}
 		var saveData = $.ajax({
 		      type: 'POST',
 		      url: "save_combin.php?action=saveCombin",
@@ -145,7 +144,6 @@ function reviseCombin(){
 	var mots = '';
 	var id = 'no';
 	var titre = 'Combinaison de ';
-	var membre = '<?= $_SESSION['login'] ?>';
 	if(window.listeCombi.length > 1){
 		for(var i=0; i<window.listeCombi.length; i++){
 			var idListeCombi = window.listeCombi[i];			

@@ -5,7 +5,11 @@ if(isset($_GET['action'])){
 	if(isset($_POST['mots']) AND !empty($_POST['mots'])){
 		$mots = mysql_real_escape_string($_POST['mots']);
 		$titre = mysql_real_escape_string($_POST['titre']);
-		$membre = mysql_real_escape_string($_POST['membre']);
+		if(isset($_SESSION['login'])){
+			$membre = $_SESSION['login'];
+		}else{
+			die();
+		}
 		$idListe = $_POST['idListe'];
 		$idListeTotal = implode(",", $idListe);
 		$date = time();

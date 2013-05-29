@@ -29,11 +29,11 @@ function getHTML_Etape2() {
     }
     // si il est a des mot valide , on continu
     if( $mot_present != 0) {
-		$mots = htmlspecialchars($_POST['mots']);
-		$titre = htmlspecialchars($_POST['titre']);
-		$categorie = $_POST['categorie'];
-		$categorie2= $_POST['categorie2'];
-		$commentaire = mysql_real_escape_string(strip_tags(htmlspecialchars($_POST['commentaire'])));
+		$mots = stripslashes(strip_tags(mysql_real_escape_string(htmlspecialchars($_POST['mots']))));
+		$titre = stripslashes(strip_tags(mysql_real_escape_string(htmlspecialchars($_POST['titre']))));
+		$categorie = mysql_real_escape_string($_POST['categorie']);
+		$categorie2= mysql_real_escape_string($_POST['categorie2']);
+		$commentaire = stripslashes(mysql_real_escape_string(strip_tags(htmlspecialchars($_POST['commentaire']))));
 		setlocale(LC_TIME, 'fr_FR.utf8','fra'); 
 		$time= time();
 		if(strlen($commentaire) > 300) {
@@ -44,7 +44,7 @@ function getHTML_Etape2() {
 			$html = 'Veuillez préciser un titre! <a href="entrer_liste">Retour</a>';
 		} else if(isset($time) OR !empty($time)) {
 			$login = strip_tags($_SESSION['login']);
-			$isSuccess = insertListeMot($login, strip_tags(mysql_real_escape_string($mots)), strip_tags(mysql_real_escape_string($titre)), $time, mysql_real_escape_string($categorie), mysql_real_escape_string($categorie2), $commentaire, 0, '');
+			$isSuccess = insertListeMot($login, $mots, $titre, $time, $categorie, $categorie2, $commentaire, 0, '');
 			if($isSuccess){
 				$html = 'Votre liste <span style="color:green;">"'.$titre.'"</span> a bien été enregistrer sous votre login <span style="color:#be3737;">"'.$login.'"</span>. Merci de votre contribution.';
 			}else{

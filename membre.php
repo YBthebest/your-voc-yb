@@ -108,13 +108,13 @@ function validateDelete(){
 						else {
 							$i = 1;
 							foreach($requete_favoris as $rendu) {
-								$listeMots = getListeById($liste = $rendu);
+								$listeMots = getListeById($rendu->id_liste());
 								echo ''.$i++.'. ';
 								?><a href="afficher?id=<?php echo $listeMots->id() ?>"><?php echo $listeMots->titre() ?></a> - <small><?php echo $listeMots->categorie() ?></small><br /><?php
 							}
-						?><br><a href="?page=membre_all">Tout voir</a><br><?php
 						}
-						?>		
+						?>	
+						<br><a href="?page=membre_all">Tout voir</a><br>	
 					</div>
 				</div>
 			</div> 

@@ -1,9 +1,18 @@
-﻿AddDefaultCharset utf-8
-# Activation du module de réécriture d'URL :
+AddDefaultCharset utf-8
+Options +FollowSymlinks -MultiViews
 RewriteEngine On
-# redirection de l'accueil
-RewriteRule ^([_a-zA-Z0-9]+)$ index.php?page=$1 [QSA]
-<Files  ~ "\.properties$">
+RewriteBase /
+
+RewriteCond %{THE_REQUEST} ^[A-Z]+\s.+\.php\sHTTP/.+
+RewriteRule ^(.+)\.php $1 [R=301,L,QSA]
+
+RewriteCond %{REQUEST_URI} !index\.php [NC]
+RewriteCond %{REQUEST_URI} !=/ajax-search.php
+RewriteCond %{REQUEST_URI} !=/liste_result.php
+RewriteCond %{REQUEST_URI} !=/save_combin.php
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+)/?$ /index.php?page=$1  [QSA] [R=301]
+<Files ~ "\.properties$">
   Order allow,deny
   Deny from all
 </Files>

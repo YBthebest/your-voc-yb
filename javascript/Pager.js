@@ -41,7 +41,7 @@ Pager.prototype.initContainerPager = function (classe){
 Pager.prototype.addPagerContainer = function (){
 	if(this.nbPage > 1){
 		for(var i=0; i<this.$containersPager.length; i++){
-			var $container = $('<ul id="pagineur'+i+'" style="height:20px;margin: 10px 0px;padding: 0px;"></ul>');
+			var $container = $('<ul id="pagineur'+i+'" style="height:60px;margin: 10px 0px;padding: 0px;"></ul>');
 			this.initSelectors($container);
 			$(this.$containersPager[i]).append($container);
 			//this.select(this.currentPage);		
