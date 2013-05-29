@@ -51,7 +51,7 @@ function convertObjectToJs($phpObject, $dropProperties=null){
 			} else {
 				$value = '"'.mysql_real_escape_string($value).'"';//mysql_real_escape_string()
 			}
-			$jsObject .= $property->getName().":".$value;
+			$jsObject .= '"'.$property->getName().'":'.$value;
 			if($i < $size){
 				$jsObject .= ",";
 			}

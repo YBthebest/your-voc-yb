@@ -124,19 +124,19 @@ function saveCombin(){
 			}
 		};
 		var mesValeurs = { idListe: idListeCombiTotal, mots: mots, titre: titre}
-		var saveData = $.ajax({
+		$.ajax({
 		      type: 'POST',
 		      url: "save_combin.php?action=saveCombin",
 		      data: mesValeurs,
 		      dataType: "text",
 		      success: function(resultData) {
 			       alert("Votre combinaison a bien été sauvgardée.");
-			       setTimeout(function () {
-			    	   window.location.href = "membre";
-			    	}, 1000);  
+			       window.location.href = "membre"; 
+			  },
+			  error : function() { 
+				  alert("Un problème a eu lieu. Veuillez réessayer."); 
 			  }
 		});
-		saveData.error(function() { alert("Un problème a eu lieu. Veuillez réessayer."); });
 	}
 }
 function reviseCombin(){

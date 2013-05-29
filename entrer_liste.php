@@ -42,6 +42,8 @@ function getHTML_Etape2() {
 			$html = 'Veuillez entrer vos mots correctement <a href="entrer_liste">ici</a>';
 		} else if(!isset($titre) OR empty($titre)) {
 			$html = 'Veuillez préciser un titre! <a href="entrer_liste">Retour</a>';
+		} else if(isset($titre) && sizeof($titre) > 100) {
+			$html = 'Votre titre ne doit pas dépasser 100 caractères! Utilisez le champs commentaire pour plus de détail. <a href="entrer_liste">Retour</a>';
 		} else if(isset($time) OR !empty($time)) {
 			$login = strip_tags($_SESSION['login']);
 			$isSuccess = insertListeMot($login, $mots, $titre, $time, $categorie, $categorie2, $commentaire, 0, '');
@@ -132,7 +134,7 @@ if(isset($_SESSION['login'])){
 					<div id='rowSpecChar'></div>					
 					Titre(par exemple, Allemand Genial Unité 12) : 
 					<br>
-					<input type="text" name="titre" style="margin-bottom:4px;"/>						
+					<input type="text" id="titre" name="titre" style="margin-bottom:4px;"/>						
 					<br>
 					<span style="font-style: italic;">
 						C'est ici que vous allez pouvoir entrer vos propres listes de vocabulaires, comme dans le cadre ci-dessous.

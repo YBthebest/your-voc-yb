@@ -22,25 +22,19 @@ if (!isset($_SESSION['login'])) {
 				</form> 
 			</div>
 			<?php
-			if(isset($_POST['valider'])) 
-			{
+			if(isset($_POST['valider'])) {
 				$login = $_SESSION['login'];
-				$pass = getPassByLogin($login);
-				foreach($pass as $pass_r){
-					$mdp = $pass_r->pass();
-				}
-				if($mdp == md5($_POST['ancien_mdp'])) {
+				$membre = getMembreByLogin($login);
+				if($membre->pass() == md5($_POST['ancien_mdp'])) {
 					if($_POST['new_mdp'] != $_POST['new_mdp_2']) {
 						echo "Les mots de passes ne concordent pas.<br />";
-					}
-					else {
+					} else {
 						$new_mdp_bon = md5($_POST['new_mdp']);
 						$login = $_SESSION['login'];
 						updateMdpByLogin($new_mdp_bon, $login);
 						echo 'Votre mot de passe a bien été changé! <br />';
 					}
-				}
-				else {
+				} else {
 					echo 'L\'ancien mot de passe est faux. <br />';
 				}
 			}

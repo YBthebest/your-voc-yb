@@ -41,15 +41,25 @@ function soumettre(){
 	document.formulaire.submit();
 }
 function validerListe(){
-	var listeMots = document.getElementById('newListe').value.split("\n");
-	for(var i=0; i<listeMots.length; i++){
-		if(listeMots[i].replace(new RegExp("( )*"), "").length==0){
-			alert("Merci de ne pas mettre de ligne blanche dans votre liste.");
-			return false;
-		}else if(!listeMots[i].match("=")){
-			alert("Merci de bien mettre un '=' pour chaque mot afin de pouvoir soumettre votre liste. ");
-			return false;
+	var titre = $('#titre').val();
+	var listeMots = $('#newListe').val().split("\n");
+	var message = "";
+	if(titre == ""){
+		message = "Vous devez renseigner un titre pour enregistrer une liste.";
+	}else if(titre.length > 100){
+		message = "Votre titre ne doit pas dépacer 100 caractères.\nSi vous désirez mettre plus de détail utilisez le champ commentaire";
+	}else{	
+		for(var i=0; i<listeMots.length; i++){
+			if(listeMots[i].replace(new RegExp("( )*"), "").length==0){
+				message = "Merci de ne pas mettre de ligne blanche dans votre liste.";
+			}else if(!listeMots[i].match("=")){
+				message = "Merci de bien mettre un '=' pour chaque mot afin de pouvoir soumettre votre liste. ";
+			}
 		}
+	}
+	if(message != ""){
+		alert(message);
+		return false;
 	}
 	return true;
 }
@@ -167,9 +177,6 @@ function dynamicSortMultiple(properties) {
 function getNbPage(liste, nbPerPage){
 	return parseInt(liste.length/nbPerPage  + 0.9);
 }
-
-
-
 
 function createListSort(idSelectElem, selectList, listToSort, defaultSelected, pager){
 	var selectTri = createListeSelect(idSelectElem, selectList);

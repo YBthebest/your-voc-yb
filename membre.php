@@ -100,15 +100,15 @@ function validateDelete(){
 						<h3>Favoris</h3>
 						<?php
 						$membre = $_SESSION['login'];
-						$requete_favoris = getFavoriByPseudoLimit20($membre);
-						$nombre = sizeof($requete_favoris);
+						$listeFavoris = getFavoriByPseudoLimit20($membre);
+						$nombre = sizeof($listeFavoris);
 						if($nombre == 0){
 							echo "Vous n'avez aucune liste en favoris.";
 						}
 						else {
 							$i = 1;
-							foreach($requete_favoris as $rendu) {
-								$listeMots = getListeById($rendu->id_liste());
+							foreach($listeFavoris as $favoris) {
+								$listeMots = getListeById($favoris->id_liste());
 								echo ''.$i++.'. ';
 								?><a href="afficher?id=<?php echo $listeMots->id() ?>"><?php echo $listeMots->titre() ?></a> - <small><?php echo $listeMots->categorie() ?></small><br /><?php
 							}
