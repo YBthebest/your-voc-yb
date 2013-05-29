@@ -65,7 +65,7 @@ function initializeContextResult(listeObject){
 					<p>
 						Nous avons trouvé <span id="totalListe"></span> dans notre base de données. 
 						<br />
-						Voici les listes que nous avons trouvées, classées par <span id="critere"><?php echo $critere ?></span>.
+						Voici les listes que nous avons trouvées, classées par <span id="critere"><?php echo htmlspecialchars($critere) ?></span>.
 						<br /> 
 						<a href="recherche">Faire une nouvelle recherche</a>
 					<p>
