@@ -51,7 +51,6 @@ function dbConfiguration(){
 	DBHelper::addManager(new VoteManager());
 	DBHelper::addManager(new RevisionManager());
 	DBHelper::addManager(new FavoriManager());
-	DBHelper::addManager(new ErreurManager());
 	DBHelper::addManager(new CommentaireManager());
 	DBHelper::addManager(new CombinaisonManager());
 }
@@ -126,14 +125,14 @@ function getMembre($login, $mdp){
 	}
 	if(empty($result)){
 		$liste = DBHelper::getDBManager("Membre")->getMembreByLogin($login);
-		$result = "Votre identifiant est inconnu, merci de vous inscrire pour vous connecter";
+		$result = "Votre identifiant ou mot de passe est incorrect";
 		if(count($liste) == 1){
 			$result = $liste[0];
 			if(md5($mdp) != $result->pass()){
-				$result = "Votre mot de passe est incorrect";
+				$result = "Votre identifiant ou mot de passe est incorrect";
 			}
 		}else if(count($liste) > 1){
-			$result = "Une erreur dans notre base est surevenu plusieur membres porte le même login. Merci de contacter l'administrateur du site.";
+			$result = "Une erreur dans notre base est survenue plusieurs membres portent le même login. Merci de contacter l'administrateur du site.";
 		}
 	}
 	return $result;
