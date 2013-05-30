@@ -102,6 +102,12 @@ if(isset($listeMotDefinition)) {
 ?>
 <script type="text/javascript">
 	$(function(){
+		var favori = <?php echo $favoriOption;?>;
+		if(favori.val){
+			$("#buttonFav").attr('value', favori.val).attr('name', favori.name);
+			$("#favoris").show("slow");
+		}	
+		
 		$("#login").val('<?php echo @$_SESSION['login'];?>');
 		window.listeMot = <?php echo $listeToJson;?>;		
 
@@ -121,10 +127,6 @@ if(isset($listeMotDefinition)) {
 		if(capchaReponse != ""){
 			alert(capchaReponse);
 		}
-		var favori = <?php echo $favoriOption;?>;
-		if(favori.val){
-			$("#buttonFav").attr('value', favori.val).attr('name', favori.name);
-		}	
 
 		var withCapcha=<?php echo $withCapcha;?>;	
 		if(!withCapcha){
@@ -198,7 +200,7 @@ if(isset($listeMotDefinition)) {
 				</form>
 			</div>
 		<?php } ?>	
-			<div id="favoris">	
+			<div id="favoris" style="display:none;">	
 				<form method="post" action="afficher?id=<?php echo $id ?>">
 					<input type="hidden" name="membre" value="<?php echo $_SESSION['login'] ?>" />
 					<input id="buttonFav" type="submit" name="favoris" value="favoris" />

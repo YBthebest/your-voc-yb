@@ -40,9 +40,9 @@ function getElementsByClass(classe,elementTag) {
 function soumettre(){
 	document.formulaire.submit();
 }
-function validerListe(){
-	var titre = $('#titre').val();
-	var listeMots = $('#newListe').val().split("\n");
+function validerListe(idListe, idTitre){
+	var titre = $("#"+idTitre).val();
+	var listeMots = $("#"+idListe).val().split("\n");
 	var message = "";
 	if(titre == ""){
 		message = "Vous devez renseigner un titre pour enregistrer une liste.";
@@ -52,8 +52,10 @@ function validerListe(){
 		for(var i=0; i<listeMots.length; i++){
 			if(listeMots[i].replace(new RegExp("( )*"), "").length==0){
 				message = "Merci de ne pas mettre de ligne blanche dans votre liste.";
-			}else if(!listeMots[i].match("=")){
-				message = "Merci de bien mettre un '=' pour chaque mot afin de pouvoir soumettre votre liste. ";
+			}else if(listeMots[i].split("=").length != 2){
+				message = "Merci de renseigner un '=' et un seul pour chaque mot afin de pouvoir soumettre votre liste. ";
+			}else if(listeMots[i].split("=")[1].length == 0){
+				message = "Merci de renseigner une traduction afin de pouvoir soumettre votre liste. ";
 			}
 		}
 	}
@@ -118,7 +120,13 @@ function createListeButtonCharSpec(parentElement){
 	var charSpecTab = ['ö','ä','ü','Ä','Ö','Ü','é','è','à','ç','É','È','ô','À','î','ê','Ê'];
 	var container = createElem({tag:'div', id:'specialCharContainer'});
 	for(var i=0; i<charSpecTab.length; i++){
-		var buttonChar = createElem({tag:'input', type:'button', value:charSpecTab[i], name:i+1, onclick:"toucheclavier(this.value);"});
+		var buttonChar = createElem({tag:'input', type:'button', value:charSpecTab[i], name:i+1, 
+			onclick: function (){
+				if(document.clavier.choix.value==1){
+			    	document.clavier.mots.value+=this.value;
+			    }
+			}
+		});
 		container.appendChild(buttonChar);
 	}
 	parentElement.appendChild(container);
@@ -260,7 +268,7 @@ function slidePage(domObjectDefine){
 	var $sliderContainer = $("#sliderContainer");
 	if($sliderContainer.length == 0){
 		$sliderContainer = $('<div id="sliderContainer" />');
-		$sliderListe = $('<div id="sliderList" style="position: absolute; width: 100%; height: 100%" />');
+		$sliderListe = $('<div id="sliderList" style="position: absolute; width: auto; height: auto" />');
 		$sliderContainer.append($sliderListe);
 		$elemContainer.before($sliderContainer);
 		$sliderListe.append($elemContainer);

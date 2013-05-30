@@ -87,11 +87,6 @@ if(isset($_SESSION['login'])){
 			//createLigneMotTraduction();	
 		});
 		
-		function toucheclavier(touche) {
-			if(document.clavier.choix.value==1) document.clavier.mots.value+=touche;
-		}
-		
-		
 		function createLigneMotTraduction(){
 			var table = $("#listeMots");
 			var row = createElem({tag:'tr'});
@@ -119,7 +114,7 @@ if(isset($_SESSION['login'])){
     <div id="bloc">
 		<div id="text-center">
 			<div id="title">Entrer une liste </div>
-			<form name="clavier" method="post" onsubmit="return validerListe();">
+			<form name="clavier" method="post" onsubmit="return validerListe('newListe','titre');">
 				<input type="hidden" name="choix" value="1" /> 
 				<div class="contentEntrerListe" id="<?php echo $etape;?>">
 				<?php 

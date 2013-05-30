@@ -99,14 +99,14 @@ usort($liste, function ($a, $b){
 				?>
 				<div id="modifier">
 					<h3>Modifier votre liste :</h3><br />
-					<form name="modif" method="post" >
+					<form name="modif" method="post" onsubmit="return validerListe('mots','titre');">
 						<input type="hidden" name="step2" /><br />
 						<input type="hidden" name="pseudo" value="<?php echo $_POST['pseudo']; ?>" />
 						<input type="hidden" name="id" value="<?php echo $_POST['id'];  ?>" />
 						<table>
 							<tr>
 								<td style="vertical-align:top;text-align:right;width:300px;">Titre : </td>
-								<td style="text-align:left;"><input type="text" name="titre" size="60" value="<?php echo $titre;?>" /></td>
+								<td style="text-align:left;"><input type="text" id="titre" name="titre" size="60" value="<?php echo $titre;?>" /></td>
 							</tr>
 							<tr>
 								<td style="vertical-align:top;text-align:right;width:300px;">Commentaire concernant la liste : </td>
