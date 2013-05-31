@@ -99,7 +99,8 @@ function initializeContextResult(listeObject){
 								<option value="tous">les deux</option>
 							</select>
 							<br /> 
-							<input type="text" name="requete" value="Mots-clés" size="30">
+							<input type="text" name="requete" value="Mots-clés" size="30" onblur="if (this.value == '') {this.value = 'Mots-clés';}"
+ 							onfocus="if (this.value == 'Mots-clés') {this.value = '';}" >
 							<br /> 
 							<input type="hidden" name="critere" value="vues">
 							<input type="submit" value="Recherche">

@@ -5,3 +5,4 @@
 *.sql
 *.save
 config.properties
+.htaccess
