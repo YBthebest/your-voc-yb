@@ -75,7 +75,7 @@
 							$listeMots = getListeById($favoris->id_liste());
 							echo ''.$i++.'. ';
 					?>
-						<a href="afficher?id=<?php echo $listeMots->id() ?>"><?php echo $listeMots->titre() ?></a> - <small><?php echo $listeMots->categorie() ?></small><br />
+						<a href="afficher?id=<?php echo $listeMots->id() ?>"><?php echo $listeMots->titre() ?></a> - <small><?php echo $listeMots->categorie() ?> <-> <?php echo $listeMots->categorie2() ?></small><br />
 					<?php
 						}
 					}

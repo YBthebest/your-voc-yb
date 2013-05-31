@@ -3,18 +3,27 @@ Options +FollowSymlinks -MultiViews
 RewriteEngine On
 RewriteBase /
 
+#Redirige tout le traffic vers "www"
+#RewriteCond %{HTTP_HOST} !^www\.
+#RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
+
+#Redirige tous les fichiers en .php vers leur version sans .php
 RewriteCond %{THE_REQUEST} (\.php(.*)\sHTTP/1)
 RewriteCond %{REQUEST_URI} !=/ajax-search.php
 RewriteCond %{REQUEST_URI} !=/liste_result.php
 RewriteCond %{REQUEST_URI} !=/save_combin.php
 RewriteRule ^(.+)\.php$ /$1 [R=301,L,QSA]
 
+#Redirige tout le traffic correct vers index.php?page=
 RewriteCond %{REQUEST_URI} !index\.php [NC]
 RewriteCond %{REQUEST_URI} !=/ajax-search.php
 RewriteCond %{REQUEST_URI} !=/liste_result.php
 RewriteCond %{REQUEST_URI} !=/save_combin.php
+RewriteCond %{REQUEST_URI} !=/sitemap.xml
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^([^/]+)/?$ /index.php?page=$1  [QSA] [R=301]
+
+#interdit la vision de tous les fichiers qui finissent en .properties
 <Files ~ "\.properties$">
   Order allow,deny
   Deny from all
