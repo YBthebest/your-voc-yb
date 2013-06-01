@@ -61,15 +61,15 @@ function initTitle($url){
 		$_ENV['title'] = "Contact - Révision de vocabulaire allemand anglais espagnol facilement sur Your-Voc.";
 		$_ENV['metaContent'] = "Contactez-nous facilement à travers cette page.";
 	}
-	elseif (preg_match("/entrer_liste.php/i", $url)) {
+	elseif (preg_match("/entrer-liste.php/i", $url)) {
 		$_ENV['title'] = "Entrer une liste - Révision de vocabulaire allemand anglais espagnol facilement sur Your-Voc.";
 		$_ENV['metaContent'] = "Aidez la communauté Your-Voc à grandir, entrer une nouvelle liste et utilisez-là vous-même!";
 	}
-	elseif (preg_match("/gerer_public.php/i", $url)) {
+	elseif (preg_match("/gerer-public.php/i", $url)) {
 		$_ENV['title'] = "Derniers ajouts et autre - Révision de vocabulaire anglais sur Your-Voc.";
 		$_ENV['metaContent'] = "Derniers ajouts, listes les plus populaires et catégories. Vous trouverez tout ici!";
 	}
-	elseif (preg_match("/gerer_listes.php/i", $url)) {
+	elseif (preg_match("/gerer-listes.php/i", $url)) {
 		$_ENV['title'] = "Vos listes - Révision de vocabulaire allemand anglais espagnol facilement sur Your-Voc.";
 		$_ENV['metaContent'] = "Vous trouverez ici toutes les listes que vous avez entré sur Your-Voc!";
 	}

@@ -14,7 +14,7 @@
 				</div>
 				<div id="col2outer"> 
 					<div id="col2mid">
-						<h3><a href="entrer_liste">Commencez dès maintenant, et créez votre première liste.</a></h3><br />
+						<h3><a href="entrer-liste">Commencez dès maintenant, et créez votre première liste.</a></h3><br />
 						Le fonctionnement de Your-Voc est très simple. Créez votre liste, basée sur le vocabulaire que vos élèves doivent apprendre, et partagez-là avec vos élèves et vos collègues.<br />
 						La méthode qu'utilise Your-Voc plaît aux enfants et adolescents, et fonctionne parfaitement. <br />Cette méthode a été utilisée aux USA, aux Pays-Bas et dans plein d'autres pays et a connu énormément de succès. Soyez les premiers à surprendre vos élèves! <br />Le tout entièrement gratuitement, qu'attendez-vous? Les résultats seront immédiat!
 					</div>

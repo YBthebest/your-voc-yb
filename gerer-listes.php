@@ -135,7 +135,7 @@ usort($liste, function ($a, $b){
 			<div id="vosListes">
 				<h2>Vos listes</h2>
 				Triées par date d'ajout.<br />
-				<a href="entrer_liste" >Entrer une nouvelle liste</a><br />
+				<a href="entrer-liste" >Entrer une nouvelle liste</a><br />
 				<a href="revise" >Réviser quelques mots sans créer une liste</a><br /><br />
 				<table style="border:0; border-spacing:10px">
 			  		<tr>
@@ -163,7 +163,7 @@ usort($liste, function ($a, $b){
 							</form>
 						</td>
 						<td>
-							<form method="post" action="gerer_listes" >
+							<form method="post" action="gerer-listes" >
 								<input type="hidden" value="<?php echo $requete->id(); ?>" name="id" />
 								<input type="hidden" value="<?php echo $pseudo; ?>" name="pseudo" />
 								<?php $listeMot = "";
@@ -184,7 +184,7 @@ usort($liste, function ($a, $b){
 							</form>
 						</td>
 						<td>
-							<form method="post" action="gerer_listes" onsubmit="return validateDelete();">
+							<form method="post" action="gerer-listes" onsubmit="return validateDelete();">
 								<input type="hidden" value="<?php echo $requete->id(); ?>" name="id" />
 								<input type="hidden" value="<?php echo $pseudo; ?>" name="pseudo" />
 								<input type="hidden" value="supprimer" name="type" />

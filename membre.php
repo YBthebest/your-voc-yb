@@ -57,15 +57,15 @@ function validateDelete(){
 						}
 					}
 					?>
-					<a href="?page=membre_all">Toutes les voir</a><br />
+					<a href="?page=membre-all">Toutes les voir</a><br />
 				</div>
 				<div id="col2outer"> 
 					<div id="col2mid">
 						<p>
 							<h3>Bienvenue <?php echo htmlentities(trim($_SESSION['login'])); ?>!</h3>
 							<a href="revise" >Réviser quelques mots sans créer une liste</a><br/>		
-							<a href="gerer_listes" >Gerer et réviser ses listes</a><br/>			
-							<a href="entrer_liste" >Entrer une nouvelle liste</a><br/>
+							<a href="gerer-listes" >Gerer et réviser ses listes</a><br/>			
+							<a href="entrer-liste" >Entrer une nouvelle liste</a><br/>
 							<a href="recherche" >Faire une recherche</a><br/>
 							<a href="mdp">Modifier mon mot de passe</a><br/>
 							<a href="deconnexion">Déconnexion</a><br/>
@@ -75,7 +75,7 @@ function validateDelete(){
 						$listeRevisions = getRevisionsByPseudoLimit3($pseudo);
 						$i = 1;
 						if(sizeof($listeRevisions) == 0) {
-							echo 'Aucune liste révisée.<br><a href="?page=gerer_public">Commencer maintenant</a> !';
+							echo 'Aucune liste révisée.<br><a href="?page=gerer-public">Commencer maintenant</a> !';
 						} else {
 							foreach($listeRevisions as $revision) {
 								$idListeMot = $revision->id_liste();
@@ -94,7 +94,7 @@ function validateDelete(){
 							}
 						}
 						?>
-						<br><a href="?page=membre_all">Tout voir</a><br>		
+						<br><a href="?page=membre-all">Tout voir</a><br>		
 					</div>
 					<div id="col2side"> 
 						<h3>Favoris</h3>
@@ -114,7 +114,7 @@ function validateDelete(){
 							}
 						}
 						?>	
-						<br><a href="?page=membre_all">Tout voir</a><br>	
+						<br><a href="?page=membre-all">Tout voir</a><br>	
 					</div>
 				</div>
 			</div> 

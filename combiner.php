@@ -87,7 +87,7 @@ $(document).ready(function() {
 function checkCombin() {      
 	if(window.listeCombi.length < 2) {
        $("#valider_combin").prop("disabled",true);
-	} else if(window.listeCombi.length > 9){
+	} else if(window.listeCombi.length > 5){
 	   $("#valider_combin").prop("disabled",true);		
     } else {
        $("#valider_combin").prop("disabled",false);

@@ -1,8 +1,8 @@
 <?php
-	$menuLink = array("accueil" => "Accueil", "gerer_public" => "Toutes les listes", "contact" => "Contact");	
+	$menuLink = array("accueil" => "Accueil", "gerer-public" => "Toutes les listes", "contact" => "Contact");	
 	if(isset($_SESSION['login'])) { 
 		$menuLink["membre"] = "Espace Membre";
-		$menuLink["gerer_listes"] = "Vos listes";
+		$menuLink["gerer-listes"] = "Vos listes";
 		$menuLink["deconnexion"] = "Déconnexion";
 	} else { 
 		$menuLink["categories"] = "Catégories";

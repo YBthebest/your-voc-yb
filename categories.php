@@ -88,7 +88,7 @@ function valideRequete(){
 				<input type="text" id="requete" name="requete" value="Mots-clés" size="30" /> <input type="submit" value="Recherche" />
 			</p>
 		</form>
-		<a href="entrer_liste">Entrer une nouvelle liste</a><br />
+		<a href="entrer-liste">Entrer une nouvelle liste</a><br />
 
 		<div>
 			Trier par : <select id="trier"></select>

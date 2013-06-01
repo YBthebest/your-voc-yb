@@ -55,7 +55,7 @@ $(function(){
 			<div id="col2outer"> 
 				<div id="col2mid"> 
 					<div id="title" style="text-align: center">
-						<a href="entrer_liste" >Entrer une nouvelle liste</a><br /><br />
+						<a href="entrer-liste" >Entrer une nouvelle liste</a><br /><br />
 					</div>
 					<h3><a href="all">Listes les plus populaires</a></h3>
 					<ul type="circle">

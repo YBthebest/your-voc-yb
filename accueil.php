@@ -42,7 +42,7 @@ $(function(){
 					</div> 
 					<div id="col2outer"> 
 						<div id="col2mid"> 	
-							<a href="entrer_liste"><img src="images/entrerliste.png" alt="enter liste" /></a>
+							<a href="entrer-liste"><img src="images/entrerliste.png" alt="enter liste" /></a>
 							<div id="text-center">
 								<b><h2>ou chercher une liste :</h2></b>
 								<form action="recherche" method="Post">
@@ -66,7 +66,7 @@ $(function(){
 						</div> 
 						<div id="col2side">
 							<?php $defaultNbListe = 3; ?>
-							<h3><a href="gerer_public">Derniers ajouts</a></h3>					
+							<h3><a href="gerer-public">Derniers ajouts</a></h3>					
 							<ul type="circle">
 							<?php
 								$listeMotArray = getListesMotDefinitionByDate($defaultNbListe);								

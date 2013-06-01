@@ -49,7 +49,7 @@ function validateDelete(){
 								<input type="hidden" name="titreCombi" value="<?php echo $titre ?>" />
 								<input type="submit" name="combiner" value="Réviser cette combinaison" />
 							</form>
-							<form method="post" action="membre_all" name="supprimerCombi" onsubmit="return validateDelete();">
+							<form method="post" action="membre-all" name="supprimerCombi" onsubmit="return validateDelete();">
 								<input type="hidden" name="idListeCombi" value="<?php echo $resultat1->id() ?>" />
 								<input src="images/delete.png" type=image type="submit" name="supprimer" value="Supprimer cette combinaison" />
 							</form>
@@ -67,7 +67,7 @@ function validateDelete(){
 		$listeRevision = getRevisionsByPseudoLimit20($pseudo);
 		$i = 1;
 		if(sizeof($listeRevision) == 0) {
-			echo 'Aucune liste révisée.<br><a href="?page=gerer_public">Commencer maintenant</a> !';
+			echo 'Aucune liste révisée.<br><a href="?page=gerer-public">Commencer maintenant</a> !';
 		}
 		else {
 			foreach($listeRevision as $revision) {

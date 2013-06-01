@@ -27,7 +27,7 @@
 				$listeRevision = getRevisionsByPseudoLimit3($pseudo);
 				$i = 1;
 				if(sizeof($listeRevision) == 0) {
-					echo 'Aucune liste révisée.<br><a href="?page=gerer_public">Commencer maintenant</a> !';
+					echo 'Aucune liste révisée.<br><a href="?page=gerer-public">Commencer maintenant</a> !';
 				}
 				else {
 					foreach($listeRevision as $revision) {

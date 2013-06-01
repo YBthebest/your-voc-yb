@@ -46,7 +46,7 @@ function initializeContextResult(listeObject){
 	<div id="bloc">
 		<div id="text-center">
             <div id="title">Toutes les listes </div>
-			<a href="entrer_liste" >Entrer une nouvelle liste</a><br />
+			<a href="entrer-liste" >Entrer une nouvelle liste</a><br />
 			<a href="recherche" >Faire une recherche</a><br />
 			<form action="recherche" method="Post">
 				<p>
