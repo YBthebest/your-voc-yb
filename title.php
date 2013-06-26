@@ -89,17 +89,13 @@ function initTitle($url){
 		$_ENV['title'] = "Révision - Révision de vocabulaire allemand anglais espagnol facilement sur Your-Voc.";
 		$_ENV['metaContent'] = "Révisez votre liste!";
 	}
-	elseif (preg_match("/signaler.php/i", $url)) {
-		$_ENV['title'] = "Signaler une erreur - Révision de vocabulaire allemand anglais espagnol facilement sur Your-Voc.";
-		$_ENV['metaContent'] = "Signaler une erreur concernant une certaine liste. Nous la corrigerons ensuite.";
-	}
 	elseif (preg_match("/combiner.php/i", $url)) {
 		$_ENV['title'] = "Combiner des listes - Révision de vocabulaire allemand anglais espagnol facilement sur Your-Voc.";
-		$_ENV['metaContent'] = "Signaler une erreur concernant une certaine liste. Nous la corrigerons ensuite.";
+		$_ENV['metaContent'] = "Combiner plusieurs listes ensemble.";
 	}
-	elseif (preg_match("/chat.php/i", $url)) {
-		$_ENV['title'] = "Chat du site - Révision de vocabulaire allemand anglais espagnol facilement sur Your-Voc.";
-		$_ENV['metaContent'] = "Signaler une erreur concernant une certaine liste. Nous la corrigerons ensuite.";
+	elseif (preg_match("/forgot.php/i", $url)) {
+		$_ENV['title'] = "Mot de passe oublié - Révision de vocabulaire allemand anglais espagnol facilement sur Your-Voc.";
+		$_ENV['metaContent'] = "Récuperer un mot de passe oublié.";
 	}
 	elseif (preg_match("/profil.php/i", $url)) {
 		$_ENV['title'] = "Profil";

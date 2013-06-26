@@ -18,6 +18,12 @@ require "Metier/Vote.php";
 require "Metier/VoteManager.php";
 require "Metier/Combinaison.php";
 require "Metier/CombinaisonManager.php";
+require "Metier/MdpOublie.php";
+require "Metier/MdpOublieManager.php";
+require "Metier/Groupe.php";
+require "Metier/GroupeManager.php";
+require "Metier/MembreGroupe.php";
+require "Metier/MembreGroupeManager.php";
 require "Utils.php";
 require "ConfigPage.php";
 
@@ -53,6 +59,9 @@ function dbConfiguration(){
 	DBHelper::addManager(new FavoriManager());
 	DBHelper::addManager(new CommentaireManager());
 	DBHelper::addManager(new CombinaisonManager());
+	DBHelper::addManager(new MdpOublieManager());
+	DBHelper::addManager(new GroupeManager());
+	DBHelper::addManager(new MembreGroupeManager());
 }
 
 function getProperty($propertyName){
@@ -444,5 +453,23 @@ function deleteCombinaisonByIdAndMembre($id, $membre){
 function getListeByTitreLikeKeyword($keyword){
 	$liste = DBHelper::getDBManager("ListeMotDefinition")->getListeByTitreLikeKeyword($keyword);
 	return $liste;
+}
+function getTokenNotUsedByPseudo($pseudo){
+	$token = DBHelper::getDBManager("MdpOublie")->getTokenNotUsedByPseudo($pseudo);
+	return $token;
+}
+function createToken($pseudo, $token, $date, $dateExpire){
+	$newToken = new MdpOublie(array("pseudo" => $pseudo, "token" => $token, "date" => $date, "dateExpire" => $dateExpire));
+	DBHelper::getDBManager("MdpOublie")->createToken($pseudo, $token, $date, $dateExpire);
+	return $newToken;
+}
+function getMdpOublieByToken($token){
+	$token = DBHelper::getDBManager("MdpOublie")->getMdpOublieByToken($token);
+	return $token;
+}
+function updateUsedByTokenAndPseudo($token, $pseudo){
+	$updateUsed = new MdpOublie(array("token"=>$token, "pseudo"=>$pseudo));
+	DBHelper::getDBManager("MdpOublie")->updateUsedByTokenAndPseudo($token, $pseudo);
+	return $updateUsed;
 }
 ?>

@@ -48,9 +48,9 @@ echo $mapstring;
 
 // TODO: Database information
 $dbHost = 'localhost';
-$dbName = 'your_voc1';
+$dbName = 'your_voc';
 $dbUser = 'root';
-$dbPass = 'rootroot';
+$dbPass = '';
 
 // Open a connection to the information_schema database
 $infoDB = mysql_connect($dbHost, $dbUser, $dbPass);

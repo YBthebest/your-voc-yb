@@ -4,8 +4,13 @@ RewriteEngine On
 RewriteBase /
 
 #Redirige tout le traffic vers "www"
-#RewriteCond %{HTTP_HOST} !^www\.
-#RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
+RewriteCond %{HTTP_HOST}  \.
+RewriteCond %{HTTP_HOST} !^www\.
+RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
+
+#301 redirect for renamed files
+RewriteRule ^entrer_liste\.php$ http://www.your-voc.com/entrer-liste [R=301]
+RewriteRule ^gerer_public\.php$ http://www.your-voc.com/gerer-public [R=301,L]
 
 #Redirige tous les fichiers en .php vers leur version sans .php
 RewriteCond %{THE_REQUEST} (\.php(.*)\sHTTP/1)

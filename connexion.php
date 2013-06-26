@@ -69,7 +69,8 @@ if (isset($_POST['connexion']) && $_POST['connexion'] == 'Connexion') {
 		echo $waitingText;
 	}
 ?>
-<a href="inscription">Pas encore inscrit ?</a>
+<a href="inscription">Pas encore inscrit ?</a><br />
+<a href="forgot">Mot de passe oublié?</a>
 <?php if (isset($erreur)) echo '<br /><br />',$erreur; ?>
 			</div>
         </div>
