@@ -23,6 +23,25 @@ $result = mysql_query($query);
     }else {
         echo 'No Results for :"'.$_GET['keyword'].'"';
     }
+}elseif(isset($_GET['groupe'])){
+	$g_keyword = trim($_GET['groupe']) ;
+	$g_keyword = mysql_real_escape_string($g_keyword);
+	$g_keyword = htmlspecialchars($g_keyword);
+	$query = "select * from groupe where nom like '%$g_keyword%'";
+	$result = mysql_query($query);
+	if(mysql_num_rows($result) != 0){
+		$arr = array();
+		$i = 0;
+		while($result1 = mysql_fetch_array($result)){
+			$arr[$i]['id'] = $result1['id'];
+			$arr[$i]['nom'] = $result1['nom'];
+			$arr[$i]['date'] = $result1['date'];
+			$i++;
+		}
+		echo json_encode($arr);
+	}else {
+		echo 'No Results for :"'.$_GET['groupe'].'"';
+	}
 }else {
     echo 'Parameter Missing';
 }

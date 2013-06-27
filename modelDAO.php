@@ -472,4 +472,13 @@ function updateUsedByTokenAndPseudo($token, $pseudo){
 	DBHelper::getDBManager("MdpOublie")->updateUsedByTokenAndPseudo($token, $pseudo);
 	return $updateUsed;
 }
+function getGroupeById($id){
+	$groupe = DBHelper::getDBManager("Groupe")->getGroupeById($id);
+	return $groupe;
+}
+function createGroupe($nom, $date){
+	$newGroupe = new Groupe(array("nom" => $nom, "timestamp"=> $date));
+	DBHelper::getDBManager("Groupe")->createGroupe($nom, $date);
+	return $newGroupe;
+}
 ?>

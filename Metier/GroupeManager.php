@@ -15,7 +15,18 @@ class GroupeManager extends DbManager{
 	}
 	
 	protected function newInstanceEntity($donnees){	
-		return new Categorie($donnees);
+		return new Groupe($donnees);
+	}
+	
+	public function getGroupeById($id){
+		$query = "select * from ".$this->table." where id = :id" ;
+		$entity = new Groupe(array("id"=>$id));
+		return $this->selectUniqueResult($query, $entity);
+	}
+	public function createGroupe($nom, $date){
+		$query = "insert into ".$this->table." values('', '".$nom."', '".$date."')" ;
+		$statement = $this->_db->prepare($query);
+		$statement->execute();
 	}
 }
 ?>
