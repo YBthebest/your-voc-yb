@@ -1,15 +1,15 @@
 <?php
 class Revision extends Entity{
-	private $membre;
 	private $id_liste;
+	private $membre;
 	private $moyenne;
 	private $date;
 	private $timestamp;
 	
 	public function __construct(array $donnees){
 		if(isset($donnees['id']))$this->id = $donnees['id'];
-		if(isset($donnees['pseudo']))$this->nom = $donnees['pseudo'];
 		if(isset($donnees['id_liste']))$this->id_liste = $donnees['id_liste'];
+		if(isset($donnees['id_membre']))$this->nom = $donnees['id_membre'];
 		if(isset($donnees['moyenne']))$this->moyenne = $donnees['moyenne'];
 		if(isset($donnees['date'])){
 			$this->setTimestamp($donnees['date']);			
@@ -25,8 +25,16 @@ class Revision extends Entity{
 	public function membre(){
 		return $this->membre;
 	}
-	public function setMembre($p_membre){
-		$this->membre = $p_membre;
+	public function setMembre($membre){
+		require_once('modelDAO.php');
+		if(is_numeric($membre)){
+			$m = getMembreById($membre);
+			$this->membre = $m->login();
+		}
+		else{
+			$m = getMembreByLogin($membre);	
+			$this->membre = $m->id();
+		}
 	}
 	public function id_liste(){
 		return $this->id_liste;

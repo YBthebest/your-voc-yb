@@ -16,6 +16,8 @@ if(isset($_GET['action'])){
 		$idListe = $_POST['idListe'];
 		$idListeTotal = implode(",", $idListe);
 		$date = time();
+		$m = getMembreByLogin($membre);
+		$membre = $m->id();
 		if(createNewCombinaison($idListeTotal, $membre, $titre, $mots, $date)){
 			echo 'success';
 		}else{

@@ -11,7 +11,7 @@ class CombinaisonManager extends DbManager{
 	protected function binding(){
 		$this->arrayBinding[$this->ID_COLUMN] = "id";
 		$this->arrayBinding["liste"] = "liste";
-		$this->arrayBinding["pseudo"] = "membre";
+		$this->arrayBinding["id_membre"] = "membre";
 		$this->arrayBinding["titre"] = "titre";
 		$this->arrayBinding["date"] = "date";
 		$this->arrayBinding["id_liste"] = "id_liste";
@@ -22,13 +22,15 @@ class CombinaisonManager extends DbManager{
 	}
 	
 	public function getCombinaisonByPseudoLimit5($pseudo){
-		$query = "select * from ".$this->table." where pseudo = :pseudo ORDER BY id DESC LIMIT 5";
-		$entity = new Combinaison(array("pseudo"=>$pseudo));
+		$query = "select * from ".$this->table." where id_membre = :id_membre ORDER BY id DESC LIMIT 5";
+		$entity = new Combinaison(array());
+		$entity->setMembre($pseudo);
 		return $this->select($query, $entity);		
 	}
 	public function getCombinaisonByPseudoLimit15($pseudo){
-		$query = "select * from ".$this->table." where pseudo = :pseudo ORDER BY id DESC LIMIT 15";
-		$entity = new Combinaison(array("pseudo"=>$pseudo));
+		$query = "select * from ".$this->table." where id_membre = :id_membre ORDER BY id DESC LIMIT 15";
+		$entity = new Combinaison(array());
+		$entity->setMembre($pseudo);
 		return $this->select($query, $entity);
 	}
 	public function createNewCombinaison($id, $membre, $titre, $mots, $date){
@@ -37,7 +39,7 @@ class CombinaisonManager extends DbManager{
 		$statement->execute();
 	}
 	public function deleteCombinaisonByIdAndMembre($id, $membre){
-		$query = "delete from ".$this->table." where id = '".$id."' and pseudo = '".$membre."'" ;
+		$query = "delete from ".$this->table." where id = '".$id."' and id_membre = '".$membre."'" ;
 		$statement = $this->_db->prepare($query);
 		$statement->execute();
 	}

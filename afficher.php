@@ -16,16 +16,23 @@ if(empty($listeMotDefinition)){
 }
 
 if(isset($_POST['addFavoris'])) {
-	createFavori($id, $login);
+	$m = getMembreByLogin($login);
+	$membre = $m->id();
+	createFavori($id, $membre);
 } else if(isset($_POST['delFavoris'])) {
-	deleteFavoriByIdAndMembre($id, $login);
+	$m = getMembreByLogin($login);
+	$membre = $m->id();
+	deleteFavoriByIdAndMembre($id, $membre);
 }
 
 if(isset($_POST['note_submit'])) {
 	$note = $_POST['note'];
 	$checkVote = getVotesByIdAndPseudo($id, $login);
-	if(sizeof($checkVote) !== 0){
+	$m = getMembreByLogin($login);
+	$login = $m->id();
+	if(sizeof($checkVote) != 0){
 		$message = 'Vous avez déjà voté pour cette liste.';
+		?><meta http-equiv="refresh" content="0"><?php
 	} else if(is_numeric($note)) {
 		if($note > 5) {
 			$message = 'Un problème est apparu, veuillez réessayer.';
@@ -58,7 +65,7 @@ if(isset($listeMotDefinition)) {
 		}
 	}
 	
-	if(isset($_SESSION['login'])) {					
+	if(isset($_SESSION['login'])) {	
 		$voteByLogin = getVotesByIdAndPseudo($id, $login);
 		$voteByLoginSize = sizeof($voteByLogin);
 		
@@ -85,6 +92,8 @@ if(isset($listeMotDefinition)) {
 			$privatekey = "6LdsCMMSAAAAAKYeqj37ims8IdO_mnYM4O_mH608";
 			$resp = recaptcha_check_answer ($privatekey, $_SERVER["REMOTE_ADDR"], $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"]);
 			if ($resp->is_valid) {
+				$m = getMembreByLogin($login);
+				$login = $m->id();
 				createCommentaire($id, $login, $time, $commentaire);
 				$capchaReponse = "Commentaire ajouté avec succès : ".$commentaire;
 			}else{
@@ -119,7 +128,7 @@ if(isset($listeMotDefinition)) {
 		var commentaires = <?php echo $commToJson;?>;
 		$("#nbCommentaires").html(commentaires.length);
 		$.each(commentaires, function(index, commentaireDef){
-			var divComment = '<div id="'+commentaireDef.id+'"><b>'+commentaireDef.commentaire+'</b><br><small>Par <a href="profil?m=commentaireDef.membre;">'+commentaireDef.membre+'</a> le '+commentaireDef.date+'</small></div>';
+			var divComment = '<div id="'+commentaireDef.id+'"><b>'+commentaireDef.commentaire+'</b><br><small>Par <a href="profil?m='+commentaireDef.membre+'">'+commentaireDef.membre+'</a> le '+commentaireDef.date+'</small></div>';
 			$("#commentairesMembres").append(divComment);
 		});
 

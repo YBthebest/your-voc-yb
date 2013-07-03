@@ -8,7 +8,7 @@ if(isset($_GET['t'])){
 	$mdpOublie = getMdpOublieByToken($token);
 	if(!empty($mdpOublie)){
 		foreach($mdpOublie as $resultMdp){
-			$pseudo = $resultMdp->pseudo();
+			$id_membre = $resultMdp->idMembre();
 			$dateExpire = $resultMdp->dateExpire();
 			$used = $resultMdp->used();
 			if($used == 'no'){
@@ -19,7 +19,7 @@ if(isset($_GET['t'])){
 					<form id="modify" method="post">
 						Nouveau mot de passe: <input type="password" name="mdp" /><br />
 						Confirmation: <input type="password" name="mdp_confirm" /><br />
-						<input type="hidden" name="pseudo" value="'.$pseudo.'" />
+						<input type="hidden" name="id_membre" value="'.$id_membre.'" />
 						<input type="hidden" name="token" value="'.$token.'" />
 						<input type="submit" name="valid" value="Valider" />
 					</form>';
@@ -41,11 +41,13 @@ if(isset($_POST['valid'])){
 	$mdp = mysql_real_escape_string($_POST['mdp']);
 	$confirm = mysql_real_escape_string($_POST['mdp_confirm']);
 	if($mdp == $confirm){
+		$membre = getMembreById($id_membre);
+		$pseudo = $membre->login();
 		$mdp = md5($mdp);
-		$pseudo = mysql_real_escape_string($_POST['pseudo']);
+		$id_membre = mysql_real_escape_string($_POST['id_membre']);
 		$token = mysql_real_escape_string($_POST['token']);
 		if(updateMdpByLogin($mdp, $pseudo)){
-			updateUsedByTokenAndPseudo($token, $pseudo);
+			updateUsedByTokenAndPseudo($token, $id_membre);
 			$success = "Votre mot de passe a bien été mis à jour. Ne l'oubliez plus! Bonne journée.";
 		}else{
 			$erreur = "Un problème est survenu. Veuillez réessayer.";
@@ -76,9 +78,11 @@ if(isset($_POST['confirm'])){
 		if(isValidMail($email)){
 			$requete = getMembreByLogin($pseudo);
 			if(!empty($requete)){
+				$m = getMembreByLogin($pseudo);
+				$id_membre = $m->id();
 				$email_reponse = $requete->email();
 				if($email_reponse == $email){
-					$token = getTokenNotUsedByPseudo($pseudo);
+					$token = getTokenNotUsedByPseudo($id_membre);
 					if(!empty($token)){
 						foreach($token as $resultToken){
 							if(time() < ($resultToken->date() + 600)){
@@ -86,7 +90,7 @@ if(isset($_POST['confirm'])){
 								break;							
 							}
 							else{
-								createToken($pseudo, $tokenCode, $date, $dateExpire);	
+								createToken($id_membre, $tokenCode, $date, $dateExpire);	
 								$to = '"'.$pseudo.'" <<a href="mailto:'.$email.'">'.$email.'</a>>';
 								$subject = "Your-Voc: mot de passe oublié";
 								$message = "Voici les instructions à suivre pour créer un nouveau mot de passe:
@@ -111,7 +115,7 @@ if(isset($_POST['confirm'])){
 						}					
 					}
 					else{
-						createToken($pseudo, $tokenCode, $date, $dateExpire);
+						createToken($id_membre, $tokenCode, $date, $dateExpire);
 						$to = '"'.$pseudo.'" <<a href="mailto:'.$email.'">'.$email.'</a>>';
 						$subject = "Your-Voc: mot de passe oublié";
 						$message = "Voici les instructions à suivre pour créer un nouveau mot de passe:

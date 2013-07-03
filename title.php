@@ -97,6 +97,10 @@ function initTitle($url){
 		$_ENV['title'] = "Mot de passe oublié - Révision de vocabulaire allemand anglais espagnol facilement sur Your-Voc.";
 		$_ENV['metaContent'] = "Récuperer un mot de passe oublié.";
 	}
+	elseif (preg_match("/ajouter-groupe.php/i", $url)) {
+		$_ENV['title'] = "Créer un groupe de révision - Révision de vocabulaire allemand anglais espagnol facilement sur Your-Voc.";
+		$_ENV['metaContent'] = "Créer un nouveau groupe de révision.";
+	}
 	elseif (preg_match("/profil.php/i", $url)) {
 		$_ENV['title'] = "Profil";
 		if(isset($_GET['m'])) {

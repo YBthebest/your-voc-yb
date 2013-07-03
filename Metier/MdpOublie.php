@@ -1,6 +1,6 @@
 <?php
 class MdpOublie extends Entity{
-	private $pseudo;
+	private $idMembre;
 	private $token;
 	private $date;
 	private $dateExpire;
@@ -8,7 +8,7 @@ class MdpOublie extends Entity{
 	
 	public function __construct(array $donnees){
 		if(isset($donnees['id']))$this->id = $donnees['id'];
-		if(isset($donnees['pseudo']))$this->pseudo = $donnees['pseudo'];
+		if(isset($donnees['id_membre']))$this->idMembre = $donnees['id_membre'];
 		if(isset($donnees['token']))$this->token = $donnees['token'];
 		if(isset($donnees['date']))$this->date = $donnees['date'];
 		if(isset($donnees['dateExpire']))$this->dateExpire = $donnees['dateExpire'];
@@ -21,11 +21,11 @@ class MdpOublie extends Entity{
 	public function setId($p_id){
 		$this->id= $p_id;
 	}
-	public function pseudo(){
-		return $this->pseudo;
+	public function idMembre(){
+		return $this->idMembre;
 	}
-	public function setPseudo($p_pseudo){
-		$this->pseudo = $p_pseudo;
+	public function setIdMembre($p_idMembre){
+		$this->idMembre = $p_idMembre;
 	}
 	public function token(){
 		return $this->token;

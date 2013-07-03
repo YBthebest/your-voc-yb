@@ -10,12 +10,13 @@ class MembreGroupeManager extends DbManager{
 	
 	protected function binding(){
 		$this->arrayBinding["id"] = "id";
-		$this->arrayBinding["idMembre"] = "idMembre";
-		$this->arrayBinding["idGroupe"] = "idGroupe";
+		$this->arrayBinding["id_membre"] = "idMembre";
+		$this->arrayBinding["id_groupe"] = "idGroupe";
+		$this->arrayBinding["id_droit"] = "idDroit";
 	}
 	
 	protected function newInstanceEntity($donnees){
-		return new Membre($donnees);
+		return new MembreGroupe($donnees);
 	}
 }
 ?>

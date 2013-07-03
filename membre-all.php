@@ -27,7 +27,9 @@ function validateDelete(){
 					$pseudo = $_SESSION['login'];
 					if(isset($_POST['idListeCombi'])){
 						$idCombi = $_POST['idListeCombi'];
-						if(deleteCombinaisonByIdAndMembre($idCombi, $pseudo)){
+						$m = getMembreByLogin($pseudo);
+						$id_membre = $m->id();
+						if(deleteCombinaisonByIdAndMembre($idCombi, $id_membre)){
 							echo '<h3>Votre combinaison a bien été supprimée.</h3>';
 						}
 					}
@@ -64,25 +66,21 @@ function validateDelete(){
 		<div id="col2mid">
 		<p>
 		<h3>20 dernières listes révisées</h3><?php
-		$listeRevision = getRevisionsByPseudoLimit20($pseudo);
+		$listeRevisions = getRevisionsByPseudoLimit20($pseudo);
 		$i = 1;
-		if(sizeof($listeRevision) == 0) {
+		if(sizeof($listeRevisions) == 0) {
 			echo 'Aucune liste révisée.<br><a href="?page=gerer-public">Commencer maintenant</a> !';
-		}
-		else {
-			foreach($listeRevision as $revision) {
-				$id = $revision->id_liste();
-				if($id == 'no' || empty($id)) {
+		} else {
+			foreach($listeRevisions as $revision) {
+				$idListeMot = $revision->id_liste();
+				if(empty($idListeMot) || $idListeMot == 'no') {
 					$displayListe = 'Mots entrés par vous pour une utilisation unique';
-				}
-				else {
-					$listesMots = getListeByPseudo($pseudo);
-					if(empty($listesMots)){
+				} else {
+					$listeMot = getListeById($idListeMot);
+					if(empty($listeMot)){
 						$displayListe = 'Liste supprimée';		
 					}else{
-						foreach($listesMots as $listeMots){
-							$displayListe = '<a href="afficher?id='.$id.'">'.$listeMots->titre().'</a>';
-						}
+						$displayListe = '<a href="afficher?id='.$idListeMot.'">'.$listeMot->titre().'</a>';
 					}
 				}
 				?><?php echo $i ?>. <?php echo $displayListe ?> - <b>Moyenne de la révision: <?php echo $revision->moyenne() ?>%</b> - <small>Revisé le <?php echo $revision->date()?>. </small><br /><br /> <?php

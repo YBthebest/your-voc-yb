@@ -18,7 +18,9 @@ if(isset($_POST['id']) && isset($_POST['type']) && isset($_POST['pseudo']) && $_
 			$valueSelected1 = "'".$_POST['categorie']."'";
 			$valueSelected2 = "'".$_POST['categorie2']."'";
 	}else if($_POST['type'] == 'supprimer') {
-		if(deleteListeByIdAndPseudo($id, $pseudo)) {
+		$m = getMembreByLogin($pseudo);
+		$id_membre = $m->id();
+		if(deleteListeByIdAndPseudo($id, $id_membre)) {
 			$erreurMessage = 'La liste a été supprimée avec succès.';
 		}
 		else {
@@ -37,8 +39,10 @@ if(isset($_POST['step2'])) {
 			if(!empty($new_titre)){
 				$id2 = mysql_real_escape_string($_POST['id']);
 				$pseudo2 = mysql_real_escape_string($_POST['pseudo']);
+				$m = getMembreByLogin($pseudo2);
+				$id_membre2 = $m->id();
 				$commentaire2 = mysql_real_escape_string($_POST['commentaire']);
-				if(updateListe($new_mot, $categorie, $categorie2, $new_titre, $id2, $pseudo2, $commentaire2)) {
+				if(updateListe($new_mot, $categorie, $categorie2, $new_titre, $id2, $id_membre2, $commentaire2)) {
 					$erreurMessage =  '<h4>Votre liste a été modifiée avec succès.</h4><br />';
 				}
 				else {

@@ -10,7 +10,7 @@ class ListeMotDefinitionManager extends DbManager {
 	
 	protected function binding(){
 		$this->arrayBinding[$this->ID_COLUMN] = "id";
-		$this->arrayBinding["pseudo"] = "membre";
+		$this->arrayBinding["id_membre"] = "membre";
 		$this->arrayBinding["titre"] = "titre";
 		$this->arrayBinding["liste"] = "listeMot";
 		$this->arrayBinding["date"] = "date";
@@ -25,7 +25,7 @@ class ListeMotDefinitionManager extends DbManager {
 		$entity = new ListeMotDefinition();
 		if(isset($donnees['id']))$entity->setId($donnees['id']);
 		if(isset($donnees['titre']))$entity->setTitre($donnees['titre']);
-		if(isset($donnees['pseudo']))$entity->setMembre($donnees['pseudo']);
+		if(isset($donnees['id_membre']))$entity->setMembre($donnees['id_membre']);
 		if(isset($donnees['date'])){
 			$entity->setTimestamp($donnees['date']);
 		}
@@ -80,13 +80,13 @@ class ListeMotDefinitionManager extends DbManager {
 		return $this->select($query, $entityCritere);
 	}
 	public function getListeByPseudoLimit3($pseudo){
-		$query = "select * from ".$this->table." where pseudo = :pseudo ORDER BY id DESC LIMIT 3";
+		$query = "select * from ".$this->table." where id_membre = :id_membre ORDER BY id DESC LIMIT 3";
 		$entity = new ListeMotDefinition();
 		$entity->setMembre($pseudo);
 		return $this->select($query, $entity);
 	}
 	public function getListeByPseudo($pseudo){
-		$query = "select * from ".$this->table." where pseudo = :pseudo";
+		$query = "select * from ".$this->table." where id_membre = :id_membre";
 		$entity = new ListeMotDefinition();
 		$entity->setMembre($pseudo);
 		return $this->select($query, $entity);
@@ -128,7 +128,7 @@ class ListeMotDefinitionManager extends DbManager {
 			"3a" => "",
 			"4" => "ORDER BY note DESC ",
 			"4a" => "ORDER BY (vues + 0) DESC ",
-			"4b" => "ORDER BY pseudo DESC ",
+			"4b" => "ORDER BY id_membre DESC ",
 			"4c" => "ORDER BY date DESC ",
 			"5" => "LIMIT $premiereEntree, $messagesParPage",
 			"5a" => ""
@@ -162,12 +162,12 @@ class ListeMotDefinitionManager extends DbManager {
 		$statement->execute();
 	}
 	public function deleteListeByIdAndPseudo($id, $pseudo){
-		$query = "delete from ".$this->table." where id = '".$id."' and pseudo = '".$pseudo."'" ;
+		$query = "delete from ".$this->table." where id = '".$id."' and id_membre = '".$pseudo."'" ;
 		$statement = $this->_db->prepare($query);
 		$statement->execute();
 	}
 	public function updateListe($mot, $categorie, $categorie2, $titre, $id, $pseudo, $commentaire){
-		$query = "UPDATE ".$this->table." SET liste = '$mot', titre = '$titre', categorie = '$categorie', categorie2 = '$categorie2', commentaire = '$commentaire' WHERE id = '$id' AND pseudo = '$pseudo'" ;
+		$query = "UPDATE ".$this->table." SET liste = '$mot', titre = '$titre', categorie = '$categorie', categorie2 = '$categorie2', commentaire = '$commentaire' WHERE id = '$id' AND id_membre = '$pseudo'" ;
 		$statement = $this->_db->prepare($query);
 		$statement->execute();
 	}

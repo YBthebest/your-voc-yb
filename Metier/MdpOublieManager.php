@@ -10,7 +10,7 @@ class MdpOublieManager extends DbManager{
 	
 	protected function binding(){
 		$this->arrayBinding[$this->ID_COLUMN] = "id";
-		$this->arrayBinding["pseudo"] = "pseudo";
+		$this->arrayBinding["id_membre"] = "idMembre";
 		$this->arrayBinding["token"] = "token";
 		$this->arrayBinding["date"] = "date";
 		$this->arrayBinding["dateExpire"] = "dateExpire";
@@ -23,8 +23,8 @@ class MdpOublieManager extends DbManager{
 	
 	public function getTokenNotUsedByPseudo($pseudo){
 		$date = time();
-		$query = "select * from ".$this->table." where pseudo = :pseudo AND used = 'no' ORDER BY id DESC";
-		$entity = new MdpOublie(array("pseudo"=>$pseudo));
+		$query = "select * from ".$this->table." where id_membre = :id_membre AND used = 'no' ORDER BY id DESC";
+		$entity = new MdpOublie(array("id_membre"=>$pseudo));
 		return $this->select($query, $entity);
 	}
 	public function createToken($pseudo, $token, $date, $dateExpire){
@@ -39,7 +39,7 @@ class MdpOublieManager extends DbManager{
 		return $this->select($query, $entity);
 	}
 	public function updateUsedByTokenAndPseudo($token, $pseudo){
-		$query = "update ".$this->table." set used = 'yes' where token = '$token' AND pseudo = '$pseudo'";
+		$query = "update ".$this->table." set used = 'yes' where token = '$token' AND id_membre = '$pseudo'";
 		$statement = $this->_db->prepare($query);
 		$statement->execute();
 	}

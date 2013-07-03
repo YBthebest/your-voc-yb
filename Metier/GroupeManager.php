@@ -11,6 +11,7 @@ class GroupeManager extends DbManager{
 	protected function binding(){
 		$this->arrayBinding[$this->ID_COLUMN] = "id";
 		$this->arrayBinding["nom"] = "nom";
+		$this->arrayBinding["id_createur"] = "idCreateur";
 		$this->arrayBinding["date"] = "date";		
 	}
 	
@@ -23,10 +24,20 @@ class GroupeManager extends DbManager{
 		$entity = new Groupe(array("id"=>$id));
 		return $this->selectUniqueResult($query, $entity);
 	}
-	public function createGroupe($nom, $date){
-		$query = "insert into ".$this->table." values('', '".$nom."', '".$date."')" ;
+	public function createGroupe($nom, $idCreateur, $date){
+		$query = "insert into ".$this->table." values('', '".$nom."', '".$idCreateur."', '".$date."')" ;
 		$statement = $this->_db->prepare($query);
 		$statement->execute();
+	}
+	public function getGroupeByNom($nom){
+		$query = "select * from ".$this->table." where nom = :nom" ;
+		$entity = new Groupe(array("nom"=>$nom));
+		return $this->selectUniqueResult($query, $entity);
+	}
+	public function getGroupeByNomAndCreateur($nom, $idCreateur){
+		$query = "select * from ".$this->table." where nom = :nom and id_createur = :idCreateur" ;
+		$entity = new Groupe(array("nom"=>$nom, "idCreateur"=>$idCreateur));
+		return $this->selectUniqueResult($query, $entity);
 	}
 }
 ?>

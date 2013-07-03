@@ -25,7 +25,9 @@ function validateDelete(){
 					$pseudo = $_SESSION['login'];
 					if(isset($_POST['idListeCombi'])){
 						$idCombi = $_POST['idListeCombi'];
-						if(deleteCombinaisonByIdAndMembre($idCombi, $pseudo)){
+						$m = getMembreByLogin($pseudo);
+						$id_membre = $m->id();
+						if(deleteCombinaisonByIdAndMembre($idCombi, $id_membre)){
 							echo '<h3>Votre combinaison a bien été supprimée.</h3>';
 						}
 					}
@@ -63,7 +65,7 @@ function validateDelete(){
 					<div id="col2mid">
 						<p>
 							<h3>Bienvenue <?php echo htmlentities(trim($_SESSION['login'])); ?>!</h3>
-							<a href="revise" >Réviser quelques mots sans créer une liste</a><br/>		
+							<strong><a href="ajouter-groupe" >Créer un groupe de révision</a></strong><br/>		
 							<a href="gerer-listes" >Gerer et réviser ses listes</a><br/>			
 							<a href="entrer-liste" >Entrer une nouvelle liste</a><br/>
 							<a href="recherche" >Faire une recherche</a><br/>

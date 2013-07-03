@@ -10,8 +10,8 @@ class VoteManager extends DbManager{
 	
 	protected function binding(){
 		$this->arrayBinding["id_liste"] = "id_liste";
-		$this->arrayBinding["pseudo"] = "membre";
 		$this->arrayBinding["note"] = "note";
+		$this->arrayBinding["id_membre"] = "membre";
 	}
 	
 	protected function newInstanceEntity($donnees){
@@ -25,7 +25,7 @@ class VoteManager extends DbManager{
 	}
 	
 	public function getVotesByIdAndPseudo($id, $pseudo){
-		$query = "select * from ".$this->table." where id_liste = :id_liste AND pseudo = :pseudo" ;
+		$query = "select * from ".$this->table." where id_liste = :id_liste AND id_membre = :id_membre" ;
 		$entity = new Vote(array("id_liste"=>$id));
 		$entity -> setMembre($pseudo);
 		return $this->select($query, $entity);

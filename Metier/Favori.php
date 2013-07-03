@@ -6,7 +6,7 @@ class Favori extends Entity{
 	function __construct(array $donnees){
 		if(isset($donnees['id']))$this->id = $donnees['id'];
 		if(isset($donnees['id_liste']))$this->id_liste = $donnees['id_liste'];
-		if(isset($donnees['pseudo']))$this->membre = $donnees['pseudo'];
+		if(isset($donnees['id_membre']))$this->membre = $donnees['id_membre'];
 	}
 	
 	public function id(){
@@ -27,7 +27,15 @@ class Favori extends Entity{
 		return $this->membre;
 	}
 	public function setMembre($membre){
-		$this->membre = $membre;
+		require_once('modelDAO.php');
+		if(is_numeric($membre)){
+			$m = getMembreById($membre);
+			$this->membre = $m->login();
+		}
+		else{
+			$m = getMembreByLogin($membre);	
+			$this->membre = $m->id();
+		}
 	}
 }
 ?>

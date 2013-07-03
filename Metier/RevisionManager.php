@@ -10,7 +10,7 @@ class RevisionManager extends DbManager{
 	
 	protected function binding(){
 		$this->arrayBinding["id_liste"] = "id_liste";
-		$this->arrayBinding["pseudo"] = "membre";
+		$this->arrayBinding["id_membre"] = "membre";
 		$this->arrayBinding["moyenne"] = "moyenne";
 		$this->arrayBinding["date"] = "date";
 	}
@@ -20,14 +20,14 @@ class RevisionManager extends DbManager{
 	}
 	
 	public function getRevisionsByPseudoLimit20($pseudo){
-		$query = "select * from ".$this->table." where pseudo = :pseudo ORDER BY id DESC LIMIT 20";
-		$entity = new ListeMotDefinition();
+		$query = "select * from ".$this->table." where id_membre = :id_membre ORDER BY id DESC LIMIT 20";
+		$entity = new Revision(array());
 		$entity->setMembre($pseudo);
 		return $this->select($query, $entity);
 	}
 	public function getRevisionsByPseudoLimit3($pseudo){
-		$query = "select * from ".$this->table." where pseudo = :pseudo ORDER BY id DESC LIMIT 3";
-		$entity = new ListeMotDefinition();
+		$query = "select * from ".$this->table." where id_membre = :id_membre ORDER BY id DESC LIMIT 3";
+		$entity = new Revision(array());
 		$entity->setMembre($pseudo);
 		return $this->select($query, $entity);
 	}

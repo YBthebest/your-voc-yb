@@ -289,7 +289,9 @@ function getHTML_Etape3() {
 	}
 	setlocale(LC_TIME, 'fr_FR.utf8','fra'); 
 	$time = time();
-	createNewRevision($id_liste, $pseudo, $moyenne, $time);
+	$m = getMembreByLogin($pseudo);
+	$membre = $m->id();
+	createNewRevision($id_liste, $membre, $moyenne, $time);
 	unset($_SESSION['mots']);
 	unset($_SESSION['majuscules']);
 	unset($_SESSION['id']);

@@ -102,7 +102,15 @@ class ListeMotDefinition extends Entity{
 		return $this->membre;
 	}
 	public function setMembre($membre){
-		$this->membre = $membre;
+		require_once('modelDAO.php');
+		if(is_numeric($membre)){
+			$m = getMembreById($membre);
+			$this->membre = $m->login();
+		}
+		else{
+			$m = getMembreByLogin($membre);	
+			$this->membre = $m->id();
+		}
 	}
 }
 ?>

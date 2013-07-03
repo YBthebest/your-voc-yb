@@ -11,13 +11,15 @@ class CommentaireManager extends DbManager{
 	protected function binding(){
 		$this->arrayBinding[$this->ID_COLUMN] = "id";
 		$this->arrayBinding["id_liste"] = "id_liste";
-		$this->arrayBinding["pseudo"] = "membre";
+		$this->arrayBinding["id_membre"] = "membre";
 		$this->arrayBinding["commentaire"] = "commentaire";
 		$this->arrayBinding["date"] = "date";
 	}
 	
 	protected function newInstanceEntity($donnees){
-		return new Commentaire($donnees);
+		$entity = new Commentaire($donnees);
+		if(isset($donnees['id_membre']))$entity->setMembre($donnees['id_membre']);
+		return $entity;
 	}
 	
 	public function countNbCommentairesById($id_liste){

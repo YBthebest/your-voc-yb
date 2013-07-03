@@ -1,11 +1,13 @@
 <?php
 class Groupe extends Entity{
 	private $nom;
+	private $idCreateur;
 	private $date;
 	private $timestamp;
 	
 	public function __construct(array $donnees){
 		if(isset($donnees['id']))$this->id = $donnees['id'];
+		if(isset($donnees['id_createur']))$this->idCreateur = $donnees['id_createur'];
 		if(isset($donnees['nom']))$this->nom = $donnees['nom'];
 		if(isset($donnees['date'])){
 			$this->setTimestamp($donnees['date']);
@@ -23,6 +25,12 @@ class Groupe extends Entity{
 	}
 	public function setNom($p_nom){
 		$this->nom = $p_nom;
+	}
+	public function idCreateur(){
+		return $this->idCreateur;
+	}
+	public function setIdCreateur($p_idCreateur){
+		$this->idCreateur = $p_idCreateur;
 	}
 	public function date(){
 		return $this->date;

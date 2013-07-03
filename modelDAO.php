@@ -24,6 +24,10 @@ require "Metier/Groupe.php";
 require "Metier/GroupeManager.php";
 require "Metier/MembreGroupe.php";
 require "Metier/MembreGroupeManager.php";
+require "Metier/DroitGroupe.php";
+require "Metier/DroitGroupeManager.php";
+require "Metier/DemandeMembreGroupe.php";
+require "Metier/DemandeMembreGroupeManager.php";
 require "Utils.php";
 require "ConfigPage.php";
 
@@ -62,6 +66,8 @@ function dbConfiguration(){
 	DBHelper::addManager(new MdpOublieManager());
 	DBHelper::addManager(new GroupeManager());
 	DBHelper::addManager(new MembreGroupeManager());
+	DBHelper::addManager(new DroitGroupeManager());
+	DBHelper::addManager(new DemandeMembreGroupeManager());
 }
 
 function getProperty($propertyName){
@@ -149,6 +155,7 @@ function getMembre($login, $mdp){
 
 function getMembreById($id){
 	$membre = DBHelper::getDBManager("Membre")->getMembreById($id);
+	return $membre;
 }
 
 function getMembreByLogin($login){
@@ -476,9 +483,21 @@ function getGroupeById($id){
 	$groupe = DBHelper::getDBManager("Groupe")->getGroupeById($id);
 	return $groupe;
 }
-function createGroupe($nom, $date){
-	$newGroupe = new Groupe(array("nom" => $nom, "timestamp"=> $date));
-	DBHelper::getDBManager("Groupe")->createGroupe($nom, $date);
+function createGroupe($nom, $idCreateur, $date){
+	$newGroupe = new Groupe(array("nom" => $nom, "idCreateur" => $idCreateur, "timestamp"=> $date));
+	DBHelper::getDBManager("Groupe")->createGroupe($nom, $idCreateur, $date);
 	return $newGroupe;
+}
+function getGroupeByNom($nom){
+	$groupe = DBHelper::getDBManager("Groupe")->getGroupeByNom($nom);
+	return $groupe;
+}
+function getGroupeByNomAndCreateur($nom, $idCreateur){
+	$groupe = DBHelper::getDBManager("Groupe")->getGroupeByNomAndCreateur($nom, $idCreateur);
+	return $groupe;
+}
+function getDemandeByPseudoAndIdGroupe($pseudo, $idGroupe){
+	$demande = DBHelper::getDBManager("DemandeMembreGroupe")->getDemandeByPseudoAndIdGroupe($pseudo, $idGroupe);
+	return $demande;
 }
 ?>
