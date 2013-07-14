@@ -35,8 +35,8 @@ class GroupeManager extends DbManager{
 		return $this->selectUniqueResult($query, $entity);
 	}
 	public function getGroupeByNomAndCreateur($nom, $idCreateur){
-		$query = "select * from ".$this->table." where nom = :nom and id_createur = :idCreateur" ;
-		$entity = new Groupe(array("nom"=>$nom, "idCreateur"=>$idCreateur));
+		$query = "select * from ".$this->table." where nom = :nom and id_createur = :id_createur" ;
+		$entity = new Groupe(array("nom"=>$nom, "id_createur"=>$idCreateur));
 		return $this->selectUniqueResult($query, $entity);
 	}
 }

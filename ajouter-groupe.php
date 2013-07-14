@@ -58,11 +58,19 @@ $(document).ready(function() {
 								$nom = mysql_real_escape_string($_POST['nom']);
 								if(strlen($nom) > 4){
 									$date = time();
-									$idCreateur = $_SESSION['login'];
-									createGroupe($nom, $idCreateur, $date);
-									$groupe = getGroupeByNomAndCreateur($nom, $idCreateur);
-									$id = $groupe->id();
-									?><meta http-equiv="Refresh" content="0;url=/groupe?id=<?php echo $id ;?>"><?php
+									$createur = $_SESSION['login'];
+									$m = getMembreByLogin($createur);
+									$idCreateur = $m->id();
+									$getGroupe = getGroupeByNom($nom);
+									if(empty($getGroupe)){
+										createGroupe($nom, $idCreateur, $date);
+										$groupe = getGroupeByNomAndCreateur($nom, $idCreateur);
+										$id = $groupe->id();
+										?><meta http-equiv="Refresh" content="0;url=/groupe?id=<?php echo $id ;?>"><?php
+									}
+									else{
+										echo 'Un groupe avec ce nom exite déjà. Veuillez le rejoindre ou choisir un autre nom.';
+									}
 								}
 								else{
 									echo 'Le nom de votre groupe est trop court.';

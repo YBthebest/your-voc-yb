@@ -20,9 +20,15 @@ class DemandeMembreGroupeManager extends DbManager{
 	}
 	
 	public function getDemandeByPseudoAndIdGroupe($pseudo, $idGroupe){
-		$query = "select * from ".$this->table." where pseudo = :pseudo AND id_groupe = :idGroupe" ;
-		$entity = new Vote(array("pseudo"=>$pseudo, "idGroupe"=>$idGroupe));
+		$query = "select * from ".$this->table." where id_membre = :id_membre AND id_groupe = :id_groupe ORDER BY id DESC" ;
+		$entity = new DemandeMembreGroupe(array("id_membre"=>$pseudo, "id_groupe"=>$idGroupe));
 		return $this->select($query, $entity);
+	}
+	
+	public function createDemande($idGroupe, $idMembre){
+		$query = "insert into ".$this->table." values('', '".$idGroupe."', '".$idMembre."', 'pending')" ;
+		$statement = $this->_db->prepare($query);
+		$statement->execute();
 	}
 }
 ?>

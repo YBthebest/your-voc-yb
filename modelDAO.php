@@ -500,4 +500,13 @@ function getDemandeByPseudoAndIdGroupe($pseudo, $idGroupe){
 	$demande = DBHelper::getDBManager("DemandeMembreGroupe")->getDemandeByPseudoAndIdGroupe($pseudo, $idGroupe);
 	return $demande;
 }
+function getMembreByIdGroupeAndMembre($idGroupe, $idMembre){
+	$membre = DBHelper::getDBManager("MembreGroupe")->getMembreByIdGroupeAndMembre($idGroupe, $idMembre);
+	return $membre;
+}
+function createDemande($idGroupe, $idMembre){
+	$newDemande = new DemandeMembreGroupe(array("idGroupe" => $idGroupe, "idMembre" => $idMembre));
+	DBHelper::getDBManager("DemandeMembreGroupe")->createDemande($idGroupe, $idMembre);
+	return $newDemande;
+}
 ?>

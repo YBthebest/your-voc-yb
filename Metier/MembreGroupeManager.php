@@ -18,5 +18,11 @@ class MembreGroupeManager extends DbManager{
 	protected function newInstanceEntity($donnees){
 		return new MembreGroupe($donnees);
 	}
+	
+	public function getMembreByIdGroupeAndMembre($idGroupe, $idMembre){
+		$query = "select * from ".$this->table." where id_membre = :id_membre AND id_groupe = :id_groupe" ;
+		$entity = new MembreGroupe(array("id_membre"=>$idMembre, "id_groupe"=>$idGroupe));
+		return $this->select($query, $entity);
+	}
 }
 ?>
