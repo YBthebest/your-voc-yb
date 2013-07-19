@@ -89,7 +89,30 @@ function validateDelete(){
 		}
 		?>
 		</div>
-		<div id="col2side"> 
+		<div id="col2side">
+			<h3>Groupes</h3> 
+			<?php 
+			$membre = $_SESSION['login'];
+			$m = getMembreByLogin($membre);
+			$idMembre = $m->id();
+			$groupes = getMembreGroupeByIdMembre($idMembre);
+			if(empty($groupes)){
+				echo 'Vous ne faites partis d\'aucun groupe. <a href="ajouter-groupe">Rejoignez-en un!</a>.';
+			}
+			else{
+				$i = '0';
+				foreach($groupes as $groupeMembre){
+					if($i == 15){
+						break;
+					}
+					$i++;
+					echo ''.$i.'. ';
+					$idGroupe = $groupeMembre->idGroupe();
+					$result = getGroupeById($idGroupe);
+					?><a href="groupe?id=<?php echo $result->id()?>"><?php echo $result->nom()?></a><br /><?php	
+				}
+			}
+			?> 
 			<h3>Favoris</h3>
 				<?php
 				$membre = $_SESSION['login'];

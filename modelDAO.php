@@ -28,6 +28,8 @@ require "Metier/DroitGroupe.php";
 require "Metier/DroitGroupeManager.php";
 require "Metier/DemandeMembreGroupe.php";
 require "Metier/DemandeMembreGroupeManager.php";
+require "Metier/ListesGroupe.php";
+require "Metier/ListesGroupeManager.php";
 require "Utils.php";
 require "ConfigPage.php";
 
@@ -68,6 +70,7 @@ function dbConfiguration(){
 	DBHelper::addManager(new MembreGroupeManager());
 	DBHelper::addManager(new DroitGroupeManager());
 	DBHelper::addManager(new DemandeMembreGroupeManager());
+	DBHelper::addManager(new ListesGroupeManager());
 }
 
 function getProperty($propertyName){
@@ -483,9 +486,9 @@ function getGroupeById($id){
 	$groupe = DBHelper::getDBManager("Groupe")->getGroupeById($id);
 	return $groupe;
 }
-function createGroupe($nom, $idCreateur, $date){
-	$newGroupe = new Groupe(array("nom" => $nom, "idCreateur" => $idCreateur, "timestamp"=> $date));
-	DBHelper::getDBManager("Groupe")->createGroupe($nom, $idCreateur, $date);
+function createGroupe($nom, $idCreateur, $date, $droitMembres){
+	$newGroupe = new Groupe(array("nom" => $nom, "idCreateur" => $idCreateur, "timestamp"=> $date, "droitMembres" => $droitMembres));
+	DBHelper::getDBManager("Groupe")->createGroupe($nom, $idCreateur, $date, $droitMembres);
 	return $newGroupe;
 }
 function getGroupeByNom($nom){
@@ -496,8 +499,8 @@ function getGroupeByNomAndCreateur($nom, $idCreateur){
 	$groupe = DBHelper::getDBManager("Groupe")->getGroupeByNomAndCreateur($nom, $idCreateur);
 	return $groupe;
 }
-function getDemandeByPseudoAndIdGroupe($pseudo, $idGroupe){
-	$demande = DBHelper::getDBManager("DemandeMembreGroupe")->getDemandeByPseudoAndIdGroupe($pseudo, $idGroupe);
+function getLastDemandeByPseudoAndIdGroupe($pseudo, $idGroupe){
+	$demande = DBHelper::getDBManager("DemandeMembreGroupe")->getLastDemandeByPseudoAndIdGroupe($pseudo, $idGroupe);
 	return $demande;
 }
 function getMembreByIdGroupeAndMembre($idGroupe, $idMembre){
@@ -508,5 +511,90 @@ function createDemande($idGroupe, $idMembre){
 	$newDemande = new DemandeMembreGroupe(array("idGroupe" => $idGroupe, "idMembre" => $idMembre));
 	DBHelper::getDBManager("DemandeMembreGroupe")->createDemande($idGroupe, $idMembre);
 	return $newDemande;
+}
+function createMembreGroupe($idMembre, $idGroupe, $idDroit){
+	$newMembreGroupe = new MembreGroupe(array("idMembre" => $idMembre, "idGroupe" => $idGroupe, "idDroit" => $idDroit));
+	DBHelper::getDBManager("MembreGroupe")->createMembreGroupe($idMembre, $idGroupe, $idDroit);
+	return $newMembreGroupe;
+}
+function createDroit($libelle, $idMembre, $idGroupe){
+	$newDroit = new DroitGroupe(array("libelle" => $libelle, "idMembre" => $idMembre, "idGroupe" => $idGroupe));
+	DBHelper::getDBManager("DroitGroupe")->createDroit($libelle, $idMembre, $idGroupe);
+	return $newDroit;
+}
+function getDroitByIdMembreAndIdGroupe($idMembre, $idGroupe){
+	$droit = DBHelper::getDBManager("DroitGroupe")->getDroitByIdMembreAndIdGroupe($idMembre, $idGroupe);
+	return $droit;
+}
+function getDemandePendingByIdGroupe($idGroupe){
+	$demande = DBHelper::getDBManager("DemandeMembreGroupe")->getDemandePendingByIdGroupe($idGroupe);
+	return $demande;
+}
+function updateDemandeByStatut($idGroupe, $idMembre, $statut){
+	$newDemande = new DemandeMembreGroupe(array("idGroupe" => $idGroupe, "idMembre" => $idMembre));
+	DBHelper::getDBManager("DemandeMembreGroupe")->updateDemandeByStatut($idGroupe, $idMembre, $statut);
+	return $newDemande;
+}
+function getMembresByIdGroupe($idGroupe){
+	$membre = DBHelper::getDBManager("MembreGroupe")->getMembresByIdGroupe($idGroupe);
+	return $membre;
+}
+function deleteMembreGroupe($idMembre, $idGroupe){
+	$deleteMembreGroupe = new MembreGroupe(array("idMembre" => $idMembre, "idGroupe" => $idGroupe));
+	DBHelper::getDBManager("MembreGroupe")->deleteMembreGroupe($idMembre, $idGroupe);
+	return $deleteMembreGroupe;
+}
+function deleteDroit($idMembre, $idGroupe){
+	$deleteDroit = new DroitGroupe(array("idMembre" => $idMembre, "idGroupe" => $idGroupe));
+	DBHelper::getDBManager("DroitGroupe")->deleteDroit($idMembre, $idGroupe);
+	return $deleteDroit;
+}
+function getDemandeByStatut($statut){
+	$demande = DBHelper::getDBManager("DemandeMembreGroupe")->getDemandeByStatut($statut);
+	return $demande;
+}
+function deleteDemande($idGroupe, $idMembre){
+	$newDemande = new DemandeMembreGroupe(array("idGroupe" => $idGroupe, "idMembre" => $idMembre));
+	DBHelper::getDBManager("DemandeMembreGroupe")->deleteDemande($idGroupe, $idMembre);
+	return $newDemande;
+}
+function updateDroitLibelle($idMembre, $idGroupe, $libelle){
+	$updateDroit = new DroitGroupe(array("idMembre" => $idMembre, "idGroupe" => $idGroupe));
+	DBHelper::getDBManager("DroitGroupe")->updateDroitLibelle($idMembre, $idGroupe, $libelle);
+	return $updateDroit;
+}
+function getMembreGroupeByIdMembre($idMembre){
+	$membre = DBHelper::getDBManager("MembreGroupe")->getMembreGroupeByIdMembre($idMembre);
+	return $membre;
+}
+function deleteAllMembreGroupe($idGroupe){
+	$deleteMembreGroupe = new MembreGroupe(array("idGroupe" => $idGroupe));
+	DBHelper::getDBManager("MembreGroupe")->deleteAllMembreGroupe($idGroupe);
+	return $deleteMembreGroupe;
+}
+function deleteAllDemandeByGroupe($idGroupe){
+	$newDemande = new DemandeMembreGroupe(array("idGroupe" => $idGroupe));
+	DBHelper::getDBManager("DemandeMembreGroupe")->deleteAllDemandeByGroupe($idGroupe);
+	return $newDemande;
+}
+function deleteAllDroitByGroupe($idGroupe){
+	$deleteDroit = new DroitGroupe(array("idGroupe" => $idGroupe));
+	DBHelper::getDBManager("DroitGroupe")->deleteAllDroitByGroupe($idGroupe);
+	return $deleteDroit;
+}
+function deleteGroupe($id, $idCreateur){
+	$deleteGroupe = new Groupe(array("idCreateur" => $idCreateur));
+	DBHelper::getDBManager("Groupe")->deleteGroupe($id, $idCreateur);
+	return $deleteGroupe;
+}
+function updateNomGroupe($id, $idCreateur, $nom){
+	$updateGroupe = new Groupe(array("idCreateur" => $idCreateur, "nom" => $nom));
+	DBHelper::getDBManager("Groupe")->updateNomGroupe($id, $idCreateur, $nom);
+	return $updateGroupe;
+}
+function updateDroitMembresGroupe($id, $idCreateur, $droitMembres){
+	$updateGroupe = new Groupe(array("idCreateur" => $idCreateur, "droitMembres" => $droitMembres));
+	DBHelper::getDBManager("Groupe")->updateDroitMembresGroupe($id, $idCreateur, $droitMembres);
+	return $updateGroupe;
 }
 ?>

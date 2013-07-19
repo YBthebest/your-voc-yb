@@ -63,9 +63,21 @@ $(document).ready(function() {
 									$idCreateur = $m->id();
 									$getGroupe = getGroupeByNom($nom);
 									if(empty($getGroupe)){
-										createGroupe($nom, $idCreateur, $date);
+										if(isset($_POST['droitMembres'])){
+											$droitMembres = 'write';
+										}
+										else{
+											$droitMembres = 'read';
+										}
+										createGroupe($nom, $idCreateur, $date, $droitMembres);
 										$groupe = getGroupeByNomAndCreateur($nom, $idCreateur);
 										$id = $groupe->id();
+										createDroit('admin', $idCreateur, $id);
+										$droit = getDroitByIdMembreAndIdGroupe($idCreateur, $id);
+										foreach($droit as $result){
+											$idDroit = $result->id();
+										}
+										createMembreGroupe($idCreateur, $id, $idDroit);
 										?><meta http-equiv="Refresh" content="0;url=/groupe?id=<?php echo $id ;?>"><?php
 									}
 									else{
@@ -77,6 +89,7 @@ $(document).ready(function() {
 									?>
 									<form name="groupe" method="post">
 									<input type="text" name="nom"><br />
+									Est-ce qu'un membre simple peut rajouter des listes? <input type="checkbox" name="droitMembres" value="oui"><br />
 									<input type="submit" name="valid" value="Valider"/>
 									</form>
 									<?php
@@ -86,6 +99,7 @@ $(document).ready(function() {
 							<p>Précisez si possible des informations comme le nom du professeur et l'année scolaire.<br /></p>
 							<form name="groupe" method="post">
 								<input type="text" name="nom"><br />
+								Est-ce qu'un membre simple peut rajouter des listes? <input type="checkbox" name="droitMembres" value="write"><br />
 								<input type="submit" name="valid" value="Valider"/>
 							</form>
 							<?php

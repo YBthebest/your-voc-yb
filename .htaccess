@@ -4,6 +4,7 @@ RewriteEngine On
 RewriteBase /
 
 #Redirige tout le traffic vers "www"
+RewriteCond %{HTTP_HOST} ^your-voc\.com$ [NC]
 RewriteCond %{HTTP_HOST}  \.
 RewriteCond %{HTTP_HOST} !^www\.
 RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]

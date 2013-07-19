@@ -1,19 +1,19 @@
 <?php
-class Groupe extends Entity{
-	private $nom;
-	private $idCreateur;
+class ListesGroupe extends Entity{
+	private $idListe;
+	private $idMembre;
+	private $idGroupe;
 	private $date;
 	private $timestamp;
-	private $droitMembres;
 	
 	public function __construct(array $donnees){
 		if(isset($donnees['id']))$this->id = $donnees['id'];
-		if(isset($donnees['id_createur']))$this->idCreateur = $donnees['id_createur'];
-		if(isset($donnees['nom']))$this->nom = $donnees['nom'];
+		if(isset($donnees['id_liste']))$this->idListe = $donnees['id_liste'];
+		if(isset($donnees['id_membre']))$this->idMembre = $donnees['id_membre'];
+		if(isset($donnees['id_groupe']))$this->idGroupe = $donnees['id_groupe'];		
 		if(isset($donnees['date'])){
 			$this->setTimestamp($donnees['date']);
 		}
-		if(isset($donnees['droit_membres']))$this->droitMembres = $donnees['droit_membres'];		
 	}
 
 	public function id(){
@@ -22,17 +22,23 @@ class Groupe extends Entity{
 	public function setId($p_id){
 		$this->id= $p_id;
 	}
-	public function nom(){
-		return $this->nom;
+	public function idListe(){
+		return $this->idListe;
 	}
-	public function setNom($p_nom){
-		$this->nom = $p_nom;
+	public function setIdListe($p_idListe){
+		$this->idListe = $p_idListe;
 	}
-	public function idCreateur(){
-		return $this->idCreateur;
+	public function idMembre(){
+		return $this->idMembre;
 	}
-	public function setIdCreateur($p_idCreateur){
-		$this->idCreateur = $p_idCreateur;
+	public function setIdMembre($p_idMembre){
+		$this->idMembre = $p_idMembre;
+	}
+	public function idGroupe(){
+		return $this->idGroupe;
+	}
+	public function setIdGroupe($p_idGroupe){
+		$this->idGroupe = $p_idGroupe;
 	}
 	public function date(){
 		return $this->date;

@@ -12,7 +12,8 @@ class GroupeManager extends DbManager{
 		$this->arrayBinding[$this->ID_COLUMN] = "id";
 		$this->arrayBinding["nom"] = "nom";
 		$this->arrayBinding["id_createur"] = "idCreateur";
-		$this->arrayBinding["date"] = "date";		
+		$this->arrayBinding["date"] = "date";	
+		$this->arrayBinding["droit_membres"] = "droitMembres";	
 	}
 	
 	protected function newInstanceEntity($donnees){	
@@ -24,8 +25,8 @@ class GroupeManager extends DbManager{
 		$entity = new Groupe(array("id"=>$id));
 		return $this->selectUniqueResult($query, $entity);
 	}
-	public function createGroupe($nom, $idCreateur, $date){
-		$query = "insert into ".$this->table." values('', '".$nom."', '".$idCreateur."', '".$date."')" ;
+	public function createGroupe($nom, $idCreateur, $date, $droitMembres){
+		$query = "insert into ".$this->table." values('', '".$nom."', '".$idCreateur."', '".$date."', '".$droitMembres."')" ;
 		$statement = $this->_db->prepare($query);
 		$statement->execute();
 	}
@@ -38,6 +39,21 @@ class GroupeManager extends DbManager{
 		$query = "select * from ".$this->table." where nom = :nom and id_createur = :id_createur" ;
 		$entity = new Groupe(array("nom"=>$nom, "id_createur"=>$idCreateur));
 		return $this->selectUniqueResult($query, $entity);
+	}
+	public function deleteGroupe($id, $idCreateur){
+		$query = "delete from ".$this->table." where id = '".$id."' and id_createur = '".$idCreateur."'" ;
+		$statement = $this->_db->prepare($query);
+		$statement->execute();
+	}
+	public function updateNomGroupe($id, $idCreateur, $nom){
+		$query = "update ".$this->table." set nom = '".$nom."' where id = '".$id."' and id_createur = '".$idCreateur."'" ;
+		$statement = $this->_db->prepare($query);
+		$statement->execute();
+	}
+	public function updateDroitMembresGroupe($id, $idCreateur, $droitMembres){
+		$query = "update ".$this->table." set droit_membres = '".$droitMembres."' where id = '".$id."' and id_createur = '".$idCreateur."'" ;
+		$statement = $this->_db->prepare($query);
+		$statement->execute();
 	}
 }
 ?>

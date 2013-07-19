@@ -48,7 +48,7 @@ echo $mapstring;
 
 // TODO: Database information
 $dbHost = 'localhost';
-$dbName = 'your_voc';
+$dbName = 'your_voc1';
 $dbUser = 'root';
 $dbPass = '';
 

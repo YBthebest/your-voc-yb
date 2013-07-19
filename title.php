@@ -101,6 +101,21 @@ function initTitle($url){
 		$_ENV['title'] = "Créer un groupe de révision - Révision de vocabulaire allemand anglais espagnol facilement sur Your-Voc.";
 		$_ENV['metaContent'] = "Créer un nouveau groupe de révision.";
 	}
+	elseif (preg_match("/groupe.php/i", $url)) {
+		$_ENV['title'] = 'Groupe - ';
+		if(isset($_GET['id'])) {
+			$id = $_GET['id'];
+			$query = mysql_query("SELECT * FROM groupe WHERE id = '$id'");
+			while($result = mysql_fetch_array($query)){
+				if(!empty($result)){
+					$_ENV['title'] = $result['nom'];
+					$_ENV['title'] .= ' - ';
+				}
+			}
+		} 
+		$_ENV['title'] .="Révision de vocabulaire allemand anglais espagnol facilement sur Your-Voc.";
+		$_ENV['metaContent'] = "Créer un nouveau groupe de révision.";
+	}
 	elseif (preg_match("/profil.php/i", $url)) {
 		$_ENV['title'] = "Profil";
 		if(isset($_GET['m'])) {
