@@ -113,6 +113,7 @@ function validateDelete(){
 				}
 			}
 			?> 
+			<br />
 			<h3>Favoris</h3>
 				<?php
 				$membre = $_SESSION['login'];

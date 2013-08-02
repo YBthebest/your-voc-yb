@@ -13,6 +13,9 @@
 	}
 	function validateSupprimer(){
 		return confirm("Voulez-vous vraiment supprimer ce groupe? Cette action est irréversible et tous les membres du groupe perdront l'accés au groupe.");
+	}
+	function validateSupprimerListeGroupe(){
+		return confirm("Voulez-vous vraiment supprimer cette liste? Cette action est irréversible.");
 	}	
 	function showDivDemandes() {
 	    ele = document.getElementById('demande');
@@ -40,6 +43,76 @@
 	   	else {
 	   	   	ele.style.display = "block";
 	   	}   
+	}
+	
+	window.listesMots = [];
+	window.selectedElem;
+
+	function getListeMot(id){
+		for(var i=0; i<window.listesMots.length; i++){
+			if(window.listesMots[i].id == id){
+				return window.listesMots[i];
+			}
+		}
+		return null;
+	}
+
+	function displayListe(elem, idListe){
+		var listeMotDef = getListeMot(idListe);	
+		var domResult = '<div id="liste_'+listeMotDef.id+'"><div style="color:#be3737"><a href="afficher?id='+ listeMotDef.id +'">' + listeMotDef.titre + '</a> : </div><br /> <strong>' + listeMotDef.categorie + '<->' + listeMotDef.categorie2 + '</strong><br /><br />';
+		for(var i=0; i<listeMotDef.mots.split('\r\n').length; i++){
+	     domResult += listeMotDef.mots.split('\r\n')[i];
+	     domResult += '<br />';
+	    }  
+	    domResult += "</div>";
+	    $('#listeMot').html("");
+	    $('#listeMot').append(domResult);
+		 elem.style.color = "#be3737";
+		 if(window.selectedElem){
+			 window.selectedElem.style.color = "white";
+		 }
+		 window.selectedElem = elem;
+	}
+	$(document).ready(function() {
+		$("#faq_search_input").watermark("Tappez ici pour commencer la recherche");
+		$("#faq_search_input").keyup(function(){
+			var faq_search_input = $(this).val();
+			var dataString = 'keyword='+ faq_search_input;
+			if(faq_search_input.length>1){
+				$('#result').empty();
+				$('#result').append('<table class="table" cellspacing="0" cellpadding="0">');	
+				$('#result').append('<tr><th></th><th>Titre</th></tr>');
+				var e = document.getElementById("recherche_sur");
+				var value_submit = e.options[e.selectedIndex].value;
+				if(value_submit == 'perso'){
+					$.getJSON("ajax-search.php?keyword=" + faq_search_input +"&sur=" + value_submit, function(data) {
+					    $.each(data, function(index, data1) {					
+						    $('#result').append('<tr>');
+					    	$('#result').append('<div id="result_'+data1.id+'"><td><img src="images/add.png" onclick="addListe(' + data1.id + ');"/></td><td><span class="listeMot" onclick="displayListe(this, \'' + data1.id + '\');">' + data1.titre + '</span>(<small>' + data1.categorie + ' <-> ' + data1.categorie2 + '</small>)</td></div>');     			
+							$('#result').append('</tr>');
+					    	window.listesMots.push(data1);    
+					    });
+					});
+				}else{
+					$.getJSON("ajax-search.php?keyword=" + faq_search_input, function(data) {
+					    $.each(data, function(index, data1) {					
+						    $('#result').append('<tr>');
+					    	$('#result').append('<div id="result_'+data1.id+'"><td><img src="images/add.png" onclick="addListe(' + data1.id + ');"/></td><td><span class="listeMot" onclick="displayListe(this, \'' + data1.id + '\');">' + data1.titre + '</span>(<small>' + data1.categorie + ' <-> ' + data1.categorie2 + '</small>)</td></div>');     			
+							$('#result').append('</tr>');
+					    	window.listesMots.push(data1);    
+					    });
+					});
+				}
+				$('#result').append('</table>');
+			}return false;
+		});
+	});	
+	function addListe(idListe){
+		var mydiv = document.getElementById('content').innerHTML = '<form id="addNewListe" method="post"><input name="formNewListe" type="hidden" value="ok" /><input name="newListeId" type="hidden" value="'+ idListe +'" /></form>';
+		f=document.getElementById('addNewListe');
+		if(f){
+			f.submit();
+		}
 	}
 </script>
 <!-- Début de la présentation -->
@@ -70,10 +143,10 @@
 								updateNomGroupe($id, $membre, $new_titre);
 								$groupe = getGroupeById($id);
 								$nom = $groupe->nom();
-								echo 'Le titre du groupe a bien été changé.';
+								echo 'Le titre du groupe a bien été changé.<br />';
 							}
 							else{
-								echo 'Le nouveau titre donné est trop court. Veuillez recommencer.';
+								echo 'Le nouveau titre donné est trop court. Veuillez recommencer.<br />';
 							}
 						}
 						if(isset($_POST['membre'])){
@@ -81,20 +154,20 @@
 								$idMembre = $_POST['membre'];
 								updateDemandeByStatut($id, $idMembre, 'accepted');
 								$m = getMembreById($idMembre);
-								$membre = $m->login();
+								$pseudo = $m->login();
 								createDroit('read', $idMembre, $id);
 								$droit = getDroitByIdMembreAndIdGroupe($idMembre, $id);
 								foreach($droit as $result){
 									$idDroit = $result->id();
 								}
 								createMembreGroupe($idMembre, $id, $idDroit);
-								echo $membre;
-								echo ' fait désormais parti de votre groupe.';
+								echo $pseudo;
+								echo ' fait désormais parti de votre groupe.<br />';
 							}
 							elseif(isset($_POST['reject'])){
 								$idMembre = $_POST['membre'];
 								updateDemandeByStatut($id, $idMembre, 'rejected');
-								echo 'La demande a bien été rejetée.';
+								echo 'La demande a bien été rejetée.<br />';
 							}	
 						}
 					}
@@ -103,8 +176,6 @@
     	<div id="title"><?php echo $nom; ?></div>
 		 <?php
 		    if(isset($_SESSION['login'])){
-				$m = getMembreByLogin($_SESSION['login']);
-				$membre = $m->id();
 				$membreGroupe = getMembreByIdGroupeAndMembre($id, $membre);
 				if(empty($membreGroupe)){
 					if(isset($_POST['join_sub'])){
@@ -112,7 +183,7 @@
 						if(!empty($demande)){
 							foreach($demande as $result){
 								if($result->statut() == ('pending' OR 'rejected')){
-									echo "Vous avez déjà fait une demande pour rejoindre ce groupe.";
+									echo "Vous avez déjà fait une demande pour rejoindre ce groupe.<br />";
 								}
 								elseif($result->statut() == 'accepted'){
 									?><meta http-equiv="refresh" content="0;URL='/membre'" /> <?php
@@ -122,11 +193,11 @@
 						else{
 							if(createDemande($id, $membre)){
 								$createur = $groupe->idCreateur();
-								$membreEmail = getMembreById($id);
+								$membreEmail = getMembreById($membre);
 								$pseudoCreateur = $membreEmail->login();
 								$pseudoDemande = $_SESSION['login'];
 								$emailCreateur = $membreEmail->email();
-								echo "Votre demande a été envoyée. Veuillez attendre l'acceptation ou le refus du groupe.";
+								echo "Votre demande a été envoyée. Veuillez attendre l'acceptation ou le refus du groupe.<br />";
 								$to = '"'.$pseudoCreateur.'" <<a href="mailto:'.$emailCreateur.'">'.$emailCreateur.'</a>>';
 								$subject = "Your-Voc: un nouveau membre veut rejoindre votre groupe!";
 								$message = "".$pseudoDemande." veut rejoindre votre groupe.
@@ -146,36 +217,31 @@
 							}
 						}
 					}								
-					$m = getMembreByLogin($_SESSION['login']);
-					$idMembre = $m->id();
-					$membre = getLastDemandeByPseudoAndIdGroupe($idMembre, $id);
-					if(empty($membre)){
+					$lastDemande = getLastDemandeByPseudoAndIdGroupe($membre, $id);
+					if(empty($lastDemande)){
 						?><form method="post" id="join"><input type="submit" name="join_sub" value="Rejoindre ce groupe" /></form><?php
 					}
 					else{
-						foreach($membre as $result){
+						foreach($lastDemande as $result){
 							if($result->statut() == 'pending'){
-								echo 'Votre demande est en attente. Veuillez patienter.';
+								echo 'Votre demande est en attente. Veuillez patienter.<br />';
 								?><form name="annuler_form" method="post">
 								<input type="submit" name="annuler" value="Annuler la demande" />
 								</form><?php 
 							}
 							elseif($result->statut() == 'rejected'){
-								echo 'Votre demande a été rejetée. Si vous pensez qu\'il s\'agit d\'une erreur, veuillez nous <a href="contact">contacter</a>.';
+								echo 'Votre demande a été rejetée. Si vous pensez qu\'il s\'agit d\'une erreur, veuillez nous <a href="contact">contacter</a>.<br />';
 							}
 						}
 					}
 					if(isset($_POST['annuler'])){
-						deleteDemande($id, $idMembre);
+						deleteDemande($id, $membre);
 						echo 'Votre demande a bien été annulée.';
 						?><meta http-equiv="refresh" content="0;URL='/membre'" /> <?php
 					}
 				}
 				else{
-					$pseudo = $_SESSION['login'];
-					$m = getMembreByLogin($pseudo);
-					$pseudo = $m->id();
-					$droit = getDroitByIdMembreAndIdGroupe($pseudo, $id);
+					$droit = getDroitByIdMembreAndIdGroupe($membre, $id);
 					foreach($droit as $statut){
 						if($statut->libelle() == 'admin'){
 							$demandes = getDemandePendingByIdGroupe($id);
@@ -184,8 +250,8 @@
 								foreach($demandes as $result){
 									$idMembre = $result->pseudo();
 									$m = getMembreById($idMembre);
-									$membre = $m->login();
-									echo '<a href="groupe?m='.$membre.'">'.$membre.'</a>';
+									$pseudo = $m->login();
+									echo '<a href="profil?m='.$pseudo.'">'.$pseudo.'</a>';
 									?><form id="demande" name="demande" method="post" action="groupe?id=<?php echo $id ?>#tab_2" >
 								    	<input type="submit" name="accept" value="Accepter">
 										<input type="submit" name="reject" value="Rejeter">
@@ -210,8 +276,6 @@
 		    	    <li id="tab_2">Les membres</li>
 			        <?php
 			        if(isset($_SESSION['login'])){ 
-			        	$m = getMembreByLogin($_SESSION['login']);
-			        	$membre = $m->id();
 			        	$membreGroupe = getMembreByIdGroupeAndMembre($id, $membre);
 			        	if(!empty($membreGroupe)){
 			        		?><li id="tab_3">Les options</li><?php 
@@ -225,24 +289,88 @@
 		        	<h2>Les listes</h2>
 		        	<?php 
 		        	if(isset($_SESSION['login'])){
-						$pseudo = $_SESSION['login'];
-						$m = getMembreByLogin($pseudo);
-						$pseudo = $m->id();
-						$droit = getDroitByIdMembreAndIdGroupe($pseudo, $id);
+						$date = time();
+						if(isset($_POST['newListeId'])){
+							$idNewListe = $_POST['newListeId'];
+							createListeGroupe($idNewListe, $membre, $id, $date);
+							echo 'Votre liste a bien été ajoutée au groupe.<br />';
+						}
+						if(isset($_POST['confirmDeleteListe'])){
+							$idListeSupp = $_POST['idListeGroupe'];
+							if(isset($_POST['adminSuppIdMembre'])){
+								$pseudo = $_POST['adminSuppIdMembre'];
+							}
+							else{
+								$pseudo = $membre;
+							}
+							deleteListeGroupe($idListeSupp, $pseudo, $id);
+							echo 'La liste a bien été supprimée.<br />';
+						}
+						$listesGroupe = getListesGroupeByIdGroupe($id);
+						$getDroitMembres = $groupe->droitMembres();
+						$droit = getDroitByIdMembreAndIdGroupe($membre, $id);
+						if(!empty($listesGroupe)){
+							foreach($listesGroupe as $resultListes){
+								$idListeGroupe = $resultListes->idListe();
+								$idMembreListeGroupe = $resultListes->idMembre();
+								$m = getMembreById($idMembreListeGroupe);
+								$pseudo = $m->login();
+								$listeById = getListeById($idListeGroupe);
+								echo '<a href="afficher?id='.$listeById->id().'">'.$listeById->titre().'</a>';
+								echo ' <small>(liste partagée par <a href="profil?m='.$pseudo.'">'.$pseudo.'</a>)</small>';
+								foreach($droit as $statut){
+									if($statut->libelle() == 'admin'){
+										$membreEnLigne = 'admin';
+									}
+								}
+								if($idMembreListeGroupe == $membre || isset($membreEnLigne)){
+									?>
+									<form name="deleteListeGroupe" id="deleteListeGroupe" method="post" onsubmit="return validateSupprimerListeGroupe();">
+										<?php 
+										if(isset($membreEnLigne)){
+											echo '<input type="hidden" name="adminSuppIdMembre" value="'.$idMembreListeGroupe.'"/>';
+										}
+										?>
+										<input type="hidden" name="idListeGroupe" value="<?php echo $idListeGroupe ?>" />
+										<input type="submit" name="confirmDeleteListe" value="Supprimer" />
+									</form>
+									<?php 
+								}
+								echo '<br />';
+							}
+							echo '<br />';
+						}
+						else{
+							echo 'Aucune liste.<br />';
+						}
+						$getDroitMembres = $groupe->droitMembres();
+						$droit = getDroitByIdMembreAndIdGroupe($membre, $id);
 						foreach($droit as $statut){
-							if($statut->libelle() == 'admin'){
+							if($statut->libelle() == 'admin' || $getDroitMembres == 'write'){
 								?>
 								<a href="javascript:;" onclick="showDivAddListe();return false;">Ajouter une liste</a>
 								<div id="divAddListe" style="display:none;">
-									<?php
-									echo 'Vos listes:<br />';
-									$listesPerso = getListeByPseudo($_SESSION['login']);
-									if(!empty($listesPerso)){
-										foreach($listesPerso as $resultListes){
-											echo '<a href="afficher?id='.$resultListes->id().'">'.$resultListes->titre().'</a><br />';
-										}
-									}
-									?>
+									<div id="column1-wrap">
+								    <div id="column1">
+								    	<h3>Recherche des listes disponibles</h3>
+			                            <input name="query" type="text" id="faq_search_input" size="42" /><br />
+			                            Recherche sur 
+			                            <select id="recherche_sur" name="recherche_sur">
+			                            	<option value="perso">mes listes uniquement</option>
+			                            	<option value="public">toutes les listes</option>
+			                            </select>
+			   							<div style="border:1px solid #be3737;margin-top:5px;height: 400px; overflow-y: auto;overflow-x: hidden;">			
+											<div id="result"></div>
+										</div>
+								    </div>
+									</div>
+									<div id="column2">
+										<h3>Détail liste séléctionnée</h3>
+										<div style="border:1px solid #be3737;margin-top:5px;height: 400px; overflow-y: auto;overflow-x: hidden;">
+											<div id="listeMot"></div>
+										</div>
+									</div>
+									<div id="clear"></div>
 								</div>
 								<?php 
 							}
@@ -254,14 +382,9 @@
 		      		<h2>Les membres</h2>
 				    <?php
 					if(isset($_SESSION['login'])){
-		    			$m = getMembreByLogin($_SESSION['login']);
-		    			$membre = $m->id();
 		    			$membreGroupe = getMembreByIdGroupeAndMembre($id, $membre);
 		    			if(!empty($membreGroupe)){
-								$pseudo = $_SESSION['login'];
-								$m = getMembreByLogin($pseudo);
-								$pseudo = $m->id();
-								$droit = getDroitByIdMembreAndIdGroupe($pseudo, $id);
+								$droit = getDroitByIdMembreAndIdGroupe($membre, $id);
 								foreach($droit as $statut){
 									if($statut->libelle() == 'admin'){
 										echo '<h3>Demandes de rejoindre le groupe:</h3>';
@@ -273,8 +396,8 @@
 											foreach($demandes as $result){
 												$idMembre = $result->pseudo();
 												$m = getMembreById($idMembre);
-												$membre = $m->login();
-												echo '<a href="groupe?m='.$membre.'">'.$membre.'</a>';
+												$pseudo = $m->login();
+												echo '<a href="profil?m='.$pseudo.'">'.$pseudo.'</a>';
 												?><form id="demande" name="demande" method="post" action="groupe?id=<?php echo $id ?>#tab_2">
 												<input type="submit" name="accept" value="Accepter">
 												<input type="submit" name="reject" value="Rejeter">
@@ -293,9 +416,9 @@
 												$i++;
 												echo ''.$i.'. ';
 												$m = $deleted->pseudo();
-												$membre = getMembreById($m);
-												$pseudo = $membre->login();
-												echo '<a href="groupe?m='.$pseudo.'">'.$pseudo.'</a><br />';
+												$membreByDeleted = getMembreById($m);
+												$pseudo = $membreByDeleted->login();
+												echo '<a href="profil?m='.$pseudo.'">'.$pseudo.'</a><br />';
 												?>
 												<form name="reaccepter" method="post" action="groupe?id=<?php echo $id ?>#tab_2">
 													<input type="submit" name="reaccept" value="Ok" />
@@ -335,11 +458,14 @@
 									echo ' n\'est désormais plus un administrateur du groupe.</h3>';
 								}
 								if(isset($_POST['supp'])){
+									$idCreateur = $groupe->idCreateur();
 									$idMembre = mysql_real_escape_string($_POST['idMembre']);
-									deleteMembreGroupe($idMembre, $id);
-									deleteDroit($idMembre, $id);
-									updateDemandeByStatut($id, $idMembre, 'deleted');
-									echo '<br /><h3>Le membre a bien été supprimé.</h3>';
+									if($idMembre != $idCreateur){
+										deleteMembreGroupe($idMembre, $id);
+										deleteDroit($idMembre, $id);
+										updateDemandeByStatut($id, $idMembre, 'deleted');
+										echo '<br /><h3>Le membre a bien été supprimé.</h3>';
+									}
 								}
 							}
 						}
@@ -355,18 +481,13 @@
 								$idMembre = $result->idMembre();
 								$droit_1 = getDroitByIdMembreAndIdGroupe($idMembre, $id);
 								$m = getMembreById($idMembre);
-								$membre = $m->login();
+								$pseudo = $m->login();
 								echo ''.$i.'. ';
-								echo '<a href="groupe?m='.$membre.'">'.$membre.'</a>';
+								echo '<a href="profil?m='.$pseudo.'">'.$pseudo.'</a>';
 								if(isset($_SESSION['login'])){
-									$m = getMembreByLogin($_SESSION['login']);
-									$membre = $m->id();
 									$membreGroupe = getMembreByIdGroupeAndMembre($id, $membre);
 									if(!empty($membreGroupe)){				
-										$pseudo = $_SESSION['login'];
-										$m = getMembreByLogin($pseudo);
-										$pseudo = $m->id();
-										if($idMembre == $pseudo){
+										if($idMembre == $membre){
 											echo '<small><strong> (vous)</strong></small><br />';
 										}
 										else{
@@ -377,7 +498,7 @@
 												echo '<small><strong> (admin)</strong></small><br />';
 											}
 										}
-										$droit = getDroitByIdMembreAndIdGroupe($pseudo, $id);
+										$droit = getDroitByIdMembreAndIdGroupe($membre, $id);
 										foreach($droit as $statut){
 											if($statut->libelle() == 'admin'){
 												foreach($droit_1 as $result){
@@ -395,8 +516,6 @@
 													}
 													else{
 														$idCreateur = $groupe->idCreateur();
-														$m = getMembreByLogin($_SESSION['login']);
-														$membre = $m->id();
 														if($idMembre != $idCreateur){
 															if($membre == $idCreateur){													
 																?>

@@ -14,7 +14,7 @@
 <!-- Début du header -->
 <div id="header">
 	<div id="logo">
-		<a href="index.php"><img src="images/logo.png" alt="Your-Voc" title="Your-Voc" /></a>
+		<a href="accueil"><img src="images/logo.png" alt="Your-Voc" title="Your-Voc" /></a>
 	</div>
 
 	<div id="menu">

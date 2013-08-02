@@ -597,4 +597,18 @@ function updateDroitMembresGroupe($id, $idCreateur, $droitMembres){
 	DBHelper::getDBManager("Groupe")->updateDroitMembresGroupe($id, $idCreateur, $droitMembres);
 	return $updateGroupe;
 }
+function createListeGroupe($id_liste, $id_membre, $id_groupe, $date){
+	$newListeGroupe = new ListesGroupe(array());
+	DBHelper::getDBManager("ListesGroupe")->createListeGroupe($id_liste, $id_membre, $id_groupe, $date);
+	return $newListeGroupe;
+}
+function getListesGroupeByIdGroupe($id_groupe){
+	$listesGroupe = DBHelper::getDBManager("ListesGroupe")->getListesGroupeByIdGroupe($id_groupe);
+	return $listesGroupe;
+}
+function deleteListeGroupe($idListe, $idMembre, $idGroupe){
+	$deleteListeGroupe = new ListesGroupe(array("idListe" => $idListe, "idMembre" => $idMembre, "idGroupe" => $idGroupe));
+	DBHelper::getDBManager("ListesGroupe")->deleteListeGroupe($idListe, $idMembre, $idGroupe);
+	return $deleteListeGroupe;
+}
 ?>

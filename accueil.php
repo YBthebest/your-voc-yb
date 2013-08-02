@@ -20,7 +20,7 @@ $(function(){
 					<h3>Avouez-le, vous l'avez tous connu. Un test arrive très rapidement, mais vous ne savez pas comment réviser et vous manquez de motivation.</h3>
 					Et bien, Your-Voc est fait pour vous. Créé par quelqu'un comme vous, pour vous, il vous aidera très facilement à apprendre votre vocabulaire sans y perdre des heures. Vous pouvez passer du temps sur l'ordinateur, Facebook et compagnie, et réviser en même temps. <br>
 					C'est une méthode déjà utilisée, testée et approuvée dans pleins d'autres pays, et elle débarque désormais en français pour vous, gratuitement.<br />
-					Commencez donc par chercher une liste ou bien par créer votre propre liste.<br>
+					Commencez donc par chercher une liste ou bien par créer votre propre liste.<br /><br />
 				</p>
 			</div>
 

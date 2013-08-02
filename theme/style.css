@@ -279,6 +279,21 @@ img {
  	margin-bottom : 10px;
 }
 
+#column1-wrap{
+    float: left;
+    width: 100%;
+}
+#column1{
+    margin-right: 200px;
+}
+#column2{
+    float: left;
+    width: 200px;
+    margin-left: -200px;
+}
+#clear{
+    clear: both;
+}
 
  /*****TABS*****/
  * {

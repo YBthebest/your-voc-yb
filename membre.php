@@ -122,6 +122,7 @@ function validateDelete(){
 							}
 						}
 						?>
+						<br />
 						<h3>Favoris</h3>
 						<?php
 						$listeFavoris = getFavoriByPseudoLimit20($membre);
