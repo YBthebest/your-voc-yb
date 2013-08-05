@@ -70,6 +70,7 @@ function validateDelete(){
 							<a href="entrer-liste" >Entrer une nouvelle liste</a><br/>
 							<a href="recherche" >Faire une recherche</a><br/>
 							<a href="mdp">Modifier mon mot de passe</a><br/>
+							<a href="supprimer">Supprimer mon compte</a><br/>
 							<a href="deconnexion">Déconnexion</a><br/>
 						</p>
 						<h3>3 dernières listes révisées</h3>

@@ -69,7 +69,8 @@ $(document).ready(function() {
 										else{
 											$droitMembres = 'read';
 										}
-										createGroupe($nom, $idCreateur, $date, $droitMembres);
+										$urlAuto = md5(uniqid($nom, true));
+										createGroupe($nom, $idCreateur, $date, $droitMembres, $urlAuto);
 										$groupe = getGroupeByNomAndCreateur($nom, $idCreateur);
 										$id = $groupe->id();
 										createDroit('admin', $idCreateur, $id);
@@ -81,7 +82,7 @@ $(document).ready(function() {
 										?><meta http-equiv="Refresh" content="0;url=/groupe?id=<?php echo $id ;?>"><?php
 									}
 									else{
-										echo 'Un groupe avec ce nom exite déjà. Veuillez le rejoindre ou choisir un autre nom.';
+										echo 'Un groupe avec ce nom existe déjà. Veuillez le rejoindre ou choisir un autre nom.';
 									}
 								}
 								else{

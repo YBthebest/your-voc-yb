@@ -178,6 +178,26 @@
 		    if(isset($_SESSION['login'])){
 				$membreGroupe = getMembreByIdGroupeAndMembre($id, $membre);
 				if(empty($membreGroupe)){
+					if(isset($_GET['auto'])){
+						$demande = getLastDemandeByPseudoAndIdGroupe($membre, $id);
+						if(empty($demande)){
+							$urlAutoGet = mysql_real_escape_string($_GET['auto']);
+							$md5BddRaccourci = substr($groupe->urlAuto(), 0, 20);
+							if($urlAutoGet == $md5BddRaccourci){
+								$m = getMembreById($membre);
+								$pseudo = $m->login();
+								createDemande($id, $membre);
+								updateDemandeByStatut($id, $membre, 'accepted');
+								createDroit('read', $membre, $id);
+								$droit = getDroitByIdMembreAndIdGroupe($membre, $id);
+								foreach($droit as $result){
+									$idDroit = $result->id();
+								}
+								createMembreGroupe($membre, $id, $idDroit);
+								?><meta http-equiv="refresh" content="0;URL='/groupe?id=<?php echo $id ?>'" /> <?php
+							}							
+						}
+					}
 					if(isset($_POST['join_sub'])){
 						$demande = getLastDemandeByPseudoAndIdGroupe($membre, $id);
 						if(!empty($demande)){
@@ -292,8 +312,34 @@
 						$date = time();
 						if(isset($_POST['newListeId'])){
 							$idNewListe = $_POST['newListeId'];
-							createListeGroupe($idNewListe, $membre, $id, $date);
-							echo 'Votre liste a bien été ajoutée au groupe.<br />';
+							if(createListeGroupe($idNewListe, $membre, $id, $date)){
+								$allMembres = getMembresByIdGroupe($id);
+								foreach($allMembres as $resultAllMembres){
+									$idMembreMail = $resultAllMembres->idMembre();
+									$membreMail = getMembreById($idMembreMail);								
+									$pseudoMembre = $membreMail->login();
+									$pseudoNewListe = $_SESSION['login'];
+									$emailMembre = $membreMail->email();				
+									$to = '"'.$pseudoMembre.'" <<a href="mailto:'.$emailMembre.'">'.$emailMembre.'</a>>';
+									$subject = "Your-Voc: une liste a été ajoutée au groupe ".$nom.".";
+									$message = "Bonjour,
+									".$pseudoNewListe." a ajouté une nouvelle liste au groupe..
+									Veuillez cliquer sur le lien suivant pour accéder au groupe.
+									----------------------------
+									http://www.your-voc.com/groupe?id=$id
+									----------------------------
+									Ceci est un e-mail généré automatiquement. Veuillez bien ne pas y répondre.
+									
+									Merci de votre compréhension et bon apprentisage sur Your-Voc.
+									";
+									$headers = 'From: "Your-Voc" <<a href="mailto:reset@your-voc.com">reset@your-voc.com</a>>' . PHP_EOL .
+																	'X-Mailer: PHP/' . phpversion();
+									if (!mail($to, $subject, $message, $headers)) {
+										$erreur = "Un problème a apparu. Veuillez-nous contacter. (<a href='contact'>Contact</a>)";
+									}
+								}
+								echo 'Votre liste a bien été ajoutée au groupe.<br />';
+							}
 						}
 						if(isset($_POST['confirmDeleteListe'])){
 							$idListeSupp = $_POST['idListeGroupe'];
@@ -387,6 +433,10 @@
 								$droit = getDroitByIdMembreAndIdGroupe($membre, $id);
 								foreach($droit as $statut){
 									if($statut->libelle() == 'admin'){
+										$md5Url = substr($groupe->urlAuto(), 0, 20);
+										$urlAutoComplet = 'http://www.your-voc.com/groupe?id='.$id.'&auto='.$md5Url.'';
+										echo '<small>Invitez des gens à rejoindre directement le groupe en partageant ce lien:</small>';
+										?><form><input type="text" name="urlAuto" onClick="this.select();" value="<?php echo $urlAutoComplet ?>" size="65" /></form><br /><?php
 										echo '<h3>Demandes de rejoindre le groupe:</h3>';
 										$demandes = getDemandePendingByIdGroupe($id);
 										if(empty($demandes)){
@@ -584,18 +634,21 @@
 			   	        	</div>
 			   	        	<?php 	
 			    			if(isset($_POST['supp_groupe'])){
-			    				deleteAllMembreGroupe($id);
-			    				deleteAllDemandeByGroupe($id);
-			    				deleteAllDroitByGroupe($id);
-			    				$idCreateur = $groupe->idCreateur();
-			    				deleteGroupe($id, $idCreateur);
-			    				?><META HTTP-EQUIV="Refresh" CONTENT="0; URL=membre"> <?php
+								$idCreateur = $groupe->idCreateur();
+								if($membre == $idCreateur){
+				    				deleteAllMembreGroupe($id);
+				    				deleteAllDemandeByGroupe($id);
+				    				deleteAllDroitByGroupe($id);
+				    				deleteAllListesByGroupe($id);
+				    				deleteGroupe($id, $idCreateur);
+				    				?><META HTTP-EQUIV="Refresh" CONTENT="0; URL=membre"> <?php
+				    			}
 			    			}
 						}
 			       		if(isset($_POST['quitter'])){
-			       			deleteMembreGroupe($pseudo, $id);
-			        		deleteDroit($pseudo, $id);
-			        		deleteDemande($id, $pseudo);
+			       			deleteMembreGroupe($membre, $id);
+			        		deleteDroit($membre, $id);
+			        		deleteDemande($id, $membre);
 			       			?><META HTTP-EQUIV="Refresh" CONTENT="0; URL=membre"> <?php
 			        	}
 			      	}			        	

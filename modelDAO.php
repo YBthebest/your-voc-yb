@@ -486,9 +486,9 @@ function getGroupeById($id){
 	$groupe = DBHelper::getDBManager("Groupe")->getGroupeById($id);
 	return $groupe;
 }
-function createGroupe($nom, $idCreateur, $date, $droitMembres){
-	$newGroupe = new Groupe(array("nom" => $nom, "idCreateur" => $idCreateur, "timestamp"=> $date, "droitMembres" => $droitMembres));
-	DBHelper::getDBManager("Groupe")->createGroupe($nom, $idCreateur, $date, $droitMembres);
+function createGroupe($nom, $idCreateur, $date, $droitMembres, $urlAuto){
+	$newGroupe = new Groupe(array("nom" => $nom, "idCreateur" => $idCreateur, "timestamp"=> $date, "droitMembres" => $droitMembres, "urlAuto" => $urlAuto));
+	DBHelper::getDBManager("Groupe")->createGroupe($nom, $idCreateur, $date, $droitMembres, $urlAuto);
 	return $newGroupe;
 }
 function getGroupeByNom($nom){
@@ -610,5 +610,10 @@ function deleteListeGroupe($idListe, $idMembre, $idGroupe){
 	$deleteListeGroupe = new ListesGroupe(array("idListe" => $idListe, "idMembre" => $idMembre, "idGroupe" => $idGroupe));
 	DBHelper::getDBManager("ListesGroupe")->deleteListeGroupe($idListe, $idMembre, $idGroupe);
 	return $deleteListeGroupe;
+}
+function deleteAllListesByGroupe($idGroupe){
+	$deleteListes = new ListesGroupe(array("idGroupe" => $idGroupe));
+	DBHelper::getDBManager("ListesGroupe")->deleteAllListesByGroupe($idGroupe);
+	return $deleteListes;
 }
 ?>

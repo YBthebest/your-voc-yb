@@ -14,6 +14,7 @@ class GroupeManager extends DbManager{
 		$this->arrayBinding["id_createur"] = "idCreateur";
 		$this->arrayBinding["date"] = "date";	
 		$this->arrayBinding["droit_membres"] = "droitMembres";	
+		$this->arrayBinding["url_auto"] = "urlAuto";
 	}
 	
 	protected function newInstanceEntity($donnees){	
@@ -25,8 +26,8 @@ class GroupeManager extends DbManager{
 		$entity = new Groupe(array("id"=>$id));
 		return $this->selectUniqueResult($query, $entity);
 	}
-	public function createGroupe($nom, $idCreateur, $date, $droitMembres){
-		$query = "insert into ".$this->table." values('', '".$nom."', '".$idCreateur."', '".$date."', '".$droitMembres."')" ;
+	public function createGroupe($nom, $idCreateur, $date, $droitMembres, $urlAuto){
+		$query = "insert into ".$this->table." values('', '".$nom."', '".$idCreateur."', '".$date."', '".$droitMembres."', '".$urlAuto."')" ;
 		$statement = $this->_db->prepare($query);
 		$statement->execute();
 	}
