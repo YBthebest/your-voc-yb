@@ -55,5 +55,10 @@ class DemandeMembreGroupeManager extends DbManager{
 		$statement = $this->_db->prepare($query);
 		$statement->execute();
 	}
+	public function deleteAllDemandeByMembre($idMembre){
+		$query = "delete from ".$this->table." where id_membre = '$idMembre'" ;
+		$statement = $this->_db->prepare($query);
+		$statement->execute();
+	}
 }
 ?>

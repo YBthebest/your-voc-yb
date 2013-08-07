@@ -29,8 +29,8 @@ class ListesGroupeManager extends DbManager{
 		$entity = new ListesGroupe(array("id_groupe"=>$id_groupe));
 		return $this->select($query, $entity);
 	}
-	public function deleteListeGroupe($idListe, $idMembre, $idGroupe){
-		$query = "delete from ".$this->table." where id_liste = '".$idListe."' and id_membre = '".$idMembre."' and id_groupe = '".$idGroupe."'" ;
+	public function deleteListeGroupe($id, $idMembre, $idGroupe){
+		$query = "delete from ".$this->table." where id = '".$id."' and id_membre = '".$idMembre."' and id_groupe = '".$idGroupe."'" ;
 		$statement = $this->_db->prepare($query);
 		$statement->execute();
 	}

@@ -357,6 +357,7 @@
 						$droit = getDroitByIdMembreAndIdGroupe($membre, $id);
 						if(!empty($listesGroupe)){
 							foreach($listesGroupe as $resultListes){
+								$idListe = $resultListes->id();
 								$idListeGroupe = $resultListes->idListe();
 								$idMembreListeGroupe = $resultListes->idMembre();
 								$m = getMembreById($idMembreListeGroupe);
@@ -377,7 +378,7 @@
 											echo '<input type="hidden" name="adminSuppIdMembre" value="'.$idMembreListeGroupe.'"/>';
 										}
 										?>
-										<input type="hidden" name="idListeGroupe" value="<?php echo $idListeGroupe ?>" />
+										<input type="hidden" name="idListeGroupe" value="<?php echo $idListe ?>" />
 										<input type="submit" name="confirmDeleteListe" value="Supprimer" />
 									</form>
 									<?php 

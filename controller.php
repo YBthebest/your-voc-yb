@@ -28,9 +28,8 @@
 		}
 		return false;
 	}
-	
 	function isCookieValid($membre){
-		if(getHash($login, $id) == getHash($membre->login(), $membre->id())){
+		if($_COOKIE['connexion_auto'] == getHash($membre->login(), $membre->id())){
 			return true;
 		}
 		return false;

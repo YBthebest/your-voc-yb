@@ -42,6 +42,11 @@ class DroitGroupeManager extends DbManager{
 		$query = "delete from ".$this->table." where id_groupe = '$idGroupe'" ;
 		$statement = $this->_db->prepare($query);
 		$statement->execute();
+	}
+	public function deleteAllDroitByMembre($idMembre){
+		$query = "delete from ".$this->table." where id_membre = '$idMembre'" ;
+		$statement = $this->_db->prepare($query);
+		$statement->execute();
 	}	
 }
 ?>

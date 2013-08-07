@@ -42,5 +42,10 @@ class CommentaireManager extends DbManager{
 		$entity = "";
 		return $this->select($query, $entity);		
 	}
+	public function deleteAllCommentairesByIdMembre($id_membre){
+		$query = "delete from ".$this->table." where id_membre = ".$id_membre."" ;
+		$statement = $this->_db->prepare($query);
+		$statement->execute();
+	}
 }
 ?>

@@ -606,14 +606,34 @@ function getListesGroupeByIdGroupe($id_groupe){
 	$listesGroupe = DBHelper::getDBManager("ListesGroupe")->getListesGroupeByIdGroupe($id_groupe);
 	return $listesGroupe;
 }
-function deleteListeGroupe($idListe, $idMembre, $idGroupe){
-	$deleteListeGroupe = new ListesGroupe(array("idListe" => $idListe, "idMembre" => $idMembre, "idGroupe" => $idGroupe));
-	DBHelper::getDBManager("ListesGroupe")->deleteListeGroupe($idListe, $idMembre, $idGroupe);
+function deleteListeGroupe($id, $idMembre, $idGroupe){
+	$deleteListeGroupe = new ListesGroupe(array("id" => $id, "idMembre" => $idMembre, "idGroupe" => $idGroupe));
+	DBHelper::getDBManager("ListesGroupe")->deleteListeGroupe($id, $idMembre, $idGroupe);
 	return $deleteListeGroupe;
 }
 function deleteAllListesByGroupe($idGroupe){
 	$deleteListes = new ListesGroupe(array("idGroupe" => $idGroupe));
 	DBHelper::getDBManager("ListesGroupe")->deleteAllListesByGroupe($idGroupe);
 	return $deleteListes;
+}
+function deleteAllCommentairesByIdMembre($id_membre){
+	$deleteCommentaires = new Commentaire(array("membre" => $id_membre));
+	DBHelper::getDBManager("Commentaire")->deleteAllCommentairesByIdMembre($id_membre);
+	return $deleteCommentaires;
+}
+function deleteAllDemandeByMembre($idMembre){
+	$newDemande = new DemandeMembreGroupe(array("idMembre" => $idMembre));
+	DBHelper::getDBManager("DemandeMembreGroupe")->deleteAllDemandeByMembre($idMembre);
+	return $newDemande;
+}
+function deleteAllDroitByMembre($idMembre){
+	$deleteDroit = new DroitGroupe(array("idMembre" => $idMembre));
+	DBHelper::getDBManager("DroitGroupe")->deleteAllDroitByMembre($idMembre);
+	return $deleteDroit;
+}
+function deleteAllFavorisByMembre($idMembre){
+	$deleteFavori = new Favori(array("membre" => $idMembre));
+	DBHelper::getDBManager("Favori")->deleteAllFavorisByMembre($idMembre);
+	return $deleteFavori;
 }
 ?>
