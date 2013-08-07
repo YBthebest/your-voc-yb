@@ -101,6 +101,10 @@ function initTitle($url){
 		$_ENV['title'] = "Créer un groupe de révision - Révision de vocabulaire allemand anglais espagnol facilement sur Your-Voc.";
 		$_ENV['metaContent'] = "Créer un nouveau groupe de révision.";
 	}
+	elseif (preg_match("/supprimer.php/i", $url)) {
+		$_ENV['title'] = "Supprimer son compte - Révision de vocabulaire allemand anglais espagnol facilement sur Your-Voc.";
+		$_ENV['metaContent'] = "Supprimer son compte.";
+	}
 	elseif (preg_match("/groupe.php/i", $url)) {
 		$_ENV['title'] = 'Groupe - ';
 		if(isset($_GET['id'])) {

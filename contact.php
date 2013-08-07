@@ -3,18 +3,13 @@
 </div>
 <!-- Fin de la présentation -->
 <!-- Début du contenu -->
+
 <div id="content">
 	<div id="bloc">
     	<div id="title">Contact </div>
 		<?php
-		echo 'Si vous avez des bugs, erreurs ou améliorations à nous signaler, merci d\'utiliser le formulaire de contact ci-dessous !';
 		$ok_mail = '';
 		$erreur = '';
-		// Couleur du texte des champs si erreur saisie utilisateur
-		$color_font_warn="#FF0000";
-		// Couleur de fond des champs si erreur saisie utilisateur
-		$color_form_warn="#FFCC66";
-		// Ne rien modifier ci-dessous si vous n’êtes pas certain de ce que vous faites !
 		if(isset($_POST['submit'])){
 			require_once('recaptchalib.php');
 			$privatekey = "6LdsCMMSAAAAAKYeqj37ims8IdO_mnYM4O_mH608";
@@ -25,7 +20,7 @@
 		
 			if (!$resp->is_valid) {
 				// What happens when the CAPTCHA was entered incorrectly
-				$erreur.="<li><span class='txterror'>Le captcha n'a pas été entré correctement. Veuillez réessayer. <br /><br /></span>";
+				$erreur.="Le captcha n'a pas été entré correctement. Veuillez réessayer. <br /><br />";
 			} else {
 				$erreur="";
 				// Nettoyage des entrées
@@ -45,21 +40,21 @@
 				$f_2 = mysql_real_escape_string($f_2);
 				// Verification des champs
 				if(strlen($f_1)<2){
-					$erreur.="<li><span class='txterror'>Le champ &laquo; Nom &raquo; est vide ou incomplet.</span>";
+					$erreur.="Le champ &laquo; Nom &raquo; est vide ou incomplet.";
 					$errf_1=1;
 				}
 				if(strlen($f_2)<2){
-					$erreur.="<li><span class='txterror'>Le champ &laquo; E-Mail &raquo; est vide ou incomplet.</span>";
+					$erreur.="Le champ &laquo; E-Mail &raquo; est vide ou incomplet.";
 					$errf_2=1;
 				}else{
 					$regex = '/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/';
 					if(!preg_match($regex, $f_2)){
-						$erreur.="<li><span class='txterror'>La syntaxe de votre adresse e-mail n'est pas correcte.</span>";
+						$erreur.="La syntaxe de votre adresse e-mail n'est pas correcte.";
 						$errf_2=1;
 					}
 				}
 				if(strlen($f_3)<2){
-					$erreur.="<li><span class='txterror'>Le champ &laquo; Votre demande &raquo; est vide ou incomplet.</span>";
+					$erreur.="Le champ &laquo; Votre demande &raquo; est vide ou incomplet.";
 					$errf_3=1;
 				}
 				if($erreur==""){
@@ -72,7 +67,7 @@
 					if(mail("yannickbloem@hotmail.com", $titre, stripslashes($corps), $tete)){
 						$ok_mail="true";
 					}else{
-						$erreur.="<li><span class='txterror'>Une erreur est survenue lors de l'envoi du message, veuillez refaire une tentative.</span>";
+						$erreur.="Une erreur est survenue lors de l'envoi du message, veuillez refaire une tentative.";
 					}
 				}
 			}
@@ -85,29 +80,71 @@
 			$f_3="";
 		}
 		if(isset($ok_mail) && $ok_mail=="true"){ ?>
-			<table width='100%' border='0' cellspacing='1' cellpadding='1'>
-				<tr><td><span class='txtform'>Le message ci-dessous nous a bien été transmis, et nous vous en remercions.</span></td></tr>
-				<tr><td>&nbsp;</td></tr>
-				<tr><td><tt><?echo nl2br(stripslashes($corps));?></tt></td></tr>
-				<tr><td>&nbsp;</td></tr>
-				<tr><td><span class='txtform'>Nous allons y donner suite dans les meilleurs délais.<br>A bientôt.</span></td></tr>
-			</table>
+				<div class="alert alert-success"> Le message ci-dessous nous a bien été transmis, et nous vous en remercions.<br />
+				<blockquote>
+				<?php echo nl2br(stripslashes($corps));?>
+				</blockquote>
+				Nous allons y donner suite dans les meilleurs délais.<br>A bientôt.</div>
 		<?php 
-		}else{ ?>
-			<form action='contact' method='post'>
-			<table  border='0' cellspacing='1' cellpadding='1'>
-			<?php if($erreur){ ?><tr><td colspan='2' bgcolor='red'><span class='txterror'><font color='white'><b>&nbsp;ERREUR, votre message n'a pas été transmis</b></span></td></tr><tr><td colspan='2'><ul><?php echo$erreur?></ul></td></tr><?php }?>
-			<tr><td colspan='2'><span class='txterror'>Les champs marqués d'un * sont obligatoires.</span></td></tr>
-			<tr><td align='right'><span class='txtform'>Nom* :</span></td><td><input type='text' style='width:200 <?if($errf_1==1){print("; background-color: ".$color_form_warn."; color: ".$color_font_warn);}?>;' name='f_1' value='<?php echo stripslashes($f_1);?>' size='24' /></td></tr>
-			<tr><td align='right'><span class='txtform'>E-Mail* :</span></td><td><input type='text' style='width:200 <?if($errf_2==1){print("; background-color: ".$color_form_warn."; color: ".$color_font_warn);}?>;' name='f_2' value='<?php echo stripslashes($f_2);?>' size='24' /></td></tr>
-			<tr><td align='right'><span class='txtform'>Votre demande* :</span></td><td><textarea style='width:360 <?if($errf_3==1){print("; background-color: ".$color_form_warn."; color: ".$color_font_warn);}?>;' name='f_3' rows='6' cols='40'><?php echo$f_3?></textarea></td></tr>
-			<tr><td></td><td><?php  require_once('recaptchalib.php');
-			  $publickey = "6LdsCMMSAAAAAPx045E5nK50AEwInK8YSva0jLRh"; // you got this from the signup page
-			  echo recaptcha_get_html($publickey);
-			?></td></tr>
-			<tr><td align='right'></td><td><input type='submit' name='submit' value='Envoyer' /></td></tr>
-			</table>
-			</form>
+		}else{ ?>			
+			<div class="container">
+			<script type="text/javascript">
+            	var RecaptchaOptions = {
+                theme : 'custom',
+                custom_theme_widget: 'recaptcha_widget'
+            };
+            </script>
+				<form class="form-horizontal well span7" method="post">
+			 	<?php 
+				if(!empty($erreur)){
+					echo '<div class="alert alert-error"> '.$erreur.'</div>';
+				}
+				?>
+				  <span class="help-block">Si vous avez des bugs, erreurs ou améliorations à nous signaler, merci d'utiliser le formulaire de contact ci-dessous !</span>
+					<div class="control-group">
+						<div class="controls">
+							<input type="hidden" name="submit" value="submit" />
+							<input type="text" name="f_1" id="nom" value='<?php echo stripslashes($f_1);?>' placeholder="Nom" required>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="controls">
+							<input type="email" name="f_2" id="email" value='<?php echo stripslashes($f_2);?>' placeholder="Email" required>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="controls">
+							<textarea name="f_3" rows="10" placeholder="Votre demande" required><?php echo stripslashes($f_3);?></textarea>
+						</div>
+					</div>
+		            <div id="recaptcha_widget" style="display:none">		
+		            	<div class="control-group">
+		                	<div class="controls">
+		                    	<a id="recaptcha_image" href="#" class="thumbnail"></a>
+		                    </div>
+		                </div>		
+		                <div class="control-group">	                       
+		                	<div class="controls">
+		                    	<input type="text" id="recaptcha_response_field" name="recaptcha_response_field" class="input-recaptcha" />
+		                        <a class="btn" href="javascript:Recaptcha.reload()"><i class="icon-refresh"></i></a>
+		                        <a class="btn recaptcha_only_if_image" href="javascript:Recaptcha.switch_type('audio')"><i title="Get an audio CAPTCHA" class="icon-headphones"></i></a>
+		                        <a class="btn recaptcha_only_if_audio" href="javascript:Recaptcha.switch_type('image')"><i title="Get an image CAPTCHA" class="icon-picture"></i></a>
+		                        <a class="btn" href="javascript:Recaptcha.showhelp()"><i class="icon-question-sign"></i></a>
+		                        <button type="submit" class="btn btn-primary btn-small"><i class="icon-envelope icon-white"></i>Envoyer</button>
+		                    </div>							
+						</div>
+					</div>
+				</form>
+			</div>
+			<?php 
+			$recaptcha_noscript_url = 'http://api.recaptcha.net/noscript?k=6LdsCMMSAAAAAPx045E5nK50AEwInK8YSva0jLRh';
+			?>
+            <noscript>
+	            <iframe src="<?php echo $recaptcha_noscript_url; ?>" height="300" width="500" frameborder="0"></iframe><br>
+	            <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
+	            <input type="hidden" name="recaptcha_response_field" value="manual_challenge">
+            </noscript>
+			<script type="text/javascript" src="https://www.google.com/recaptcha/api/challenge?k=6LdsCMMSAAAAAPx045E5nK50AEwInK8YSva0jLRh"></script>			
 			<?php
 		};
 		?> 

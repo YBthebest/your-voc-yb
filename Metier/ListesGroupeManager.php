@@ -39,6 +39,11 @@ class ListesGroupeManager extends DbManager{
 		$statement = $this->_db->prepare($query);
 		$statement->execute();
 	}
+	public function deleteAllListesGroupeByMembre($idMembre){
+		$query = "delete from ".$this->table." where id_membre = '$idMembre'" ;
+		$statement = $this->_db->prepare($query);
+		$statement->execute();
+	}
 
 }
 ?>

@@ -16,7 +16,7 @@ $(function(){
         <div id="content">
             <div id="bloc">
             	<div id="title"><a href="ccm">Your-Voc, c'est quoi ?</a></div>
-				<p>
+				<p class="lead">
 					<h3>Avouez-le, vous l'avez tous connu. Un test arrive très rapidement, mais vous ne savez pas comment réviser et vous manquez de motivation.</h3>
 					Et bien, Your-Voc est fait pour vous. Créé par quelqu'un comme vous, pour vous, il vous aidera très facilement à apprendre votre vocabulaire sans y perdre des heures. Vous pouvez passer du temps sur l'ordinateur, Facebook et compagnie, et réviser en même temps. <br>
 					C'est une méthode déjà utilisée, testée et approuvée dans pleins d'autres pays, et elle débarque désormais en français pour vous, gratuitement.<br />
@@ -25,23 +25,23 @@ $(function(){
 			</div>
 
             <div id="bloc">
-				<div id="container">
-					<div id="col1">
-						<h3><a href="categories">Catégories</a></h3>
-						<ul type="circle">
-							<?php
-								$allCat = getCategoriesWithNbListe(7);
-								foreach($allCat as $key=>$cat) {
-							?>
-									<li><a href="categories?cat=<?php echo $cat->id() ?>"><?php echo  $cat->nom() ?></a> - <i><?php echo $cat->nbListe() ?> listes </i></li><br>
-							<?php 
-								} 
-							?>
-						</ul>
-						<a href="categories">Plus de catégories</a><br /><br />
-					</div> 
-					<div id="col2outer"> 
-						<div id="col2mid"> 	
+				<div class="container">
+					<div class="row">
+						<div class="span4">
+							<h3><a href="categories">Catégories</a></h3>
+							<ul type="circle">
+								<?php
+									$allCat = getCategoriesWithNbListe(7);
+									foreach($allCat as $key=>$cat) {
+								?>
+										<li><a href="categories?cat=<?php echo $cat->id() ?>"><?php echo  $cat->nom() ?></a> - <i><?php echo $cat->nbListe() ?> listes </i></li><br>
+								<?php 
+									} 
+								?>
+							</ul>
+							<a href="categories">Plus de catégories</a><br /><br />
+						</div> 
+						<div class="span4"> 	
 							<a href="entrer-liste"><img src="images/entrerliste.png" alt="enter liste" /></a>
 							<div id="text-center">
 								<b><h2>ou chercher une liste :</h2></b>
@@ -64,7 +64,7 @@ $(function(){
 								</form>
 							</div> 
 						</div> 
-						<div id="col2side">
+						<div class="span4">
 							<?php $defaultNbListe = 3; ?>
 							<h3><a href="gerer-public">Derniers ajouts</a></h3>					
 							<ul type="circle">

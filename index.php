@@ -6,7 +6,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr" > 
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-        <link rel="stylesheet" href="theme/style.css" />
 		<title><?php echo $configPage->title() ?></title>
 		<meta name="Description" lang="fr" content="<?php echo $configPage->metaContent() ?>" />
 		<script type="text/javascript" src="javascript/jquery-1.6.4.js"></script>
@@ -14,7 +13,10 @@
 		<script type="text/javascript" src="javascript/overrideObjects.js"></script>
 		<script type="text/javascript" src="javascript/your-voc.js"></script>
 		<script type="text/javascript" src="javascript/jquery.watermark.js"></script>
-		<link rel="icon" type="image/ico" href="http://your-voc.com/img/favicon.ico" />
+		<link href="theme/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="theme/style.css" />
+		<script src="javascript/bootstrap.js"></script>
+		<link rel="icon" type="image/ico" href="http://your-voc.com/images/favicon.ico" />
 		<!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" /><![endif]-->
 
 		<meta name="Identifier-url" content="http://your-voc.com" />

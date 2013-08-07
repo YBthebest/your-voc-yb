@@ -176,5 +176,10 @@ class ListeMotDefinitionManager extends DbManager {
 		$entity = new ListeMotDefinition();
 		return $this->select($query, $entity);	
 	}
+	public function updateMembreListe($old_membre, $new_membre){
+		$query = "update ".$this->table." set id_membre = '".$new_membre."' where id_membre = '".$old_membre."'" ;
+		$statement = $this->_db->prepare($query);
+		$statement->execute();
+	}
 }
 ?>

@@ -636,4 +636,43 @@ function deleteAllFavorisByMembre($idMembre){
 	DBHelper::getDBManager("Favori")->deleteAllFavorisByMembre($idMembre);
 	return $deleteFavori;
 }
+function deleteAllCombinaisonsByMembre($idMembre){
+	$deleteCombi = new Combinaison(array("membre" => $idMembre));
+	DBHelper::getDBManager("Combinaison")->deleteAllCombinaisonsByMembre($idMembre);
+	return $deleteCombi;
+}
+function deleteAllListesGroupeByMembre($idMembre){
+	$deleteListes = new ListesGroupe(array("idMembre" => $idMembre));
+	DBHelper::getDBManager("ListesGroupe")->deleteAllListesGroupeByMembre($idMembre);
+	return $deleteListes;
+}
+function deleteAllMembresGroupeByMembre($idMembre){
+	$deleteMembreGroupe = new MembreGroupe(array("idMembre" => $idMembre));
+	DBHelper::getDBManager("MembreGroupe")->deleteAllMembresGroupeByMembre($idMembre);
+	return $deleteMembreGroupe;
+}
+function deleteAllRevisionsByMembre($idMembre){
+	$deleteRevisions = new Revision(array("membre" => $idMembre));
+	DBHelper::getDBManager("Revision")->deleteAllRevisionsByMembre($idMembre);
+	return $deleteRevisions;
+}
+function deleteAllVotesByMembre($idMembre){
+	$deleteVotes = new Vote(array("membre" => $idMembre));
+	DBHelper::getDBManager("Vote")->deleteAllVotesByMembre($idMembre);
+	return $deleteVotes;
+}
+function updateMembreListe($old_membre, $new_membre){
+	$updateListe = new ListeMotDefinition(array("membre" => $old_membre));
+	DBHelper::getDBManager("ListeMotDefinition")->updateMembreListe($old_membre, $new_membre);
+	return $updateListe;
+}
+function deleteMembreById($id){
+	$deleteMembre = new Membre(array("id" => $id));
+	DBHelper::getDBManager("Membre")->deleteMembreById($id);
+	return $deleteMembre;
+}
+function getGroupeByIdCreateur($idCreateur){
+	$groupe = DBHelper::getDBManager("Groupe")->getGroupeByIdCreateur($idCreateur);
+	return $groupe;
+}
 ?>

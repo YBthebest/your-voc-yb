@@ -16,14 +16,17 @@
 	<div id="logo">
 		<a href="accueil"><img src="images/logo.png" alt="Your-Voc" title="Your-Voc" /></a>
 	</div>
-
-	<div id="menu">
-		<div id="url">
-			<?php foreach ($menuLink as $key=>$link) { ?>		
-				<a href="<?php echo $key;?>"><?php echo $link;?></a>
-			<?php } ?>
+	<nav class="navbar">
+		<div class="navbar-inner">
+			<div class="container">
+				<ul class="nav">			
+					<?php foreach ($menuLink as $key=>$link) { ?>		
+						<li><a href="<?php echo $key;?>"><?php echo $link;?></a></li>
+					<?php } ?>
+				</ul>
+			</div>
 		</div>
-	</div>
+	</nav>
 </div>
 <!--Fin du header !-->
 <?php

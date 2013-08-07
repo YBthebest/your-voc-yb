@@ -52,5 +52,10 @@ class MembreManager extends DbManager{
 		$statement = $this->_db->prepare($query);
 		$statement->execute();		
 	}
+	public function deleteMembreById($id){
+		$query = "delete from ".$this->table." where id = ".$id."" ;
+		$statement = $this->_db->prepare($query);
+		$statement->execute();
+	}
 }
 ?>

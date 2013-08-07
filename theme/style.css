@@ -6,8 +6,8 @@
  	font-size : 14px;
  	border:none;
 }
-ul,li {
- 	list-style-image : url("../images/puce.png");
+ul,li{
+ 	/*list-style-image : url("../images/puce.png");*/
  	margin-top  : 2px;
 }
 img {
@@ -151,6 +151,9 @@ img {
  	margin-top : 10px;
  	margin-bottom : 10px;
 }
+.input-recaptcha {
+width:172px;
+}
 #right {
  	float : right;
  	width : 425px;
@@ -158,10 +161,6 @@ img {
 #left {
  	float : left;
  	width : 425px;
-}
-#content a {
- 	color : #be3737;
- 	text-decoration : none;
 }
 #text-center {
 	text-align: center;

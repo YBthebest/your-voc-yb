@@ -56,5 +56,10 @@ class GroupeManager extends DbManager{
 		$statement = $this->_db->prepare($query);
 		$statement->execute();
 	}
+	public function getGroupeByIdCreateur($idCreateur){
+		$query = "select * from ".$this->table." where id_createur = :id_createur" ;
+		$entity = new Groupe(array("id_createur"=>$idCreateur));
+		return $this->select($query, $entity);
+	}
 }
 ?>

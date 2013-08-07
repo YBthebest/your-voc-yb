@@ -535,6 +535,9 @@
 								$pseudo = $m->login();
 								echo ''.$i.'. ';
 								echo '<a href="profil?m='.$pseudo.'">'.$pseudo.'</a>';
+								if(!isset($_SESSION['login'])){
+									echo '<br />';
+								}
 								if(isset($_SESSION['login'])){
 									$membreGroupe = getMembreByIdGroupeAndMembre($id, $membre);
 									if(!empty($membreGroupe)){				

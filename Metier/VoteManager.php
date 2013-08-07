@@ -36,5 +36,10 @@ class VoteManager extends DbManager{
 		$statement = $this->_db->prepare($query);
 		$statement->execute();
 	}
+	public function deleteAllVotesByMembre($idMembre){
+		$query = "delete from ".$this->table." where id_membre = ".$idMembre."" ;
+		$statement = $this->_db->prepare($query);
+		$statement->execute();
+	}
 }
 ?>
